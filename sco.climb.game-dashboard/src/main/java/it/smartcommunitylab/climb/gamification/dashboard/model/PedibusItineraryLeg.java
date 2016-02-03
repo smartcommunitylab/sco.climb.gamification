@@ -5,12 +5,14 @@ import it.smartcommunitylab.climb.contextstore.model.BaseObject;
 public class PedibusItineraryLeg extends BaseObject {
 	private String gameId;
 	private String legId;
+	private String badgeId;
 	private String name;
 	private String description;
 	private int position;
 	private double[] geocoding;
 	private String externalUrl;
 	private byte[] polyline;
+	private int points;
 	
 	public String getGameId() {
 		return gameId;
@@ -59,5 +61,17 @@ public class PedibusItineraryLeg extends BaseObject {
 	}
 	public void setPolyline(byte[] polyline) {
 		this.polyline = polyline;
+	}
+	public int getPoints() {
+		return points;
+	}
+	public void setPoints(int points) {
+		this.points = points;
+	}
+	public String getBadgeId() {
+		return badgeId;
+	}
+	public void setBadgeId(String badgeId) {
+		this.badgeId = badgeId;
 	}
 }
