@@ -12,7 +12,7 @@ public class PedibusItineraryLeg extends BaseObject {
 	private double[] geocoding;
 	private String externalUrl;
 	private byte[] polyline;
-	private int points;
+	private int score;
 	
 	public String getGameId() {
 		return gameId;
@@ -62,11 +62,11 @@ public class PedibusItineraryLeg extends BaseObject {
 	public void setPolyline(byte[] polyline) {
 		this.polyline = polyline;
 	}
-	public int getPoints() {
-		return points;
+	public int getScore() {
+		return score;
 	}
-	public void setPoints(int points) {
-		this.points = points;
+	public void setScore(int points) {
+		this.score = points;
 	}
 	public String getBadgeId() {
 		return badgeId;
