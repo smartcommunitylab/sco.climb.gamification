@@ -2,16 +2,16 @@ package it.smartcommunitylab.climb.gamification.dashboard.model;
 
 import it.smartcommunitylab.climb.contextstore.model.BaseObject;
 
-public class PedibusItineraryLeg extends BaseObject {
+public class PedibusItineraryLeg extends BaseObject implements Comparable<PedibusItineraryLeg> {
 	private String gameId;
 	private String legId;
 	private String badgeId;
 	private String name;
 	private String description;
 	private int position;
-	private double[] geocoding;
+	private double[] geocoding; // lon/lat (for mongodb)
 	private String externalUrl;
-	private byte[] polyline;
+	private String polyline;
 	private int score;
 	
 	public String getGameId() {
@@ -56,10 +56,10 @@ public class PedibusItineraryLeg extends BaseObject {
 	public void setExternalUrl(String externalUrl) {
 		this.externalUrl = externalUrl;
 	}
-	public byte[] getPolyline() {
+	public String getPolyline() {
 		return polyline;
 	}
-	public void setPolyline(byte[] polyline) {
+	public void setPolyline(String polyline) {
 		this.polyline = polyline;
 	}
 	public int getScore() {
@@ -73,5 +73,10 @@ public class PedibusItineraryLeg extends BaseObject {
 	}
 	public void setBadgeId(String badgeId) {
 		this.badgeId = badgeId;
+	}
+	
+	@Override
+	public int compareTo(PedibusItineraryLeg o) {
+		return score - o.score;
 	}
 }
