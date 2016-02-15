@@ -23,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,7 +58,7 @@ public class EventsPoller {
 	private static final transient Logger logger = LoggerFactory.getLogger(EventsPoller.class);
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-	@Scheduled(cron = "0 * * * * *")
+//	@Scheduled(cron = "0 * * * * *")
 	public void pollEvents() {
 		try {
 
@@ -115,31 +114,30 @@ public class EventsPoller {
 						WsnEvent event = mapper.convertValue(e, WsnEvent.class);
 						eventsList.add(event);
 					}
-					Collections.sort(eventsList);
 					if (!eventsList.isEmpty()) {
-						storage.saveLastEvent(eventsList.get(eventsList.size() - 1));
+						storage.saveLastEvent(Collections.max(eventsList));
 
-					address = contextstoreURL + "/api/stop/" + ownerId + "/" + routeId;
+						address = contextstoreURL + "/api/stop/" + ownerId + "/" + routeId;
 
-					String routeStops = HTTPUtils.get(address, game.getToken());
+						String routeStops = HTTPUtils.get(address, game.getToken());
 
-					Map<Integer, Stop> stopsMap = Maps.newTreeMap();
+						Map<Integer, Stop> stopsMap = Maps.newTreeMap();
 
-					List<?> stops = mapper.readValue(routeStops, List.class);
-					for (Object e : stops) {
-						Stop stop = mapper.convertValue(e, Stop.class);
-						stopsMap.put(stop.getWsnId(), stop);
-					}
+						List<?> stops = mapper.readValue(routeStops, List.class);
+						for (Object e : stops) {
+							Stop stop = mapper.convertValue(e, Stop.class);
+							stopsMap.put(stop.getWsnId(), stop);
+						}
 
-					logger.info("Computing scores for route " + routeId);
-					EventsProcessor ep = new EventsProcessor(stopsMap);
-					Collection<ChildStatus> result = ep.process(eventsList);
-					
-					sendScores(result, ownerId, game.getGameId());
-					
-					logger.info("Computed scores for route " + routeId + " = " + result);
+						logger.info("Computing scores for route " + routeId);
+						EventsProcessor ep = new EventsProcessor(stopsMap);
+						Collection<ChildStatus> result = ep.process(eventsList);
+
+						sendScores(result, ownerId, game.getGameId());
+
+						logger.info("Computed scores for route " + routeId + " = " + result);
 					} else {
-						logger.info("No recent events for route " + routeId);	
+						logger.info("No recent events for route " + routeId);
 					}
 				}
 			}

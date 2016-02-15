@@ -9,7 +9,6 @@ import it.smartcommunitylab.climb.gamification.dashboard.model.events.WsnEvent;
 import it.smartcommunitylab.climb.gamification.dashboard.security.DataSetInfo;
 import it.smartcommunitylab.climb.gamification.dashboard.security.Token;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -68,14 +67,12 @@ public class RepositoryManager {
 	}		
 	
 	public List<PedibusItineraryLeg> getPedibusItineraryLegs(String ownerId) {
-		Query query = new Query(new Criteria("ownerId").is(ownerId));
-		List<PedibusItineraryLeg> result = mongoTemplate.find(query, PedibusItineraryLeg.class);
-		Collections.sort(result);
-		return result;
+		Query query = new Query(new Criteria("ownerId").is(ownerId)).with(new Sort(Sort.Direction.ASC, "position"));
+		return mongoTemplate.find(query, PedibusItineraryLeg.class);
 	}		
 	
 	public List<PedibusItineraryLeg> getPedibusItineraryLegsByGameId(String ownerId, String gameId) {
-		Query query = new Query(new Criteria("ownerId").is(ownerId).and("gameId").is(gameId));
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("gameId").is(gameId)).with(new Sort(Sort.Direction.ASC, "position"));
 		return mongoTemplate.find(query, PedibusItineraryLeg.class);		
 	}		
 	
