@@ -12,6 +12,7 @@ import it.smartcommunitylab.climb.gamification.dashboard.utils.HTTPUtils;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -22,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,7 +59,7 @@ public class EventsPoller {
 	private static final transient Logger logger = LoggerFactory.getLogger(EventsPoller.class);
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-//	@Scheduled(cron = "0 * * * * *")
+	@Scheduled(cron = "0 * * * * *")
 	public void pollEvents() {
 		try {
 
@@ -93,18 +95,29 @@ public class EventsPoller {
 				for (String routeId : routesList) {
 					logger.info("Reading route " + routeId + " events.");
 					
-					// TODO: set correct date range
-					String address = eventstoreURL + "/api/event/" + ownerId + "?" + "routeId=" + routeId + "&dateFrom=2016-01-01T00:00:00&dateTo=2016-03-01T00:00:00";
+					WsnEvent lastEvent = storage.getLastEvent(ownerId, routeId);
+					if (lastEvent != null) {
+						Date lastDate = lastEvent.getTimestamp();
+						cal.setTime(lastDate);
+						cal.add(Calendar.SECOND, 1);
+						from = sdf.format(cal.getTime());
+					}
+					
+					String address = eventstoreURL + "/api/event/" + ownerId + "?" + "routeId=" + routeId + "&dateFrom=" + from + "&dateTo=" + to;
 
 					String routeEvents = HTTPUtils.get(address, game.getToken());
 
 					List<WsnEvent> eventsList = Lists.newArrayList();
 
 					List<?> events = mapper.readValue(routeEvents, List.class);
+					
 					for (Object e : events) {
 						WsnEvent event = mapper.convertValue(e, WsnEvent.class);
 						eventsList.add(event);
 					}
+					Collections.sort(eventsList);
+					if (!eventsList.isEmpty()) {
+						storage.saveLastEvent(eventsList.get(eventsList.size() - 1));
 
 					address = contextstoreURL + "/api/stop/" + ownerId + "/" + routeId;
 
@@ -125,6 +138,9 @@ public class EventsPoller {
 					sendScores(result, ownerId, game.getGameId());
 					
 					logger.info("Computed scores for route " + routeId + " = " + result);
+					} else {
+						logger.info("No recent events for route " + routeId);	
+					}
 				}
 			}
 		} catch (Exception e) {

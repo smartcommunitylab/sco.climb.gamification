@@ -5,6 +5,7 @@ import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusGame;
 import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusItineraryLeg;
 import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusPlayer;
 import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusTeam;
+import it.smartcommunitylab.climb.gamification.dashboard.model.events.WsnEvent;
 import it.smartcommunitylab.climb.gamification.dashboard.security.DataSetInfo;
 import it.smartcommunitylab.climb.gamification.dashboard.security.Token;
 
@@ -225,7 +226,30 @@ public class RepositoryManager {
 		}
 	}	
 	
-	
+	public void saveLastEvent(WsnEvent event) throws StorageException {
+		Query query = new Query(new Criteria("ownerId").is(event.getOwnerId()).and("routeId").is(event.getRouteId()));
+		WsnEvent eventDB = mongoTemplate.findOne(query, WsnEvent.class);
+		Date now = new Date();
+		if (eventDB == null) {
+			event.setCreationDate(now);
+			event.setLastUpdate(now);
+			mongoTemplate.save(event);
+		} else {
+			Update update = new Update();
+			update.set("timestamp", event.getTimestamp());
+			update.set("eventType", event.getEventType());
+			update.set("wsnNodeId", event.getWsnNodeId());
+			update.set("payload", event.getPayload());
+			update.set("lastUpdate", now);
+			mongoTemplate.updateFirst(query, update, WsnEvent.class);
+		}
+	}		
+
+	public WsnEvent getLastEvent(String ownerId, String routeId) throws StorageException {
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("routeId").is(routeId)); // .with(new Sort(Sort.Direction.ASC, "timestamp"));
+		WsnEvent event = mongoTemplate.findOne(query, WsnEvent.class);
+		return event;
+	}	
 	
 	public List<?> findData(Class<?> entityClass, Criteria criteria, Sort sort, String ownerId)
 			throws ClassNotFoundException {

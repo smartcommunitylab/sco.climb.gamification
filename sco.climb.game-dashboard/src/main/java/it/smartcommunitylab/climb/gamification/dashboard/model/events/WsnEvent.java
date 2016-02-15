@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WsnEvent extends BaseObject {
+public class WsnEvent extends BaseObject implements Comparable<WsnEvent> {
 	private String routeId;
 	private int wsnNodeId;
 	private int eventType;
@@ -40,6 +40,11 @@ public class WsnEvent extends BaseObject {
 	}
 	public void setRouteId(String routeId) {
 		this.routeId = routeId;
+	}
+	
+	@Override
+	public int compareTo(WsnEvent o) {
+		return getTimestamp().compareTo(o.getTimestamp());
 	}
 	
 }	
