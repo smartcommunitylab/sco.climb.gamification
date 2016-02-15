@@ -7,7 +7,7 @@ import com.google.common.collect.Sets;
 public class ChildStatus {
 
 	private int wsnId;
-	private Set<Integer> anchors;
+	private Set<String> stops;
 	private boolean inRange = false;
 	private boolean inPedibus = false;
 	private boolean arrived = false;
@@ -16,19 +16,19 @@ public class ChildStatus {
 	
 	public ChildStatus(int id) {
 		this.wsnId = id;
-		anchors = Sets.newLinkedHashSet();
+		stops = Sets.newLinkedHashSet();
 	}
 
 	public int getWsnId() {
 		return wsnId;
 	}
 
-	public Set<Integer> getAnchors() {
-		return anchors;
+	public Set<String> getStops() {
+		return stops;
 	}
 
-	public void setAnchors(Set<Integer> anchors) {
-		this.anchors = anchors;
+	public void setStops(Set<String> anchors) {
+		this.stops = anchors;
 	}
 
 	public boolean isInRange() {
@@ -65,6 +65,6 @@ public class ChildStatus {
 
 	@Override
 	public String toString() {
-		return wsnId + " (" + inRange + "," + inPedibus + "," + arrived + ") => " + anchors + " = " + ((score != null)? score: "");
+		return wsnId + " (" + inRange + "," + inPedibus + "," + arrived + ") => " + stops + " = " + ((score != null)? score: "");
 	}
 }

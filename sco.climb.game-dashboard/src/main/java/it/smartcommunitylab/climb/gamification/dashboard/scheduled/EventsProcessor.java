@@ -19,9 +19,9 @@ public class EventsProcessor {
 
 	private static final transient Logger logger = LoggerFactory.getLogger(EventsProcessor.class);
 	
-	private Map<Integer, Stop> stopsMap;
+	private Map<String, Stop> stopsMap;
 
-	public EventsProcessor(Map<Integer, Stop> stopsMap) {
+	public EventsProcessor(Map<String, Stop> stopsMap) {
 		this.stopsMap = stopsMap;
 	}
 
@@ -70,13 +70,23 @@ public class EventsProcessor {
 				cs = getChildStatus(childrenStatus, wsnId);
 				cs.setInRange(false);
 				break;
-			case 201: // anchor
+//			case 201: // anchor
+//				anchors.put(timestamp, wsnId);
+//				if (travelling) {
+//					for (ChildStatus css : childrenStatus.values()) {
+//						if (css.isInPedibus() && css.isInRange() && !css.isArrived()) {
+//							css.getAnchors().add(wsnId);
+//						}
+//					}
+//				}
+//				break;				
 			case 202: // stop reached
 				anchors.put(timestamp, wsnId);
 				if (travelling) {
 					for (ChildStatus css : childrenStatus.values()) {
 						if (css.isInPedibus() && css.isInRange() && !css.isArrived()) {
-							css.getAnchors().add(wsnId);
+							css.getStops().add((String)event.getPayload().get("stopId"));
+//							css.getAnchors().add(wsnId);
 						}
 					}
 				}
@@ -125,7 +135,7 @@ public class EventsProcessor {
 	private double computeScore(ChildStatus childStatus) {
 		double score = 0;
 		if (childStatus.isArrived()) {
-			for (Integer stopId : childStatus.getAnchors()) {
+			for (String stopId : childStatus.getStops()) {
 				Stop stop = stopsMap.get(stopId);
 				if (stop != null) {
 					score += stop.getDistance();

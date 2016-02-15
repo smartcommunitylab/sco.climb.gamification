@@ -121,12 +121,12 @@ public class EventsPoller {
 
 						String routeStops = HTTPUtils.get(address, game.getToken());
 
-						Map<Integer, Stop> stopsMap = Maps.newTreeMap();
+						Map<String, Stop> stopsMap = Maps.newTreeMap();
 
 						List<?> stops = mapper.readValue(routeStops, List.class);
 						for (Object e : stops) {
 							Stop stop = mapper.convertValue(e, Stop.class);
-							stopsMap.put(stop.getWsnId(), stop);
+							stopsMap.put(stop.getObjectId(), stop);
 						}
 
 						logger.info("Computing scores for route " + routeId);
