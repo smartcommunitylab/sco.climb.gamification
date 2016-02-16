@@ -10,6 +10,7 @@ import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusPlayer;
 import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusTeam;
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.BadgeCollectionConcept;
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.CustomData;
+import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.ExecutionDataDTO;
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.PlayerStateDTO;
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.PointConcept;
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.TeamDTO;
@@ -36,6 +37,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -58,6 +60,14 @@ public class GamificationController {
 	@Autowired
 	@Value("${points.name}")	
 	private String pointsName;
+	
+	@Autowired
+	@Value("${action.name}")	
+	private String actionName;	
+
+	@Autowired
+	@Value("${score.name}")	
+	private String scoreName;		
 	
 	@Autowired
 	private RepositoryManager storage;
@@ -332,6 +342,27 @@ public class GamificationController {
 		
 		eventsPoller.pollEvents();
 	}
+	
+	@RequestMapping(value = "/api/child/score/{ownerId}", method = RequestMethod.POST)
+	public @ResponseBody void increaseChildScore(@PathVariable String ownerId, @RequestParam String gameId, @RequestParam String playerId, @RequestParam Double score, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if(!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		
+		String address = gamificationURL + "/gengine/execute";
+		
+		ExecutionDataDTO ed = new ExecutionDataDTO();
+		ed.setGameId(gameId);
+		ed.setPlayerId(playerId);
+		ed.setActionId(actionName);
+		
+		Map<String, Object> data = Maps.newTreeMap();
+		data.put(scoreName, score);
+		ed.setData(data);
+		
+		HTTPUtils.post(address, ed, null);
+	}	
+	
 	
 	private void updateGamificationData(Gamified entity, String gameId, String id) throws Exception {
 		String address = gamificationURL + "/gengine/state/" + gameId + "/" + id;
