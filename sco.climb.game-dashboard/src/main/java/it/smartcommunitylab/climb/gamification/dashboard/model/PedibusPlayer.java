@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 public class PedibusPlayer extends BaseObject implements Gamified {
 
 	private String childId;
-	private int wsnId;
+	private String wsnId;
 	private String gameId;
 	private Double score;
 	private Map<String, Collection> badges;
@@ -25,11 +25,11 @@ public class PedibusPlayer extends BaseObject implements Gamified {
 		this.childId = childId;
 	}
 
-	public int getWsnId() {
+	public String getWsnId() {
 		return wsnId;
 	}
 
-	public void setWsnId(int wsnId) {
+	public void setWsnId(String wsnId) {
 		this.wsnId = wsnId;
 	}
 
