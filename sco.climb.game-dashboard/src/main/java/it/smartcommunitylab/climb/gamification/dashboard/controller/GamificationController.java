@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -263,12 +264,13 @@ public class GamificationController {
 	}
 
 	@RequestMapping(value = "/api/leg/{ownerId}", method = RequestMethod.POST)
-	public @ResponseBody void updatePedibusItineraryLeg(@PathVariable String ownerId, @RequestBody PedibusItineraryLeg leg, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody void createPedibusItineraryLeg(@PathVariable String ownerId, @RequestBody PedibusItineraryLeg leg, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 
 		try {
+			leg.setLegId(getUUID());
 			storage.savePedibusItineraryLeg(leg, ownerId, false);
 
 			if (logger.isInfoEnabled()) {
@@ -278,6 +280,26 @@ public class GamificationController {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
 		}
 	}
+	
+	@RequestMapping(value = "/api/legs/{ownerId}", method = RequestMethod.POST)
+	public @ResponseBody void createPedibusItineraryLeg(@PathVariable String ownerId, @RequestBody List<PedibusItineraryLeg> legs, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+
+		try {
+			for (PedibusItineraryLeg leg: legs) {
+				leg.setLegId(getUUID());
+				storage.savePedibusItineraryLeg(leg, ownerId, false);
+			}
+
+			if (logger.isInfoEnabled()) {
+				logger.info("add pedibusItineraryLegs");
+			}
+		} catch (Exception e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
+		}
+	}	
 
 	@RequestMapping(value = "/api/leg/{ownerId}/{legId}", method = RequestMethod.GET)
 	public @ResponseBody PedibusItineraryLeg getPedibusItineraryLeg(@PathVariable String ownerId, @PathVariable String legId, HttpServletRequest request, HttpServletResponse response)
@@ -433,5 +455,9 @@ public class GamificationController {
 		entity.setBadges(badges);
 
 	}
+	
+	public static String getUUID() {
+		return UUID.randomUUID().toString();
+	}	
 
 }
