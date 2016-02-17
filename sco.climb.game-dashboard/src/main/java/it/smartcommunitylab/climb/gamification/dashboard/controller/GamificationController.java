@@ -444,22 +444,27 @@ public class GamificationController {
 		PlayerStateDTO gamePlayer = mapper.readValue(result, PlayerStateDTO.class);
 
 		Set<?> pointConcept = (Set) gamePlayer.getState().get("PointConcept");
-		Iterator<?> it = pointConcept.iterator();
-		while (it.hasNext()) {
-			PointConcept pc = mapper.convertValue(it.next(), PointConcept.class);
-			if (pointsName.equals(pc.getName())) {
-				entity.setScore(pc.getScore());
+		
+		if (pointConcept != null) {
+			Iterator<?> it = pointConcept.iterator();
+			while (it.hasNext()) {
+				PointConcept pc = mapper.convertValue(it.next(), PointConcept.class);
+				if (pointsName.equals(pc.getName())) {
+					entity.setScore(pc.getScore());
+				}
 			}
 		}
 
 		Set<?> badgeCollectionConcept = (Set) gamePlayer.getState().get("BadgeCollectionConcept");
-		Map<String, Collection> badges = Maps.newTreeMap();
-		it = badgeCollectionConcept.iterator();
-		while (it.hasNext()) {
-			BadgeCollectionConcept bcc = mapper.convertValue(it.next(), BadgeCollectionConcept.class);
-			badges.put(bcc.getName(), bcc.getBadgeEarned());
+		if (badgeCollectionConcept != null) {
+			Map<String, Collection> badges = Maps.newTreeMap();
+			Iterator<?> it = badgeCollectionConcept.iterator();
+			while (it.hasNext()) {
+				BadgeCollectionConcept bcc = mapper.convertValue(it.next(), BadgeCollectionConcept.class);
+				badges.put(bcc.getName(), bcc.getBadgeEarned());
+			}
+			entity.setBadges(badges);
 		}
-		entity.setBadges(badges);
 
 	}
 	
