@@ -17,12 +17,12 @@
 }
 
 .navbar-inverse .navbar-nav>li>a:hover {
-	color:black;
+	color:#d3d7cf;
 }
 
 .navbar-inverse .navbar-nav>.active>a {
 	background-color: #639B3D;
-	color: black;
+	/*color: black;*/
 }
 .navbar-inverse .navbar-nav>.active>a:hover {
 	background-color: #639B3D;
@@ -172,4 +172,18 @@
 
 .ui-datepicker-trigger {
 	background-color: #00C853;
+}
+
+.angular-google-map-container {
+    height: 600px; 
+}
+
+div.map_margins {
+	margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.data-wrapper{
+	margin-bottom: 10px;
+    margin-top: 10px;
 }

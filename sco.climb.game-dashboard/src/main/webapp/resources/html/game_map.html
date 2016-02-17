@@ -1,0 +1,73 @@
+<div class="row" ng-controller="ViewCtrlGmap" ng-init="initWs()">
+				<div class="col-md-9">
+					<map id="viewMap" class="angular-google-map-container" center="{{ mapOption.center }}" zoom="{{ mapOption.zoom }}">
+						<marker ng-repeat="glm in mapGameLegMarkers" id="{{ glm.id }}" visible="{{ glm.options.visible }}" position="{{ glm.position }}" icon="{{ glm.icon }}" on-click="showInfoWindow(event, 'glm')" ><!-- icon="{{ pm.icon }}" -->
+							<info-window id="glm" visible-on-marker="{{ glm.id }}">
+						        <div ng-non-bindable="">
+						          	<div id="siteNotice"></div>
+						          	<h4 id="firstHeading" class="firstHeading">
+						          		<span ng-if="!glm.isActualMarker">{{ 'label_leg_iw' | i18n }} {{ glm.data.position }}</span>
+						          		<span ng-if="glm.isActualMarker">{{ 'label_actual_state_iw' | i18n }}</span>
+						          	</h4>
+							        <div id="bodyContent">
+							        	<table>
+							        		<tr ng-if="!glm.isActualMarker">
+							        			<td><strong>{{ 'label_leg_name_iw' | i18n }}:</strong></td>
+							        			<td>&nbsp;{{ glm.data.name }}</td>
+							        		</tr>
+											<tr ng-if="!glm.isActualMarker">
+							        			<td><strong>{{ 'label_leg_description_iw' | i18n }}:</strong></td>
+							        			<td>&nbsp;{{ glm.data.description }}</td>	
+							        		</tr>
+							        		<tr ng-if="glm.isActualMarker">
+							        			<td><strong>{{ 'label_leg_scores_iw' | i18n }}:</strong></td>
+							        			<td>&nbsp;{{ glm.data.scores }}</td>	
+							        		</tr>
+							        		<tr>
+							        			<td><strong>{{ 'label_leg_link_iw' | i18n }}:</strong></td>
+							        			<td>&nbsp;<a href="{{ glm.data.externalUrl }}" target="_blank">{{ glm.data.externalUrl }}</a></td>
+							        		</tr>
+							        	</table>
+							        </div>
+						        </div>
+						    </info-window>
+						</marker>
+						<shape name="polyline" ng-repeat="gp in mapGamePolylines" id="{{ gp.id }}" path="{{ gp.path }}" visible="{{ gp.visible }}"
+         					geodesic="{{ gp.geodesic }}" stroke-color="{{ gp.stroke.color }}" stroke-opacity="1.0" stroke-weight="{{ gp.stroke.weight }}" on-click="showInfoWindow(event, gp.info_windows_cod)">
+     						<info-window id="{{ gp.info_windows_cod }}" data-position="{{ gp.info_windows_pos }}" visible-on-marker="{{ gp.id }}">
+						        <div ng-non-bindable="">
+						          	<div id="siteNotice"></div>
+						          	<h4 id="firstHeading" class="firstHeading"><span>Tratta {{ gp.data.position }}</span></h4>
+							        <div id="bodyContent">
+							        	<table>
+							        		<tr>
+							        			<td><strong>{{ 'poly_length_label' | i18n }}:</strong></td>
+							        			<td>&nbsp;{{ gp.data.length }} m</td>
+							        		</tr>
+							        	</table>
+							        </div>
+						        </div>
+						    </info-window>
+     					</shape>
+					</map>
+				</div>
+				<div class="col-md-3">
+					<div class="panel panel-success">
+						<div class="panel-heading">
+							<h5 class="panel-title">{{ 'show_map_objects' | i18n }}</h5>
+						</div>
+						<div class="panel-body">
+							<table width="100%">
+								<tr >
+									<td align="center"><input id="streets" type="checkbox" ng-model="mapelements.gamepolys" ng-click="changeGamePolylines()"></td>
+									<td align="left"><label for="streets">{{ 'polys_map_objects' | i18n }}</label></td>
+								</tr>
+								<tr >
+									<td align="center"><input id="pLegs" type="checkbox" ng-model="mapelements.legmarkers" ng-click="changeLegMarkers()"></td>
+									<td align="left"><label for="pLegs">{{ 'legs_map_objects' | i18n }}</label></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
