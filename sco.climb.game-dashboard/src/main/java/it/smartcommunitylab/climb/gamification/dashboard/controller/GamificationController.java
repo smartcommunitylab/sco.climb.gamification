@@ -20,6 +20,7 @@ import it.smartcommunitylab.climb.gamification.dashboard.storage.RepositoryManag
 import it.smartcommunitylab.climb.gamification.dashboard.utils.HTTPUtils;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -282,14 +283,20 @@ public class GamificationController {
 	}
 	
 	@RequestMapping(value = "/api/legs/{ownerId}", method = RequestMethod.POST)
-	public @ResponseBody void createPedibusItineraryLeg(@PathVariable String ownerId, @RequestBody List<PedibusItineraryLeg> legs, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody void createPedibusItineraryLeg(@PathVariable String ownerId, @RequestBody List<PedibusItineraryLeg> legs, @RequestParam(required = false) Boolean sum, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 
+		Collections.sort(legs);
+		int sumValue = 0;
 		try {
 			for (PedibusItineraryLeg leg: legs) {
 				leg.setLegId(getUUID());
+				if (sum != null && sum) {
+					sumValue += leg.getScore();
+					leg.setScore(sumValue);
+				}
 				storage.savePedibusItineraryLeg(leg, ownerId, false);
 			}
 
