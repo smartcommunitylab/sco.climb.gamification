@@ -6,7 +6,7 @@ import com.google.common.collect.Sets;
 
 public class ChildStatus {
 
-	private int wsnId;
+	private String childId;
 	private Set<String> stops;
 	private boolean inRange = false;
 	private boolean inPedibus = false;
@@ -14,13 +14,13 @@ public class ChildStatus {
 	
 	private Double score;
 	
-	public ChildStatus(int id) {
-		this.wsnId = id;
+	public ChildStatus(String id) {
+		this.childId = id;
 		stops = Sets.newLinkedHashSet();
 	}
 
-	public int getWsnId() {
-		return wsnId;
+	public String getChildId() {
+		return childId;
 	}
 
 	public Set<String> getStops() {
@@ -65,6 +65,6 @@ public class ChildStatus {
 
 	@Override
 	public String toString() {
-		return wsnId + " (" + inRange + "," + inPedibus + "," + arrived + ") => " + stops + " = " + ((score != null)? score: "");
+		return childId + " (" + inRange + "," + inPedibus + "," + arrived + ") => " + stops + " = " + ((score != null)? score: "");
 	}
 }

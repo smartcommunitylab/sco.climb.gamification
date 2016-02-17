@@ -115,8 +115,6 @@ public class EventsPoller {
 						eventsList.add(event);
 					}
 					if (!eventsList.isEmpty()) {
-						storage.saveLastEvent(Collections.max(eventsList));
-
 						address = contextstoreURL + "/api/stop/" + ownerId + "/" + routeId;
 
 						String routeStops = HTTPUtils.get(address, game.getToken());
@@ -135,6 +133,7 @@ public class EventsPoller {
 
 						sendScores(result, ownerId, game.getGameId());
 
+						storage.saveLastEvent(Collections.max(eventsList));
 						logger.info("Computed scores for route " + routeId + " = " + result);
 					} else {
 						logger.info("No recent events for route " + routeId);
@@ -164,8 +163,12 @@ public class EventsPoller {
 	
 	private void sendScores(Collection<ChildStatus> childrenStatus, String ownerId, String gameId) throws Exception {
 		for (ChildStatus childStatus: childrenStatus) {
-			PedibusPlayer player = storage.getPedibusPlayerByWsnId(ownerId, gameId, childStatus.getWsnId());
+			PedibusPlayer player = storage.getPedibusPlayerByChildId(ownerId, gameId, childStatus.getChildId());
 			
+			if (player == null) {
+				logger.error("Player with childId = " + childStatus.getChildId() + " not found.");
+				continue;
+			}
 			String address = gamificationURL + "/gengine/execute";
 			
 			ExecutionDataDTO ed = new ExecutionDataDTO();

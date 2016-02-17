@@ -81,10 +81,15 @@ public class RepositoryManager {
 		return mongoTemplate.find(query, PedibusPlayer.class);		
 	}	
 	
-	public PedibusPlayer getPedibusPlayerByWsnId(String ownerId, String gameId, int wsnId) {
-		Query query = new Query(new Criteria("ownerId").is(ownerId).and("gameId").is(gameId).and("wsnId").is(wsnId));
+//	public PedibusPlayer getPedibusPlayerByWsnId(String ownerId, String gameId, int wsnId) {
+//		Query query = new Query(new Criteria("ownerId").is(ownerId).and("gameId").is(gameId).and("wsnId").is(wsnId));
+//		return mongoTemplate.findOne(query, PedibusPlayer.class);		
+//	}
+	
+	public PedibusPlayer getPedibusPlayerByChildId(String ownerId, String gameId, String id) {
+		Query query = new Query(new Criteria("ownerId").is(ownerId).and("gameId").is(gameId).and("childId").is(id));
 		return mongoTemplate.findOne(query, PedibusPlayer.class);		
-	}	
+	}		
 	
 	public List<PedibusTeam> getPedibusTeams(String ownerId, String gameId) {
 		Query query = new Query(new Criteria("ownerId").is(ownerId).and("gameId").is(gameId));
