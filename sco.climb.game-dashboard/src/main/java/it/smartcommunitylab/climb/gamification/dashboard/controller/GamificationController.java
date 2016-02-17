@@ -370,15 +370,16 @@ public class GamificationController {
 	}
 
 	@RequestMapping(value = "/api/game/events/{ownerId}", method = RequestMethod.POST)
-	public @ResponseBody void pollEvents(@PathVariable String ownerId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody Map<String, Integer> pollEvents(@PathVariable String ownerId, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 
 		try {
-			eventsPoller.pollEvents();
+			return eventsPoller.pollEvents();
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
+			return null;
 		}
 	}
 

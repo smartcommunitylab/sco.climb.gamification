@@ -59,8 +59,8 @@ public class EventsPoller {
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
 //	@Scheduled(cron = "0 * * * * *")
-	public void pollEvents() {
-		try {
+	public Map<String, Integer> pollEvents() throws Exception {
+		Map<String, Integer> results = Maps.newTreeMap();
 
 			List<PedibusGame> games = storage.getPedibusGames();
 			for (PedibusGame game : games) {
@@ -133,16 +133,16 @@ public class EventsPoller {
 
 						sendScores(result, ownerId, game.getGameId());
 
+						results.put(routeId, eventsList.size());
 						storage.saveLastEvent(Collections.max(eventsList));
 						logger.info("Computed scores for route " + routeId + " = " + result);
 					} else {
+						results.put(routeId, -1);
 						logger.info("No recent events for route " + routeId);
 					}
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			return results;
 	}
 	
 	private List<String> getRoutes(String schoolId, String ownerId, String token) throws Exception {
