@@ -432,6 +432,10 @@ public class GamificationController {
 			ed.setData(data);
 
 			HTTPUtils.post(address, ed, null);
+			
+			if (logger.isInfoEnabled()) {
+				logger.info("increased player score");
+			}			
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
 		}
