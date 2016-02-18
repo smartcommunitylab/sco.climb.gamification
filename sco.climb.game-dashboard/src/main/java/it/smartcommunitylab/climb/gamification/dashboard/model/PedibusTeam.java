@@ -19,6 +19,9 @@ public class PedibusTeam extends BaseObject implements Gamified {
 	private Double score;
 	private PedibusItineraryLeg previousLeg;
 	private PedibusItineraryLeg currentLeg;
+	
+	private Double scoreToNext;
+	private Double scoreToEnd;
 
 	public String getClassRoom() {
 		return classRoom;
@@ -74,6 +77,22 @@ public class PedibusTeam extends BaseObject implements Gamified {
 
 	public void setCurrentLeg(PedibusItineraryLeg currentLeg) {
 		this.currentLeg = currentLeg;
+	}
+
+	public Double getScoreToNext() {
+		return scoreToNext;
+	}
+
+	public void setScoreToNext(Double scoreToNextLeg) {
+		this.scoreToNext = scoreToNextLeg;
+	}
+
+	public Double getScoreToEnd() {
+		return scoreToEnd;
+	}
+
+	public void setScoreToEnd(Double scoreToEnd) {
+		this.scoreToEnd = scoreToEnd;
 	}
 
 }

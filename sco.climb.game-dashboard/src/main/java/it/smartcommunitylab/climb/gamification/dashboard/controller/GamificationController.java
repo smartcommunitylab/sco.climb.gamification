@@ -356,7 +356,8 @@ public class GamificationController {
 		try {
 			PedibusGame game = storage.getPedibusGame(ownerId, gameId);
 			List<PedibusItineraryLeg> legs = storage.getPedibusItineraryLegsByGameId(ownerId, gameId);
-
+			PedibusItineraryLeg lastLeg = Collections.max(legs);
+			
 			// players score
 			List<PedibusPlayer> players = storage.getPedibusPlayers(ownerId, gameId);
 
@@ -379,6 +380,11 @@ public class GamificationController {
 					}
 				}
 
+				if (team.getCurrentLeg() != null) {
+					team.setScoreToNext(team.getCurrentLeg().getScore() - team.getScore());
+				}
+				team.setScoreToEnd(lastLeg.getScore() - team.getScore());
+				
 			}
 
 			Map<String, Object> result = Maps.newTreeMap();
