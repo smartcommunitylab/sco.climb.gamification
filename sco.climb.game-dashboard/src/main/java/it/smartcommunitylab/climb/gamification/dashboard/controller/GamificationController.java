@@ -65,8 +65,12 @@ public class GamificationController {
 	private String pointsName;
 
 	@Autowired
-	@Value("${action.name}")
-	private String actionName;
+	@Value("${action.increase.name}")
+	private String actionIncrease;
+	
+	@Autowired
+	@Value("${action.reset.name}")
+	private String actionReset;	
 
 	@Autowired
 	@Value("${score.name}")
@@ -431,7 +435,7 @@ public class GamificationController {
 			ExecutionDataDTO ed = new ExecutionDataDTO();
 			ed.setGameId(gameId);
 			ed.setPlayerId(playerId);
-			ed.setActionId(actionName);
+			ed.setActionId(actionIncrease);
 
 			Map<String, Object> data = Maps.newTreeMap();
 			data.put(scoreName, score);
@@ -446,6 +450,65 @@ public class GamificationController {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
 		}
 	}
+	
+	@RequestMapping(value = "/api/game/reset/{ownerId}", method = RequestMethod.POST)
+	public @ResponseBody void resetGame(@PathVariable String ownerId, @RequestParam String gameId, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+
+		try {
+			List<PedibusPlayer> players = storage.getPedibusPlayers(ownerId, gameId);
+			for (PedibusPlayer player: players) {
+				resetChild(gameId, player.getChildId());
+			}
+			
+			List<PedibusTeam> teams = storage.getPedibusTeams(ownerId, gameId);
+			for (PedibusTeam team: teams) {
+				resetChild(gameId, team.getClassRoom());
+			}			
+			
+			if (logger.isInfoEnabled()) {
+				logger.info("reset game");
+			}			
+		} catch (Exception e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
+		}
+	}	
+	
+	@RequestMapping(value = "/api/child/reset/{ownerId}", method = RequestMethod.POST)
+	public @ResponseBody void resetChild(@PathVariable String ownerId, @RequestParam String gameId, @RequestParam String playerId, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+
+		try {
+			resetChild(gameId, playerId);
+			
+			if (logger.isInfoEnabled()) {
+				logger.info("reset player");
+			}			
+		} catch (Exception e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
+		}
+	}		
+	
+	private void resetChild(String gameId, String playerId) throws Exception {
+		String address = gamificationURL + "/gengine/execute";
+
+		ExecutionDataDTO ed = new ExecutionDataDTO();
+		ed.setGameId(gameId);
+		ed.setPlayerId(playerId);
+		ed.setActionId(actionReset);
+
+		Map<String, Object> data = Maps.newTreeMap();
+		ed.setData(data);
+
+		HTTPUtils.post(address, ed, null);
+	}
+	
 
 	private void updateGamificationData(Gamified entity, String gameId, String id) throws Exception {
 		String address = gamificationURL + "/gengine/state/" + gameId + "/" + id;

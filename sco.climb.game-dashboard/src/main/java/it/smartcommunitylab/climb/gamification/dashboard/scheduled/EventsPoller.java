@@ -45,8 +45,8 @@ public class EventsPoller {
 	private String gamificationURL;			
 	
 	@Autowired
-	@Value("${action.name}")	
-	private String actionName;	
+	@Value("${action.increase.name}")	
+	private String actionIncrease;	
 
 	@Autowired
 	@Value("${score.name}")	
@@ -175,7 +175,7 @@ public class EventsPoller {
 			ExecutionDataDTO ed = new ExecutionDataDTO();
 			ed.setGameId(gameId);
 			ed.setPlayerId(player.getChildId());
-			ed.setActionId(actionName);
+			ed.setActionId(actionIncrease);
 			
 			Map<String, Object> data = Maps.newTreeMap();
 			data.put(scoreName, childStatus.getScore());
