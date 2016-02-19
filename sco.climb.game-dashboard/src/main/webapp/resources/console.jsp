@@ -3,7 +3,7 @@
 <head lang="it">
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>{{ 'app_tab-title' | i18n }}</title>
+<title>CLIMB</title>
 
 <link href="css/bootstrap.min.css" rel="stylesheet" />
 <link href="css/bootstrap-theme.min.css" rel="stylesheet" />
@@ -24,7 +24,6 @@
 <script src="lib/angular/angular-awesome-slider.min.js" type="text/javascript"></script>
 <script src="lib/angular/angular-spinkit.min.js"></script>
 <script src="lib/angular/angular-base64.min.js"></script>
-<!-- <script src="lib/angular/angular-localization.min.js"></script> -->
 
 <script src="js/bootstrap.min.js"></script>
 <script src="lib/bootstrap-colorpicker-module.min.js"></script>
@@ -41,16 +40,14 @@
 <script src="js/services/serv_shared.js"></script>
 <script src="js/filters.js"></script>
 <script src="js/directives.js"></script>
-<!-- <script src="lib/ng-translation.min.js"></script> -->
 
 <script src="lib/shim.js" type="text/javascript"></script>
 <script src="lib/polyline.js" type="text/javascript"></script>
 <script src="lib/lodash.js"></script>
-<!-- <script src="https://maps.google.com/maps/api/js?key=AIzaSyBmKVWmFzh2JHT7q1MLmQRQ7jC4AhkRBDs&sensor=false&v=3.exp"></script> -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmKVWmFzh2JHT7q1MLmQRQ7jC4AhkRBDs&v=3.exp"></script>
 <script src="lib/ng-map.min.js"></script>
 
-<base href="<%=request.getContextPath()%>/" /><!-- <%=request.getContextPath()%> -->
+<base href="<%=request.getContextPath()%>/" />
 
 <script>
 var token="<%=request.getAttribute("token")%>";
@@ -73,9 +70,9 @@ var conf_api="<%=request.getAttribute("api")%>";
             <li class="{{ isMapActive() }}" ng-if="!isMapLinkDisabled()"><a href="console/game/map" ng-click="setMapPageActive()">{{ 'menu_bar-consolemap' | i18n }}</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right" >
-          	<li class="{{ isActiveItaLang() }}"><a href ng-click="setItalianLanguage()">IT</a></li>
-          	<li class="{{ isActiveEngLang() }}"><a href ng-click="setEnglishLanguage()">EN</a></li>
-            <li><a href="" ng-click="logout()">Logout{{ 'menu_bar-logout' | i18n }}</a></li>
+          	<!-- <li class="{{ isActiveItaLang() }}"><a href ng-click="setItalianLanguage()">IT</a></li>
+          	<li class="{{ isActiveEngLang() }}"><a href ng-click="setEnglishLanguage()">EN</a></li> -->
+            <li><a href="" ng-click="logout()" >Logout{{ 'menu_bar-logout' | i18n }}</a></li>
           </ul>
         </div><!-- /.nav-collapse -->
       </div><!-- /.container -->
@@ -105,13 +102,5 @@ var conf_api="<%=request.getAttribute("api")%>";
 			</div> -->
 		</div>
 	</div>
-<script>
-// $(document).ready(function() {
-// 	$(".nav li.disabled a").click(function() {
-// 	     return false;
-// 	});
-// });
-</script>
-
 </body>
 </html>

@@ -35,24 +35,9 @@ cg.service('sharedDataService', function(){
 	this.userIdentity = 'HMTRND69R11Z100M';
 	this.base64 = '';
 	
-	this.sharedLocalAreas = [];
-	this.sharedLocalZones0 = [];
-	this.sharedLocalZones1 = [];
-	this.sharedLocalZones2 = [];
-	this.sharedLocalZones3 = [];
-	this.sharedLocalZones4 = [];
-	this.sharedLocalMicroZones = [];
-	this.sharedLocalPms = [];
-	
 	this.allFamilyUpdated = false;
 	this.isTest = false;
 	this.userId = '';
-	
-	this.inGlobalLogPage = false;
-	this.inParkLogPage = false;
-	this.inStreetLogPage = false;
-	this.inProfitParkLogPage = false;
-	this.inProfitParkmeterLogPage = false;
 	
 	// Shared time variables
 	//-------------------------------------------------------------
@@ -64,11 +49,7 @@ cg.service('sharedDataService', function(){
 	this.one_day_millis = 1000 * 60 * 60 * 24 * 2; 				// Milliseconds of a day
 	this.six_hours_millis = 1000 * 60 * 60 * 6;					// Milliseconds in six hours
 	//-------------------------------------------------------------
-	
-	this.infoPanelAss = false; 			// default value: the panel is closed
-	this.infoPanelLoc = false; 			// default value: the panel is closed
-	this.infoPanelStatesAss = false;	// default value: the panel is closed
-	this.infoPanelStatesLoc = false;	// default value: the panel is closed
+
 	this.isInList = false;
 	this.utente = {};
 	this.idDomanda = '';
@@ -297,44 +278,11 @@ cg.service('sharedDataService', function(){
 	};
 });
 
-//Message retriever method
-/*cg.factory('getMyMessages', function($http, $q) {
-	
-	//var _this = this;
-
-    var promiseToHaveData = function() {
-        var deferred = $q.defer();
-        
-        var fileJson = '';
-        if(this.usedLanguage == 'ita'){
-        	fileJson = 'i18n/resources-locale_it-IT.json';
-        } else {
-        	fileJson = 'i18n/resources-locale_en-US.json';
-        }
-
-        $http.get(fileJson)
-            .success(function(data) {
-                //angular.extend(_this, data);
-                deferred.resolve(data);
-                // Funzione di caricamento stringhe messaggi in variabili di service
-                //console.log("Finded message data: " + JSON.stringify(data));
-            })
-            .error(function() {
-                deferred.reject('could not find someFile.json');
-                console.log("Error in message data recovery.");
-            });
-
-        return deferred.promise;
-    };
-    return {promiseToHaveData : promiseToHaveData};
-
-});*/
-
 // Proxy Methods section
-cg.factory('invokeWSService', function($http, $q) {
-	//var url = 'api/';
-	var url = this.api_url;
+cg.factory('invokeWSService', function($http, $q, sharedDataService) {
+	//var url = 'https://climbdev.smartcommunitylab.it/game-dashboard/api';
 	var getProxy = function(method, funcName, params, headers, data){
+		var url = sharedDataService.getApiUrl();
 		var deferred = $q.defer();
 		if(method == 'GET' && params == null){
 			$http({
@@ -370,210 +318,6 @@ cg.factory('invokeWSService', function($http, $q) {
 				headers : headers,
 				data : data
 			}).success(function(data) {
-				deferred.resolve(data);
-			}).error(function(data) {
-				console.log("Returned data FAIL: " + JSON.stringify(data));
-				deferred.resolve(data);
-			});
-		}
-		return deferred.promise;
-	};
-	return {getProxy : getProxy};
-});
-cg.factory('invokeWSServiceNS', function($http, $q) {
-	var url = 'rest/nosec/';
-	var getProxy = function(method, funcName, params, headers, data){
-		var deferred = $q.defer();
-		if(method == 'GET' && params == null){
-			$http({
-				method : method,
-				url : url + funcName + '?noCache=' + new Date().getTime(),
-				params : params,
-				headers : headers,
-				data : data
-			}).success(function(data) {
-				//console.log("Returned data ok: " + JSON.stringify(data));
-				deferred.resolve(data);
-			}).error(function(data) {
-				console.log("Returned data FAIL: " + JSON.stringify(data));
-				deferred.resolve(data);
-			});
-		} else if(method == 'GET' && params != null){
-			$http({
-				method : method,
-				url : url + funcName,
-				params : params + '&noCache=' + new Date().getTime(),
-				headers : headers,
-				data : data
-			}).success(function(data) {
-				//console.log("Returned data ok: " + JSON.stringify(data));
-				deferred.resolve(data);
-			}).error(function(data) {
-				console.log("Returned data FAIL: " + JSON.stringify(data));
-				deferred.resolve(data);
-			});
-		} else {
-			$http({
-				method : method,
-				url : url + funcName,
-				params : params,
-				headers : headers,
-				data : data
-			}).success(function(data) {
-				//console.log("Returned data ok: " + JSON.stringify(data));
-				deferred.resolve(data);
-			}).error(function(data) {
-				console.log("Returned data FAIL: " + JSON.stringify(data));
-				deferred.resolve(data);
-			});
-		}
-		return deferred.promise;
-	};
-	return {getProxy : getProxy};
-});
-cg.factory('invokeDashboardWSService', function($http, $q) {
-	var url = 'dashboard/rest/';
-	var getProxy = function(method, funcName, params, headers, data){
-		var deferred = $q.defer();
-		if(method == 'GET' && params == null){
-			$http({
-				method : method,
-				url : url + funcName + '?noCache=' + new Date().getTime(),
-				params : params,
-				headers : headers,
-				data : data
-			}).success(function(data) {
-				//console.log("Returned data ok: " + JSON.stringify(data));
-				deferred.resolve(data);
-			}).error(function(data) {
-				console.log("Returned data FAIL: " + JSON.stringify(data));
-				deferred.resolve(data);
-			});
-		} else if(method == 'GET' && params != null){
-			$http({
-				method : method,
-				url : url + funcName,
-				params : params,
-				headers : headers,
-				data : data
-			}).success(function(data) {
-				//console.log("Returned data ok: " + JSON.stringify(data));
-				deferred.resolve(data);
-			}).error(function(data) {
-				console.log("Returned data FAIL: " + JSON.stringify(data));
-				deferred.resolve(data);
-			});
-		} else {
-			$http({
-				method : method,
-				url : url + funcName,
-				params : params,
-				headers : headers,
-				data : data
-			}).success(function(data) {
-				//console.log("Returned data ok: " + JSON.stringify(data));
-				deferred.resolve(data);
-			}).error(function(data) {
-				console.log("Returned data FAIL: " + JSON.stringify(data));
-				deferred.resolve(data);
-			});
-		}
-		return deferred.promise;
-	};
-	return {getProxy : getProxy};
-});
-cg.factory('invokeAuxWSService', function($http, $q) {
-	var url = 'auxiliary/rest/';
-	var getProxy = function(method, funcName, params, headers, data){
-		var deferred = $q.defer();
-		if(method == 'GET' && params == null){
-			$http({
-				method : method,
-				url : url + funcName + '?noCache=' + new Date().getTime(),
-				params : params,
-				headers : headers,
-				data : data
-			}).success(function(data) {
-				//console.log("Returned data ok: " + JSON.stringify(data));
-				deferred.resolve(data);
-			}).error(function(data) {
-				console.log("Returned data FAIL: " + JSON.stringify(data));
-				deferred.resolve(data);
-			});
-		} else if(method == 'GET' && params != null){
-			$http({
-				method : method,
-				url : url + funcName,
-				params : params,
-				headers : headers,
-				data : data
-			}).success(function(data) {
-				//console.log("Returned data ok: " + JSON.stringify(data));
-				deferred.resolve(data);
-			}).error(function(data) {
-				console.log("Returned data FAIL: " + JSON.stringify(data));
-				deferred.resolve(data);
-			});
-		} else {
-			$http({
-				method : method,
-				url : url + funcName,
-				params : params,
-				headers : headers,
-				data : data
-			}).success(function(data) {
-				//console.log("Returned data ok: " + JSON.stringify(data));
-				deferred.resolve(data);
-			}).error(function(data) {
-				console.log("Returned data FAIL: " + JSON.stringify(data));
-				deferred.resolve(data);
-			});
-		}
-		return deferred.promise;
-	};
-	return {getProxy : getProxy};
-});
-cg.factory('invokeDashboardWSServiceNS', function($http, $q) {
-	var url = 'dashboard/rest/nosec/';
-	var getProxy = function(method, funcName, params, headers, data){
-		var deferred = $q.defer();
-		if(method == 'GET' && params == null){
-			$http({
-				method : method,
-				url : url + funcName + '?noCache=' + new Date().getTime(),
-				params : params,
-				headers : headers,
-				data : data
-			}).success(function(data) {
-				//console.log("Returned data ok: " + JSON.stringify(data));
-				deferred.resolve(data);
-			}).error(function(data) {
-				console.log("Returned data FAIL: " + JSON.stringify(data));
-				deferred.resolve(data);
-			});
-		} else if(method == 'GET' && params != null){
-			$http({
-				method : method,
-				url : url + funcName,
-				params : params + '&noCache=' + new Date().getTime(),
-				headers : headers,
-				data : data
-			}).success(function(data) {
-				//console.log("Returned data ok: " + JSON.stringify(data));
-				deferred.resolve(data);
-			}).error(function(data) {
-				console.log("Returned data FAIL: " + JSON.stringify(data));
-				deferred.resolve(data);
-			});
-		} else {
-			$http({
-				method : method,
-				url : url + funcName,
-				params : params,
-				headers : headers,
-				data : data
-			}).success(function(data) {
-				//console.log("Returned data ok: " + JSON.stringify(data));
 				deferred.resolve(data);
 			}).error(function(data) {
 				console.log("Returned data FAIL: " + JSON.stringify(data));
@@ -587,7 +331,6 @@ cg.factory('invokeDashboardWSServiceNS', function($http, $q) {
 cg.factory('invokeWSServiceProxy', function($http, $q) {
 	var getProxy = function(method, funcName, params, headers, data){
 		var deferred = $q.defer();
-		
 		//var url = 'http://localhost:8080/service.epu/';
 		//var urlWS = url + funcName;
 		var urlWS = funcName;
@@ -680,27 +423,6 @@ cg.factory('invokeWSServiceProxy', function($http, $q) {
 			});
 		}
 			
-		return deferred.promise;
-	};
-	return {getProxy : getProxy};
-});
-cg.factory('invokePdfServiceProxy', function($http, $q) {
-	var getProxy = function(method, funcName, params, headers, data){
-		var deferred = $q.defer();
-		
-		$http({
-			method : method,
-			url : funcName,
-			params : params,
-			headers : headers,
-			data : data
-		}).success(function(data) {
-			//console.log("Returned data ok: " + JSON.stringify(data));
-			deferred.resolve(data);
-		}).error(function(data) {
-			console.log("Returned data FAIL: " + JSON.stringify(data));
-			deferred.resolve(data);
-		});
 		return deferred.promise;
 	};
 	return {getProxy : getProxy};

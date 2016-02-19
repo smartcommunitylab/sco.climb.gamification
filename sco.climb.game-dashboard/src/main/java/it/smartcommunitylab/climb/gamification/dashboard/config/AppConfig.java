@@ -28,6 +28,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
@@ -43,6 +45,8 @@ import com.mongodb.MongoException;
 @ComponentScan("it.smartcommunitylab.climb.gamification.dashboard")
 @PropertySource("classpath:gamedashboard.properties")
 @EnableWebMvc
+@EnableAsync
+@EnableScheduling
 public class AppConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired

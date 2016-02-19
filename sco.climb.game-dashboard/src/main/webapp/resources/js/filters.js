@@ -146,6 +146,10 @@ angular.module('cgFilters', []).filter('truncate', function() {
 	return function(input){
 		return parseFloat(Math.round(input * 100) / 100).toFixed(2);
 	};
+}).filter('doubleToInt', function() {
+	return function(input){
+		return parseInt(Math.round(input));
+	};
 }).filter('euroVal', function() {
 	return function(input){
 		if(typeof input == "string"){

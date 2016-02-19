@@ -121,14 +121,12 @@ cg.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     };
                   		    
     $scope.getToken = function() {
-        return 'Bearer ' + sharedDataService.getToken();
+        return sharedDataService.getToken();
     };
                   		    
     $scope.authHeaders = {
-         'Authorization': $scope.getToken(),
+         'X-ACCESS-TOKEN': $scope.getToken(),
          'Accept': 'application/json;charset=UTF-8'
-        //json/json
-        //X-ACCESS-TOKEN L2MEq8WPbTAIT134
     };
     
     sharedDataService.setConfMapCenter(conf_map_center);
@@ -141,30 +139,27 @@ cg.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     $scope.getUserSurname = function(){
   	  return sharedDataService.getSurname();
     };
-    
-    $scope.getMail = function(){
-      return sharedDataService.getMail();
-    };
-    
-    $scope.setMail = function(value){
-    	sharedDataService.setMail(value);
-    };
-    
+
+    // Method getAllGames: used to retrieve all games list by the specific web service
     $scope.getAllGames = function(){
-    	/*http://localhost:8080/game-dashboard/api/game/TEST
-    	headers: 
-    	json/json
-    	X-ACCESS-TOKEN L2MEq8WPbTAIT134*/
+    	/*http://localhost:8080/game-dashboard/api/game/TEST*/
     	$scope.allGames = [];
     	var method = "GET";
     	var user = sharedDataService.getName();
-    	//var myDataPromise = invokeWSService.getProxy(method, "/game/" + user, null, $scope.authHeaders, null);
-		//myDataPromise.then(function(result){
-		//   angular.copy(result, $scope.allGames);
-		//});
-		//return myDataPromise;
-    	
-    	$scope.returnedFromService = [
+    	var myDataPromise = invokeWSService.getProxy(method, "/game/" + user, null, $scope.authHeaders, null);
+		myDataPromise.then(function(result){
+		   angular.copy(result, $scope.allGames);
+		   for(var i = 0; i < $scope.allGames.length; i++){
+			   var sharedGameId = sharedDataService.getGameId();
+			   if(sharedGameId != null){
+				   if($scope.allGames[i].gameId == sharedGameId){
+					   $scope.myGame = $scope.allGames[i];
+				   }
+			   }
+		   }
+		});
+		return myDataPromise;
+    	/*$scope.returnedFromService = [
     	     {
     	         "ownerId": "TEST",
     	         "objectId": "59be0c50-2c1b-4a4e-bf43-a1fbda964b3b",
@@ -210,8 +205,7 @@ cg.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     	    	}
     			$scope.allGames.push($scope.returnedFromService[i]);
     		}
-    	}
-    	
+    	}*/ 	
     };
     
     $scope.setSelectedGame = function(game){

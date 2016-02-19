@@ -16,9 +16,7 @@
 
 package it.smartcommunitylab.climb.gamification.dashboard.controller;
 import it.smartcommunitylab.climb.gamification.dashboard.common.Utils;
-import it.smartcommunitylab.climb.gamification.dashboard.security.DataSetDetails;
 import it.smartcommunitylab.climb.gamification.dashboard.security.DataSetInfo;
-import it.smartcommunitylab.climb.gamification.dashboard.storage.DataSetSetup;
 import it.smartcommunitylab.climb.gamification.dashboard.storage.RepositoryManager;
 import java.security.Principal;
 import java.util.List;
@@ -58,7 +56,11 @@ public class ConsoleController {
 	private String mapZoom;
 	
 	@Autowired
-	private ServletContext context;		
+	@Value("${dashboardws.url}")
+	private String dashboardWsUrl;
+	
+	@Autowired
+	private ServletContext context;
 	
 	@Autowired
 	private RepositoryManager storage;
@@ -105,7 +107,8 @@ public class ConsoleController {
 		model.addAttribute("token", token.getToken());
 		model.addAttribute("map_center", mapCenter);
 		model.addAttribute("map_zoom", mapZoom);
-		model.addAttribute("api", (token.getPaths() != null && token.getPaths().size() > 0) ? token.getPaths().get(0) : "");
+		//model.addAttribute("api", (token.getPaths() != null && token.getPaths().size() > 0) ? token.getPaths().get(0) : "");
+		model.addAttribute("api", dashboardWsUrl);
 		model.addAttribute("gname", name);
 		return new ModelAndView("console", model);
 	}

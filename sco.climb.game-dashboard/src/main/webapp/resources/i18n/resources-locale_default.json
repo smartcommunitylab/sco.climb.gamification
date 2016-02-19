@@ -60,7 +60,7 @@
     "description": "Testo messaggio errore se gioco non selezionato"
 }, {
     "key": "show_map_objects",
-    "value": "Mostra elementi in mappa",
+    "value": "Mostra percorso per classe",
     "description": "Titolo pannello gestione elementi in mappa"
 }, {
     "key": "polys_map_objects",
@@ -70,10 +70,6 @@
     "key": "legs_map_objects",
     "value": "TAPPE",
     "description": "Label elementi tappa in mappa"
-}, {
-    "key": "polys_map_objects",
-    "value": "PERCORSI",
-    "description": "Label elementi percorso in mappa"
 }, {
     "key": "label_leg_iw",
     "value": "Tappa",
@@ -95,11 +91,31 @@
     "value": "Punti",
     "description": "Label punti tappa attuale in info window marker su mappa"
 }, {
+    "key": "label_leg_scores_to_next_iw",
+    "value": "Punti alla prossima tappa",
+    "description": "Label punti mancanti alla prossima tappa in info window marker su mappa"
+}, {
+    "key": "label_leg_scores_to_end_iw",
+    "value": "Punti al traguardo",
+    "description": "Label punti mancanti all'ultima tappa in info window marker su mappa"
+}, {
     "key": "label_leg_link_iw",
     "value": "Visualizza link",
     "description": "Label link esterno tappa in info window marker su mappa"
 }, {
+    "key": "label_poly_iw",
+    "value": "Tratta",
+    "description": "Label titolo tratta in info window su mappa"
+}, {
     "key": "poly_length_label",
     "value": "Lunghezza",
     "description": "Label lunghezza tappa in info window su mappa"
+}, {
+    "key": "scool_class_label",
+    "value": "Classe",
+    "description": "Label per select classe in visualizza mappa"
+}, {
+    "key": "scool_class_select_placeholder",
+    "value": "Seleziona una classe",
+    "description": "Label per placeholder select classe in visualizza mappa"
 }]
