@@ -1,6 +1,6 @@
 <div class="row" ng-controller="ViewCtrlGmap" ng-init="initWs()">
 				<div class="col-md-9">
-					<map id="viewMap" class="angular-google-map-container" center="{{ mapOption.center }}" zoom="{{ mapOption.zoom }}" styles="{{ mapOption.styles }}">
+					<map id="viewMap" class="angular-google-map-container" center="{{ mapOption.center }}" zoom="{{ mapOption.zoom }}" styles="{{ mapOption.styles }}" disable-default-u-i="true" >
 						<marker ng-repeat="glm in mapGameLegMarkers" id="{{ glm.id }}" visible="{{ glm.options.visible }}" position="{{ glm.position }}" icon="{{ glm.icon }}" on-click="showInfoWindow(event, 'glm')" ><!-- icon="{{ pm.icon }}" -->
 							<info-window id="glm" visible-on-marker="{{ glm.id }}">
 						        <div ng-non-bindable="">
@@ -68,7 +68,7 @@
 					</map>
 				</div>
 				<div class="col-md-3">
-					<div class="panel panel-success">
+					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h5 class="panel-title">{{ 'show_map_objects' | i18n }}</h5>
 						</div>
@@ -97,5 +97,37 @@
 							</table>
 						</div>
 					</div>
+					<div class="panel panel-default" ng-if="myTeam">
+						<div class="panel-body">
+							<table>
+								<tr>
+									<td align="left" colspan="2"><strong>Stato Attuale</strong></td>
+								</tr>
+								<tr ng-if="myTeamBadges.length > 0">
+									<td align="left" colspan="2"><strong>Tappe raggiunte: </strong>
+										<div  ng-repeat="m in myTeamBadges track by $index">
+							        		<div class="col-md-12"><i class="glyphicon glyphicon-ok"></i> {{ m }}</div>
+							        	</div>
+									</td>
+								</tr>
+								<tr ng-if="myTeamBadges.length == 0">
+									<td><strong>Tappe raggiunte: </strong></td>
+									<td align="right">&nbsp;nessuna</td>
+								</tr>
+								<tr>
+									<td><strong>{{ 'label_leg_scores_iw' | i18n }}:</strong></td>
+							        <td align="right">&nbsp;{{ myTeam.score }}</td>
+								</tr>
+								<tr ng-if="myTeam.scoreToNext">
+									<td><strong>{{ 'label_leg_scores_to_next_iw' | i18n }}:</strong></td>
+							        <td align="right">&nbsp;{{ myTeam.scoreToNext }}</td>
+								</tr>
+							    <tr ng-if="myTeam.scoreToEnd > 0">
+							        <td><strong>{{ 'label_leg_scores_to_end_iw' | i18n }}:</strong></td>
+							        <td align="right">&nbsp;{{ myTeam.scoreToEnd }}</td>	
+							    </tr>
+							</table>
+						</div>
+					</div>	
 				</div>
 			</div>

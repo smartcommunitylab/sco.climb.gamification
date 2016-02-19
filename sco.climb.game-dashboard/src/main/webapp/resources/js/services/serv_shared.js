@@ -10,6 +10,7 @@ cg.service('sharedDataService', function(){
 	this.name = '';
 	this.surname = '';
 	this.gameId = '';
+	this.myGame = {};
 	this.token = '';
 	this.api_url = 'api/';
 	
@@ -129,6 +130,14 @@ cg.service('sharedDataService', function(){
 	
 	this.getGameId = function(){
 		return this.gameId;
+	};
+	
+	this.setMyGame = function(value){
+		this.myGame = value;
+	};
+	
+	this.getMyGame = function(){
+		return this.myGame;
 	};
 	
 	this.setToken = function(value){

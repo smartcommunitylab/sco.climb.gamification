@@ -1,4 +1,38 @@
-.navbar-inverse {
+.navbar-default {
+	background: #438699;
+	font-weight: bold;
+}
+.navbar-default .navbar-text {
+  		color: #ffffff;
+}
+.navbar-default .navbar-nav > li > a {
+  	color: #ffffff;
+}
+
+.navbar-default .navbar-nav > li > a:hover{
+	color: #d9e6ea;
+} 
+
+.navbar-default .navbar-nav > .disabled > a,
+.navbar-default .navbar-nav > .disabled > a:hover {
+	color: #8eb6c1;
+}
+
+.navbar-default .navbar-nav > .active > a, 
+.navbar-default .navbar-nav > .active > a:hover, 
+.navbar-default .navbar-nav > .active > a:focus {
+ 	color: #ffffff; /*#555555;*/
+  	background: #356b7a;
+}
+
+.panel-default > .panel-heading{
+	color: #ffffff;
+	background-color: #438699;
+	border-color: #438699;
+	background-image: none;
+}
+
+/* .navbar-inverse {
 	background-color: #639B3D;
 	border-color: #639B3D;
 }
@@ -22,7 +56,7 @@
 
 .navbar-inverse .navbar-nav>.active>a {
 	background-color: #639B3D;
-	/*color: black;*/
+	color: black;
 }
 .navbar-inverse .navbar-nav>.active>a:hover {
 	background-color: #639B3D;
@@ -45,7 +79,7 @@
 
 .navbar-inverse .navbar-nav>.open>a:focus {
 	background-color: #639B3D;
-}
+} */
 
 .dropdown-menu>.active>a {
 	background-color: #639B3D;

@@ -52,6 +52,7 @@ cg.controller('ViewCtrlGmap',['$scope', '$http', '$route', '$routeParams', '$roo
 		$scope.mapReady = false;
 		$scope.initPage();
 		var gameId = sharedDataService.getGameId();
+		$scope.myGame = sharedDataService.getMyGame();
 		$scope.getUserGameStatus(gameId, teamId);
 	};
 	
@@ -189,6 +190,7 @@ cg.controller('ViewCtrlGmap',['$scope', '$http', '$route', '$routeParams', '$roo
 			var polylines = gameState.legs;
 			var allTeams = gameState.teams;
 			var myTeam = $scope.getTeamFromId(allTeams, teamId);
+			$scope.myTeamBadges = myTeam.badges["Meano-FliessItinerary"];
 			var myLeg = null;
 			var isCurrLeg = true;
 			if(myTeam.currentLeg){
@@ -432,6 +434,7 @@ cg.controller('ViewCtrlGmap',['$scope', '$http', '$route', '$routeParams', '$roo
 			var polylines = gameState.legs;
 			var allTeams = gameState.teams;
 			var myTeam = $scope.getTeamFromId(allTeams, teamId);
+			$scope.myTeamBadges = myTeam.badges["Meano-FliessItinerary"];
 			var myLeg = null;
 			var isCurrLeg = true;
 			if(myTeam.currentLeg){

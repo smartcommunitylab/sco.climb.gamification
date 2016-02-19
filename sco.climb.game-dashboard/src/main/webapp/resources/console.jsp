@@ -60,19 +60,20 @@ var conf_api="<%=request.getAttribute("api")%>";
 <body>
 
 <div id="myBody" ng-controller="MainCtrl" ng-init="setItalianLanguage()">
-    <div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation"><!-- navbar-inverse -->
       <div class="container-fluid" style="margin-left:160px; margin-right:160px">
         <div class="collapse navbar-collapse">
 <!--           <div class="navbar-brand"><img src="imgs/logo.png"/></div> -->
           <ul class="nav navbar-nav">
 			<li class="{{ isHomeActive() }}"><a href="console/home" ng-click="setHomeActive()">HOME{{ 'menu_bar-home' | i18n }}</a></li>
-            <li class="disabled" ng-if="isMapLinkDisabled()"><a href>MAPPA{{ 'menu_bar-consolemap' | i18n }}</a></li>
+            <li class="disabled" ng-if="isMapLinkDisabled()"><a href>MAPPA</a></li>
             <li class="{{ isMapActive() }}" ng-if="!isMapLinkDisabled()"><a href="console/game/map" ng-click="setMapPageActive()">{{ 'menu_bar-consolemap' | i18n }}</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right" >
+      		<li class=""><a href ng-show="!isMapLinkDisabled()" >{{ returnSchoolName() }}</a></li>
           	<!-- <li class="{{ isActiveItaLang() }}"><a href ng-click="setItalianLanguage()">IT</a></li>
           	<li class="{{ isActiveEngLang() }}"><a href ng-click="setEnglishLanguage()">EN</a></li> -->
-            <li><a href="" ng-click="logout()" >Logout{{ 'menu_bar-logout' | i18n }}</a></li>
+            <li><a href="" ng-click="logout()" >LOGOUT{{ 'menu_bar-logout' | i18n }}</a></li>
           </ul>
         </div><!-- /.nav-collapse -->
       </div><!-- /.container -->
@@ -84,7 +85,7 @@ var conf_api="<%=request.getAttribute("api")%>";
 				<div class="panel panel-default" style="margin-top:100px;">
 			  		<div class="panel-body">
 			  			<div style="margin:5px 15px;">
-							<div ng-if="isHomeParkActive() != 'active'">
+							<div>
 								<div ng-view class="row" >{{ 'loading_text'| i18n }}...</div>
 							</div>
 						</div>

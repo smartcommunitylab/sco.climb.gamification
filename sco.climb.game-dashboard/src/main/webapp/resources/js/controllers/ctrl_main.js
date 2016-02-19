@@ -17,6 +17,8 @@ cg.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     if(conf_api != null && conf_api != ""){
     	sharedDataService.setApiUrl(conf_api);
     }
+    
+    $scope.myGame;
                   			
     // new elements for view
     $scope.currentView;
@@ -208,10 +210,14 @@ cg.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     	}*/ 	
     };
     
+    var schoolName = "";
+    
     $scope.setSelectedGame = function(game){
     	if(game != null){
+    		$scope.myGame = game;
     		sharedDataService.setGameId(game.gameId);
     		sharedDataService.setSelectedGame(true);
+    		sharedDataService.setMyGame($scope.myGame);
     	} else {
     		sharedDataService.setSelectedGame(false);
     	}
@@ -225,5 +231,11 @@ cg.controller('MainCtrl',['$scope', '$http', '$route', '$routeParams', '$rootSco
     	}
     };
     
+    $scope.returnSchoolName = function(){
+    	var gm = sharedDataService.getMyGame();
+    	if(gm.schoolName){
+    		return gm.schoolName.toUpperCase();
+    	}
+    };
          			
 }]);
