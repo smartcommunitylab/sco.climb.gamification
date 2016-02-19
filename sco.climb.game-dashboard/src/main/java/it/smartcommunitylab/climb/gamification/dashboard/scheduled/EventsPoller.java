@@ -71,6 +71,7 @@ public class EventsPoller {
 				
 				if (game.getFrom().compareTo(date) > 0 || game.getTo().compareTo(date) < 0) {
 					logger.info("Skipping game " + game.getGameId() + ", date out of range.");
+					continue;
 				}
 				
 				String ownerId = game.getOwnerId();

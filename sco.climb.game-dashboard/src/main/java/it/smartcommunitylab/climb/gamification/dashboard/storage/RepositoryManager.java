@@ -133,7 +133,7 @@ public class RepositoryManager {
 		if (gameDB == null) {
 			game.setCreationDate(now);
 			game.setLastUpdate(now);
-			game.setObjectId(generateObjectId(game));
+			game.setObjectId(generateObjectId());
 			game.setOwnerId(ownerId);
 			mongoTemplate.save(game);
 		} else if (canUpdate) {
@@ -160,7 +160,7 @@ public class RepositoryManager {
 		if (legDB == null) {
 			leg.setCreationDate(now);
 			leg.setLastUpdate(now);
-			leg.setObjectId(generateObjectId(leg));
+			leg.setObjectId(generateObjectId());
 			leg.setOwnerId(ownerId);
 			mongoTemplate.save(leg);
 		} else if (canUpdate) {
@@ -187,7 +187,7 @@ public class RepositoryManager {
 		if (playerDB == null) {
 			player.setCreationDate(now);
 			player.setLastUpdate(now);
-			player.setObjectId(generateObjectId(player));
+			player.setObjectId(generateObjectId());
 			player.setOwnerId(ownerId);
 			mongoTemplate.save(player);
 			return false;
@@ -211,7 +211,7 @@ public class RepositoryManager {
 		if (teamDB == null) {
 			team.setCreationDate(now);
 			team.setLastUpdate(now);
-			team.setObjectId(generateObjectId(team));
+			team.setObjectId(generateObjectId());
 			team.setOwnerId(ownerId);
 			mongoTemplate.save(team);
 			return false;
@@ -281,7 +281,7 @@ public class RepositoryManager {
 		return result;
 	}
 
-	private String generateObjectId(Object obj) {
+	private String generateObjectId() {
 		return UUID.randomUUID().toString();
 	}
 

@@ -77,6 +77,6 @@ public class PedibusItineraryLeg extends BaseObject implements Comparable<Pedibu
 	
 	@Override
 	public int compareTo(PedibusItineraryLeg o) {
-		return score - o.score;
+		return position - o.position;
 	}
 }

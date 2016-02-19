@@ -20,10 +20,12 @@ import it.smartcommunitylab.climb.gamification.dashboard.storage.RepositoryManag
 import it.smartcommunitylab.climb.gamification.dashboard.utils.HTTPUtils;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -263,12 +265,13 @@ public class GamificationController {
 	}
 
 	@RequestMapping(value = "/api/leg/{ownerId}", method = RequestMethod.POST)
-	public @ResponseBody void updatePedibusItineraryLeg(@PathVariable String ownerId, @RequestBody PedibusItineraryLeg leg, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody void createPedibusItineraryLeg(@PathVariable String ownerId, @RequestBody PedibusItineraryLeg leg, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 
 		try {
+			leg.setLegId(getUUID());
 			storage.savePedibusItineraryLeg(leg, ownerId, false);
 
 			if (logger.isInfoEnabled()) {
@@ -278,6 +281,32 @@ public class GamificationController {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
 		}
 	}
+	
+	@RequestMapping(value = "/api/legs/{ownerId}", method = RequestMethod.POST)
+	public @ResponseBody void createPedibusItineraryLeg(@PathVariable String ownerId, @RequestBody List<PedibusItineraryLeg> legs, @RequestParam(required = false) Boolean sum, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+
+		Collections.sort(legs);
+		int sumValue = 0;
+		try {
+			for (PedibusItineraryLeg leg: legs) {
+				leg.setLegId(getUUID());
+				if (sum != null && sum) {
+					sumValue += leg.getScore();
+					leg.setScore(sumValue);
+				}
+				storage.savePedibusItineraryLeg(leg, ownerId, false);
+			}
+
+			if (logger.isInfoEnabled()) {
+				logger.info("add pedibusItineraryLegs");
+			}
+		} catch (Exception e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
+		}
+	}	
 
 	@RequestMapping(value = "/api/leg/{ownerId}/{legId}", method = RequestMethod.GET)
 	public @ResponseBody PedibusItineraryLeg getPedibusItineraryLeg(@PathVariable String ownerId, @PathVariable String legId, HttpServletRequest request, HttpServletResponse response)
@@ -327,7 +356,8 @@ public class GamificationController {
 		try {
 			PedibusGame game = storage.getPedibusGame(ownerId, gameId);
 			List<PedibusItineraryLeg> legs = storage.getPedibusItineraryLegsByGameId(ownerId, gameId);
-
+			PedibusItineraryLeg lastLeg = Collections.max(legs);
+			
 			// players score
 			List<PedibusPlayer> players = storage.getPedibusPlayers(ownerId, gameId);
 
@@ -350,6 +380,11 @@ public class GamificationController {
 					}
 				}
 
+				if (team.getCurrentLeg() != null) {
+					team.setScoreToNext(team.getCurrentLeg().getScore() - team.getScore());
+				}
+				team.setScoreToEnd(lastLeg.getScore() - team.getScore());
+				
 			}
 
 			Map<String, Object> result = Maps.newTreeMap();
@@ -403,6 +438,10 @@ public class GamificationController {
 			ed.setData(data);
 
 			HTTPUtils.post(address, ed, null);
+			
+			if (logger.isInfoEnabled()) {
+				logger.info("increased player score");
+			}			
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
 		}
@@ -415,23 +454,32 @@ public class GamificationController {
 		PlayerStateDTO gamePlayer = mapper.readValue(result, PlayerStateDTO.class);
 
 		Set<?> pointConcept = (Set) gamePlayer.getState().get("PointConcept");
-		Iterator<?> it = pointConcept.iterator();
-		while (it.hasNext()) {
-			PointConcept pc = mapper.convertValue(it.next(), PointConcept.class);
-			if (pointsName.equals(pc.getName())) {
-				entity.setScore(pc.getScore());
+		
+		if (pointConcept != null) {
+			Iterator<?> it = pointConcept.iterator();
+			while (it.hasNext()) {
+				PointConcept pc = mapper.convertValue(it.next(), PointConcept.class);
+				if (pointsName.equals(pc.getName())) {
+					entity.setScore(pc.getScore());
+				}
 			}
 		}
 
 		Set<?> badgeCollectionConcept = (Set) gamePlayer.getState().get("BadgeCollectionConcept");
-		Map<String, Collection> badges = Maps.newTreeMap();
-		it = badgeCollectionConcept.iterator();
-		while (it.hasNext()) {
-			BadgeCollectionConcept bcc = mapper.convertValue(it.next(), BadgeCollectionConcept.class);
-			badges.put(bcc.getName(), bcc.getBadgeEarned());
+		if (badgeCollectionConcept != null) {
+			Map<String, Collection> badges = Maps.newTreeMap();
+			Iterator<?> it = badgeCollectionConcept.iterator();
+			while (it.hasNext()) {
+				BadgeCollectionConcept bcc = mapper.convertValue(it.next(), BadgeCollectionConcept.class);
+				badges.put(bcc.getName(), bcc.getBadgeEarned());
+			}
+			entity.setBadges(badges);
 		}
-		entity.setBadges(badges);
 
 	}
+	
+	public static String getUUID() {
+		return UUID.randomUUID().toString();
+	}	
 
 }
