@@ -5,7 +5,9 @@
 .navbar-default .navbar-text {
   		color: #ffffff;
 }
-.navbar-default .navbar-nav > li > a {
+.navbar-default .navbar-nav > li > a,
+.navbar-default .navbar-nav > li > a:visited,
+.navbar-default .navbar-nav > li > a:focus {
   	color: #ffffff;
 }
 
@@ -19,7 +21,9 @@
 }
 
 .navbar-default .navbar-nav > .active > a, 
+.navbar-default .navbar-nav > .active > a:link, 
 .navbar-default .navbar-nav > .active > a:hover, 
+.navbar-default .navbar-nav > .active > a:visited, 
 .navbar-default .navbar-nav > .active > a:focus {
  	color: #ffffff; /*#555555;*/
   	background: #356b7a;

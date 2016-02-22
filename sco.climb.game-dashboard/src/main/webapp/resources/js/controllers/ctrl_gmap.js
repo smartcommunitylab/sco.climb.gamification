@@ -21,10 +21,10 @@ cg.controller('ViewCtrlGmap',['$scope', '$http', '$route', '$routeParams', '$roo
 	
 	// Colors and Marker definitions
 	$scope.colorMissing = "#808080";
-	$scope.colorDone = "#4285F4";
+	$scope.colorDone = "#E53935";	//"#4285F4" - orange:"#F29100" - green: "#439981"
 	$scope.missingMarkerColor = "http://maps.google.com/mapfiles/kml/paddle/wht-circle-lv.png";//"http://maps.google.com/mapfiles/ms/icons/red-dot.png";
-	$scope.doneMarkerColor = "http://maps.google.com/mapfiles/kml/paddle/blu-circle-lv.png";//"http://maps.google.com/mapfiles/ms/icons/blue-dot.png";
-	$scope.actualMarkerColor = "http://maps.google.com/mapfiles/ms/icons/blue-dot.png";//"https://maps.gstatic.com/mapfiles/ms2/micons/ltblu-pushpin.png";
+	$scope.doneMarkerColor = "http://maps.google.com/mapfiles/kml/paddle/red-circle-lv.png";//"http://maps.google.com/mapfiles/ms/icons/blue-dot.png";
+	$scope.actualMarkerColor = "http://maps.google.com/mapfiles/ms/icons/red-dot.png";//"https://maps.gstatic.com/mapfiles/ms2/micons/ltblu-pushpin.png";
 	
 	// Map style: removed pois info, transport stops, naturals labels, road labels (highway and arterial)
 	$scope.mapOption = {
