@@ -23,28 +23,23 @@ var cg = angular.module('cg', [
 cg.config(['$routeProvider', '$locationProvider',
     function($routeProvider, $locationProvider) {
   	$routeProvider
-  		.when('/', {
-    		templateUrl: 'html/home.html',
+    	.when('/pedibus-game', {
+    		templateUrl: 'html/pedibus-game/home.html',
     		controller: 'MainCtrl',
     		controllerAs: 'main'
     	})
-    	.when('/console', {
-    		templateUrl: 'html/home.html',
+    	.when('/pedibus-game/home', {
+    		templateUrl: 'html/pedibus-game/home.html',
     		controller: 'MainCtrl',
     		controllerAs: 'main'
     	})
-    	.when('/console/home', {
-    		templateUrl: 'html/home.html',
-    		controller: 'MainCtrl',
-    		controllerAs: 'main'
-    	})
-    	.when('/console/game/map', {
-    		templateUrl: 'html/game_map.html',
+    	.when('/pedibus-game/map', {
+    		templateUrl: 'html/pedibus-game/game_map.html',
     		controller: 'ViewCtrlGmap',
     		controllerAs: 'view_ctrl_gmap'
     	})
     	.otherwise({
-    		redirectTo:'/'
+    		redirectTo:'/pedibus-game'
     	});
   			
   	$locationProvider.html5Mode({

@@ -130,7 +130,12 @@
 							        <td align="right">&nbsp;{{ myTeam.scoreToEnd }}</td>	
 							    </tr>
 							</table>
+							<p>
+								<button type="button" class="btn btn-primary" data-ng-click="setSelectedTeam(myTeam)">
+									<span class="glyphicon glyphicon-refresh"></span> {{ 'label_btn_refresh' | i18n }}
+								</button>
+							</p>
 						</div>
-					</div>	
+					</div>
 				</div>
 			</div>

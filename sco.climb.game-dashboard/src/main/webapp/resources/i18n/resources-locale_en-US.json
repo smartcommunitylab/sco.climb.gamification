@@ -122,4 +122,8 @@
     "key": "label_start_point_iw",
     "value": "Start point",
     "description": "Label per info window marker punto di partenza"
+}, {
+		"key": "label_btn_refresh",
+		"value": "Refresh",
+		"description": "Label pulsante refresh"
 }]
