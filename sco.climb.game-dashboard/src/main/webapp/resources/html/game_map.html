@@ -5,11 +5,14 @@
 							<info-window id="glm" visible-on-marker="{{ glm.id }}">
 						        <div ng-non-bindable="">
 						          	<div id="siteNotice"></div>
-						          	<h4 id="firstHeading" class="firstHeading">
+						          	<h4 id="firstHeading" class="firstHeading" ng-if="glm.data">
 						          		<span ng-if="!glm.isActualMarker">{{ 'label_leg_iw' | i18n }} {{ glm.data.position }}</span>
 						          		<span ng-if="glm.isActualMarker">{{ 'label_actual_state_iw' | i18n }}</span>
 						          	</h4>
-							        <div id="bodyContent">
+						          	<h4 id="firstHeading" class="firstHeading" ng-if="!glm.data">
+						          		<span>{{ 'label_start_point_iw' | i18n }}</span>
+						          	</h4>
+							        <div id="bodyContent" ng-if="glm.data">
 							        	<table>
 							        		<tr ng-if="!glm.isActualMarker">
 							        			<td><strong>{{ 'label_leg_name_iw' | i18n }}:</strong></td>

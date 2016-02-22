@@ -118,4 +118,8 @@
     "key": "scool_class_select_placeholder",
     "value": "Seleziona una classe",
     "description": "Label per placeholder select classe in visualizza mappa"
+}, {
+    "key": "label_start_point_iw",
+    "value": "Punto di partenza",
+    "description": "Label per info window marker punto di partenza"
 }]

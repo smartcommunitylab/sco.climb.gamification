@@ -25,6 +25,7 @@ cg.controller('ViewCtrlGmap',['$scope', '$http', '$route', '$routeParams', '$roo
 	$scope.missingMarkerColor = "http://maps.google.com/mapfiles/kml/paddle/wht-circle-lv.png";//"http://maps.google.com/mapfiles/ms/icons/red-dot.png";
 	$scope.doneMarkerColor = "http://maps.google.com/mapfiles/kml/paddle/red-circle-lv.png";//"http://maps.google.com/mapfiles/ms/icons/blue-dot.png";
 	$scope.actualMarkerColor = "http://maps.google.com/mapfiles/ms/icons/red-dot.png";//"https://maps.gstatic.com/mapfiles/ms2/micons/ltblu-pushpin.png";
+	$scope.firstMarker = "http://maps.google.com/mapfiles/kml/paddle/red-stars-lv.png"; //"http://maps.google.com/mapfiles/kml/pal4/icon53.png";
 	
 	// Map style: removed pois info, transport stops, naturals labels, road labels (highway and arterial)
 	$scope.mapOption = {
@@ -397,6 +398,29 @@ cg.controller('ViewCtrlGmap',['$scope', '$http', '$route', '$routeParams', '$roo
 						ret.showWindow = !ret.showWindow;
 					};
 					$scope.mapGameLegMarkers.push(ret);
+					if(i == 0 && myLeg.scores != 0){	// first marker (pos 0)
+						var pointArr = polyline.decode(polylines[i].polyline);
+						var firstMarker = {
+							id: i + "_f",
+							position: pointArr[0],	// first point
+							options: { 
+							    draggable: true,
+							    visible: true,
+							    map:null
+							},
+							data: null,
+							isActualMarker: true,
+							icon: $scope.firstMarker,
+							showWindow: false
+						};
+						firstMarker.closeClick = function () {
+							firstMarker.showWindow = false;
+						};
+						firstMarker.onClick = function () {
+							firstMarker.showWindow = !firstMarker.showWindow;
+						};
+						$scope.mapGameLegMarkers.push(firstMarker);
+					}
 				}
 			}
 			if(actualCoords && actualCoords.length > 0){
