@@ -60,7 +60,7 @@
     "description": "Testo messaggio errore se gioco non selezionato"
 }, {
     "key": "show_map_objects",
-    "value": "Mostra percorso per classe",
+    "value": "Mostra percorso per team",
     "description": "Titolo pannello gestione elementi in mappa"
 }, {
     "key": "polys_map_objects",
@@ -88,7 +88,7 @@
     "description": "Label descrizione tappa in info window marker su mappa"
 }, {
     "key": "label_leg_scores_iw",
-    "value": "Punti",
+    "value": "Passi",
     "description": "Label punti tappa attuale in info window marker su mappa"
 }, {
     "key": "label_leg_link_iw",
@@ -96,11 +96,11 @@
     "description": "Label link esterno tappa in info window marker su mappa"
 }, {
     "key": "label_leg_scores_to_next_iw",
-    "value": "Punti alla prossima tappa",
+    "value": "Passi alla prossima tappa",
     "description": "Label punti mancanti alla prossima tappa in info window marker su mappa"
 }, {
     "key": "label_leg_scores_to_end_iw",
-    "value": "Punti al traguardo",
+    "value": "Passi al traguardo",
     "description": "Label punti mancanti all'ultima tappa in info window marker su mappa"
 }, {
     "key": "label_poly_iw",
@@ -112,7 +112,7 @@
     "description": "Label lunghezza tappa in info window su mappa"
 }, {
     "key": "scool_class_label",
-    "value": "Classe",
+    "value": "Team",
     "description": "Label per select classe in visualizza mappa"
 }, {
     "key": "scool_class_select_placeholder",
