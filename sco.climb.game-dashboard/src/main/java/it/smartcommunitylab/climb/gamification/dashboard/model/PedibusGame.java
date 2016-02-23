@@ -17,6 +17,7 @@ public class PedibusGame extends BaseObject {
 	private Date from;
 	private Date to;
 	private String token;
+	private String globalTeam;
 	
 	public String getSchoolId() {
 		return schoolId;
@@ -77,5 +78,11 @@ public class PedibusGame extends BaseObject {
 	}
 	public void setToken(String token) {
 		this.token = token;
+	}
+	public String getGlobalTeam() {
+		return globalTeam;
+	}
+	public void setGlobalTeam(String globalTeam) {
+		this.globalTeam = globalTeam;
 	}
 }

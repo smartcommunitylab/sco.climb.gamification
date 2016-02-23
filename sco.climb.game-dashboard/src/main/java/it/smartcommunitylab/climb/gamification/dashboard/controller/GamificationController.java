@@ -93,6 +93,8 @@ public class GamificationController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 
+		List<String> allChildrenId = Lists.newArrayList();
+		
 		try {
 			String token = request.getHeader("X-ACCESS-TOKEN");
 
@@ -112,6 +114,7 @@ public class GamificationController {
 				for (Object c : children) {
 					Child child = mapper.convertValue(c, Child.class);
 					childrenId.add(child.getObjectId());
+					allChildrenId.add(child.getObjectId());
 
 					PedibusPlayer pp = new PedibusPlayer();
 					pp.setChildId(child.getObjectId());
@@ -144,8 +147,27 @@ public class GamificationController {
 				team.setPlayerId(classRoom);
 				team.setGameId(game.getGameId());
 
-				result = HTTPUtils.post(address, team, null);
+				HTTPUtils.post(address, team, null);
 			}
+			
+			if (game.getGlobalTeam() != null && !game.getGlobalTeam().isEmpty()) {
+				PedibusTeam pt = new PedibusTeam();
+				pt.setChildrenId(allChildrenId);
+				pt.setGameId(game.getGameId());
+				pt.setClassRoom(game.getGlobalTeam());
+				storage.savePedibusTeam(pt, ownerId, false);
+
+				String address = gamificationURL + "/console/game/" + game.getGameId() + "/team";
+				TeamDTO team = new TeamDTO();
+
+				team.setName(game.getGlobalTeam());
+				team.setMembers(allChildrenId);
+				team.setPlayerId(game.getGlobalTeam());
+				team.setGameId(game.getGameId());
+
+				HTTPUtils.post(address, team, null);
+			}
+			
 
 			if (logger.isInfoEnabled()) {
 				logger.info("add pedibusGame");
@@ -160,6 +182,8 @@ public class GamificationController {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
+		
+		List<String> allChildrenId = Lists.newArrayList();
 
 		try {
 			String token = request.getHeader("X-ACCESS-TOKEN");
@@ -180,6 +204,7 @@ public class GamificationController {
 				for (Object c : children) {
 					Child child = mapper.convertValue(c, Child.class);
 					childrenId.add(child.getObjectId());
+					allChildrenId.add(child.getObjectId());
 
 					PedibusPlayer pp = new PedibusPlayer();
 					pp.setChildId(child.getObjectId());
@@ -221,6 +246,26 @@ public class GamificationController {
 					result = HTTPUtils.post(address, childrenId, null);
 				}
 			}
+			
+			if (game.getGlobalTeam() != null && !game.getGlobalTeam().isEmpty()) {
+				PedibusTeam pt = new PedibusTeam();
+				pt.setChildrenId(allChildrenId);
+				pt.setGameId(game.getGameId());
+				pt.setClassRoom(game.getGlobalTeam());
+				boolean updated = storage.savePedibusTeam(pt, ownerId, true);
+
+				if (!updated) {
+					String address = gamificationURL + "/console/game/" + game.getGameId() + "/team";
+					TeamDTO team = new TeamDTO();
+
+					team.setName(game.getGlobalTeam());
+					team.setMembers(allChildrenId);
+					team.setPlayerId(game.getGlobalTeam());
+					team.setGameId(game.getGameId());
+
+					HTTPUtils.post(address, team, null);
+				}
+			}			
 
 			if (logger.isInfoEnabled()) {
 				logger.info("add pedibusGame");
