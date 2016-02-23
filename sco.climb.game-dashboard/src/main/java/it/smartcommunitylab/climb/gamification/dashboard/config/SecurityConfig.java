@@ -31,10 +31,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .csrf()
 			.disable()
 			.authorizeRequests()
-			.antMatchers("/", "/console/**", "/upload/**")
+			.antMatchers("/", "/console/**", "/upload/**", "/pedibus-game/**")
 			.authenticated()
 			.anyRequest()
 			.permitAll();
-		http.formLogin().loginPage("/login").permitAll().and().logout().permitAll();
+		http.formLogin().loginPage("/login").permitAll()
+		.and().logout().permitAll();
 	}
 }

@@ -79,7 +79,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	public ViewResolver getViewResolver() {
 		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
 		resolver.setPrefix("/resources/");
-		resolver.setSuffix(".html");
+		resolver.setSuffix(".jsp");
 		return resolver;
 	}
 
@@ -97,6 +97,8 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 				"/resources/js/");
 		registry.addResourceHandler("/lib/**").addResourceLocations(
 				"/resources/lib/");
+		registry.addResourceHandler("/i18n/**").addResourceLocations(
+				"/resources/i18n/");
 		registry.addResourceHandler("/templates/**").addResourceLocations(
 				"/resources/templates/");
 		registry.addResourceHandler("/html/**").addResourceLocations(

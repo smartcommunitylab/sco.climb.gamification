@@ -41,4 +41,8 @@
         <servlet-name>SpringAppDispatcher</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+    <error-page>
+    <error-code>404</error-code>
+    <location>/html/errors/error.html</location>
+  </error-page>
 </web-app>
