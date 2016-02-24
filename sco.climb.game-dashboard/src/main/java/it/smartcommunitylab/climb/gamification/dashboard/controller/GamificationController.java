@@ -19,6 +19,7 @@ import it.smartcommunitylab.climb.gamification.dashboard.storage.DataSetSetup;
 import it.smartcommunitylab.climb.gamification.dashboard.storage.RepositoryManager;
 import it.smartcommunitylab.climb.gamification.dashboard.utils.HTTPUtils;
 
+import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -556,7 +557,7 @@ public class GamificationController {
 	
 
 	private void updateGamificationData(Gamified entity, String gameId, String id) throws Exception {
-		String address = gamificationURL + "/gengine/state/" + gameId + "/" + id;
+		String address = gamificationURL + "/gengine/state/" + gameId + "/" + URLEncoder.encode(id, "UTF-8");
 		String result = HTTPUtils.get(address, null);
 
 		PlayerStateDTO gamePlayer = mapper.readValue(result, PlayerStateDTO.class);
