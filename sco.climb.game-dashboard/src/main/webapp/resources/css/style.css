@@ -1,3 +1,11 @@
+.status-row {
+	padding-top: 15px;
+}
+
+.row .form-group {
+	padding-top: 15px;
+}
+
 .navbar-default {
 	background: #438699;
 	font-weight: bold;

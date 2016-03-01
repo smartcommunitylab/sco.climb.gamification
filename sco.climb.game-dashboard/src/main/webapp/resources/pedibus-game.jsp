@@ -94,13 +94,13 @@ var conf_api="<%=request.getAttribute("api")%>";
 				</div>
 				<div class="col-md-1"></div>
 			</div>
-			<!-- <div class="row footer">
+			<div class="row footer">
 				<div class="col-md-12">
 					<footer class="footer">
-						<a href="http://www.streetlife-project.eu" target="_blank"><img src="img/STREETLIFE_logo.png" alt="{{ 'street_life_project' | i18n }}" title="{{ 'street_life_project' | i18n }}"></a>
+						<img src="img/CLIMB_logo.png" height="150px" alt="CLIMB" title="CLIMB">
 					</footer>
 				</div>
-			</div> -->
+			</div>
 		</div>
 	</div>
 </body>

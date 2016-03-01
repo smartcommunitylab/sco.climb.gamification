@@ -6,6 +6,9 @@ var cgControllers = angular.module('cgControllers');
 cg.controller('ViewCtrlGmap',['$scope', '$http', '$route', '$routeParams', '$rootScope', 'localize', 'sharedDataService', 'invokeWSService', '$timeout',
                       function($scope, $http, $route, $routeParams, $rootScope, localize, sharedDataService, invokeWSService, $timeout, $location, $filter) { 
 	
+	$scope.ok = false;
+	$scope.okMsg = "";
+	$scope.fScore;
 	$scope.$route = $route;
 	$scope.$routeParams = $routeParams;
 	var hidedLegsMarkers = [];
@@ -321,6 +324,27 @@ cg.controller('ViewCtrlGmap',['$scope', '$http', '$route', '$routeParams', '$roo
 		});
 		return myDataPromise;
 	};
+	
+	$scope.addScore = function() {
+		var method = "POST";
+		var user = sharedDataService.getName();
+		var params = {
+			'gameId' : '56b9ab76e4b057f358eb5b11',
+			'playerId' : 'd3356a44-1092-46b8-8342-39ff7fc39926',
+		};
+		params.score = $scope.fScore;
+		var myDataPromise = invokeWSService.getProxy(method, "/child/score/" + user, params, $scope.authHeaders, null);
+		myDataPromise.then(function(result){
+				console.log('addScore: ' + result);
+				$scope.ok = true;
+				$scope.okMsg = "Richiesta inviata";
+		});		
+	};
+	
+	$scope.resetOk = function() {
+		$scope.ok = false;
+		$scope.okMsg = "";
+	}
 	
 	// Method setSelectedTeam: used to select a specific team (school class) from all the available teams.
 	// This event refresh the element on map and recall the data from ws.

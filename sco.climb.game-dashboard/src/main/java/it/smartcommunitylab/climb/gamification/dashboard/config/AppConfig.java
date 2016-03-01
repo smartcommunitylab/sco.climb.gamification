@@ -105,6 +105,8 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 				"/resources/html/");
 		registry.addResourceHandler("/file/**").addResourceLocations(
 				"/resources/file/");
+		registry.addResourceHandler("/img/**").addResourceLocations(
+				"/resources/img/");
 	}
 
 	@Bean
