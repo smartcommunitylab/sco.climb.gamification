@@ -221,7 +221,8 @@ cg.controller('ViewCtrlGmap',['$scope', '$http', '$route', '$routeParams', '$roo
 						var lengthInMeters = $scope.sumAllDistances(pointArr) * 1000;
 						if(actual_completing > 0){
 							if(actual_completing < 1){	// case completing between 1% and 99%
-								var splittedSubPolys = $scope.retrievePercentagePoly(pointArr, actual_completing);
+								var proportionalLength = lengthInMeters * actual_completing;
+								var splittedSubPolys = $scope.retrievePercentagePoly(pointArr, actual_completing, proportionalLength);
 								for(var y = 0; y < splittedSubPolys.length; y++){
 									var partialPath = {
 										id: polylines[i].position + "_" + y,
@@ -515,10 +516,10 @@ cg.controller('ViewCtrlGmap',['$scope', '$http', '$route', '$routeParams', '$roo
 					if(polylines[i].position == actualPosition){
 						// Actual leg. I have to split them in 2 part considering the percentage
 						var actual_completing = (totalRange > 0) ? doneRange / totalRange : 0;		//0,8
-						//var proportionalLength = lengthInMeter * actual_completing;
+						var proportionalLength = lengthInMeters * actual_completing;
 						if(actual_completing > 0){
 							if(actual_completing < 1){	// case completing between 1% and 99%
-								var splittedSubPolys = $scope.retrievePercentagePoly(pointArr, actual_completing);
+								var splittedSubPolys = $scope.retrievePercentagePoly(pointArr, actual_completing, proportionalLength);
 								for(var y = 0; y < splittedSubPolys.length; y++){
 									var partialPath = {
 										id: polylines[i].position + "_" + y,
@@ -616,9 +617,35 @@ cg.controller('ViewCtrlGmap',['$scope', '$http', '$route', '$routeParams', '$roo
 	
 	// Method used to split a polyline in two polylines considering a percentage value.
 	// Now the percentage is related with the array elements number but we can consider the real distance in meters
-	$scope.retrievePercentagePoly = function(pointArr, percentage){
-		var splittedPolys = [];
-		if(percentage > 0){
+	$scope.retrievePercentagePoly = function(pointArr, percentage, proportionalLength){
+		var findSplitPoint = false;
+		var count = 1;
+		do {
+			var partialPoly = pointArr.slice(0, count);
+			var lengthInMeters = $scope.sumAllDistances(partialPoly) * 1000;
+			if(lengthInMeters > proportionalLength) {
+				findSplitPoint = true;
+			} else {
+				count++;
+			}
+		} while (!findSplitPoint);
+		if(count == pointArr.length) {
+			count--;
+		}
+		var previousPoint = pointArr[count-1];
+		var nextPoint = pointArr[count];
+		var deltaY = nextPoint[0] - previousPoint[0];
+		var deltaX = nextPoint[1] - previousPoint[1];
+		var newX = previousPoint[1] + (deltaX * percentage);
+		var newY = previousPoint[0] + (deltaY * percentage);
+		var newPoint = [newY, newX];
+		
+		var partialPoly1 = pointArr.slice(0, count);
+		partialPoly1.push(newPoint);
+		var partialPoly2 = pointArr.slice(count, pointArr.length);
+		partialPoly2.unshift(newPoint);
+		
+		/*if(percentage > 0){
 			var perc = Math.floor(percentage * pointArr.length);
 			if(perc <= 1)perc = 2;	// in case of too small value the system force the perc value to 2 (so the first splitted array has minimal 2 points)
 			var partialPoly1 = pointArr.slice(0, perc);
@@ -626,7 +653,9 @@ cg.controller('ViewCtrlGmap',['$scope', '$http', '$route', '$routeParams', '$roo
 		} else {
 			var partialPoly1 = [];
 			var partialPoly2 = pointArr;
-		}
+		}*/
+		
+		var splittedPolys = [];
 		splittedPolys.push(partialPoly1);
 		splittedPolys.push(partialPoly2);
 		return splittedPolys;
