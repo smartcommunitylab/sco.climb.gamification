@@ -45,6 +45,14 @@ public class EventsPoller {
 	private String gamificationURL;			
 	
 	@Autowired
+	@Value("${gamification.user}")
+	private String gamificationUser;
+
+	@Autowired
+	@Value("${gamification.password}")
+	private String gamificationPassword;
+	
+	@Autowired
 	@Value("${action.increase.name}")	
 	private String actionIncrease;	
 
@@ -105,7 +113,7 @@ public class EventsPoller {
 					
 					String address = eventstoreURL + "/api/event/" + ownerId + "?" + "routeId=" + routeId + "&dateFrom=" + from + "&dateTo=" + to;
 
-					String routeEvents = HTTPUtils.get(address, game.getToken());
+					String routeEvents = HTTPUtils.get(address, game.getToken(), null, null);
 
 					List<WsnEvent> eventsList = Lists.newArrayList();
 
@@ -118,7 +126,7 @@ public class EventsPoller {
 					if (!eventsList.isEmpty()) {
 						address = contextstoreURL + "/api/stop/" + ownerId + "/" + routeId;
 
-						String routeStops = HTTPUtils.get(address, game.getToken());
+						String routeStops = HTTPUtils.get(address, game.getToken(), null, null);
 
 						Map<String, Stop> stopsMap = Maps.newTreeMap();
 
@@ -149,7 +157,7 @@ public class EventsPoller {
 	private List<String> getRoutes(String schoolId, String ownerId, String token) throws Exception {
 		String address = contextstoreURL + "/api/route/" + ownerId + "/school/" + schoolId;
 
-		String result = HTTPUtils.get(address, token);
+		String result = HTTPUtils.get(address, token, null, null);
 
 		List<String> routesList = Lists.newArrayList();
 		ObjectMapper mapper = new ObjectMapper();
@@ -181,7 +189,7 @@ public class EventsPoller {
 			data.put(scoreName, childStatus.getScore());
 			ed.setData(data);
 			
-			HTTPUtils.post(address, ed, null);	
+			HTTPUtils.post(address, ed, null, gamificationUser, gamificationPassword);	
 		}
 	}
 	
