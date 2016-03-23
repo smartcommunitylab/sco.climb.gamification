@@ -58,9 +58,17 @@ public class GamificationController {
 	private String contextstoreURL;
 
 	@Autowired
+	@Value("${gamification.user}")
+	private String gamificationUser;
+
+	@Autowired
+	@Value("${gamification.password}")
+	private String gamificationPassword;
+	
+	@Autowired
 	@Value("${gamification.url}")
 	private String gamificationURL;
-
+	
 	@Autowired
 	@Value("${points.name}")
 	private String pointsName;
@@ -107,7 +115,7 @@ public class GamificationController {
 
 				String address = contextstoreURL + "/api/child/" + ownerId + "/" + game.getSchoolId() + "/classroom?classRoom=" + classRoom;
 
-				String result = HTTPUtils.get(address, token);
+				String result = HTTPUtils.get(address, token, null, null);
 
 				List<?> children = mapper.readValue(result, List.class);
 				List<String> childrenId = Lists.newArrayList();
@@ -132,7 +140,7 @@ public class GamificationController {
 					cd.put("surname", child.getSurname());
 					player.setCustomData(cd);
 
-					result = HTTPUtils.post(address, player, null);
+					result = HTTPUtils.post(address, player, null, gamificationUser, gamificationPassword);
 				}
 				PedibusTeam pt = new PedibusTeam();
 				pt.setChildrenId(childrenId);
@@ -148,7 +156,7 @@ public class GamificationController {
 				team.setPlayerId(classRoom);
 				team.setGameId(game.getGameId());
 
-				HTTPUtils.post(address, team, null);
+				HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
 			}
 			
 			if (game.getGlobalTeam() != null && !game.getGlobalTeam().isEmpty()) {
@@ -166,7 +174,7 @@ public class GamificationController {
 				team.setPlayerId(game.getGlobalTeam());
 				team.setGameId(game.getGameId());
 
-				HTTPUtils.post(address, team, null);
+				HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
 			}
 			
 
@@ -197,7 +205,7 @@ public class GamificationController {
 
 				String address = contextstoreURL + "/api/child/" + ownerId + "/" + game.getSchoolId() + "/classroom?classRoom=" + classRoom;
 
-				String result = HTTPUtils.get(address, token);
+				String result = HTTPUtils.get(address, token, null, null);
 
 				List<?> children = mapper.readValue(result, List.class);
 				List<String> childrenId = Lists.newArrayList();
@@ -223,7 +231,7 @@ public class GamificationController {
 						cd.put("surname", child.getSurname());
 						player.setCustomData(cd);
 
-						result = HTTPUtils.post(address, player, null);
+						result = HTTPUtils.post(address, player, null, gamificationUser, gamificationPassword);
 					}
 				}
 				PedibusTeam pt = new PedibusTeam();
@@ -241,10 +249,10 @@ public class GamificationController {
 					team.setPlayerId(classRoom);
 					team.setGameId(game.getGameId());
 
-					result = HTTPUtils.post(address, team, null);
+					result = HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
 				} else {
 					address = gamificationURL + "/console/game/" + game.getGameId() + "/team/" + classRoom + "/members";
-					result = HTTPUtils.post(address, childrenId, null);
+					result = HTTPUtils.post(address, childrenId, null, gamificationUser, gamificationPassword);
 				}
 			}
 			
@@ -264,7 +272,7 @@ public class GamificationController {
 					team.setPlayerId(game.getGlobalTeam());
 					team.setGameId(game.getGameId());
 
-					HTTPUtils.post(address, team, null);
+					HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
 				}
 			}			
 
@@ -487,7 +495,7 @@ public class GamificationController {
 			data.put(scoreName, score);
 			ed.setData(data);
 
-			HTTPUtils.post(address, ed, null);
+			HTTPUtils.post(address, ed, null, gamificationUser, gamificationPassword);
 			
 			if (logger.isInfoEnabled()) {
 				logger.info("increased player score");
@@ -552,13 +560,13 @@ public class GamificationController {
 		Map<String, Object> data = Maps.newTreeMap();
 		ed.setData(data);
 
-		HTTPUtils.post(address, ed, null);
+		HTTPUtils.post(address, ed, null, gamificationUser, gamificationPassword);
 	}
 	
 
 	private void updateGamificationData(Gamified entity, String gameId, String id) throws Exception {
 		String address = gamificationURL + "/gengine/state/" + gameId + "/" + URLEncoder.encode(id, "UTF-8");
-		String result = HTTPUtils.get(address, null);
+		String result = HTTPUtils.get(address, null, gamificationUser, gamificationPassword);
 
 		PlayerStateDTO gamePlayer = mapper.readValue(result, PlayerStateDTO.class);
 
