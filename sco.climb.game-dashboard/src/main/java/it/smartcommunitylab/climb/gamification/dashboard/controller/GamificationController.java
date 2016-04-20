@@ -140,7 +140,11 @@ public class GamificationController {
 					cd.put("surname", child.getSurname());
 					player.setCustomData(cd);
 
-					result = HTTPUtils.post(address, player, null, gamificationUser, gamificationPassword);
+					try {
+						HTTPUtils.post(address, player, null, gamificationUser, gamificationPassword);
+					} catch (Exception e) {
+						logger.info("Gamification engine player creation warning; " + e.getClass() + " " + e.getMessage());
+					}
 				}
 				PedibusTeam pt = new PedibusTeam();
 				pt.setChildrenId(childrenId);
@@ -156,7 +160,11 @@ public class GamificationController {
 				team.setPlayerId(classRoom);
 				team.setGameId(game.getGameId());
 
-				HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
+				try {
+					HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
+				} catch (Exception e) {
+					logger.info("Gamification engine team creation warning; " + e.getClass() + " " + e.getMessage());
+				}
 			}
 			
 			if (game.getGlobalTeam() != null && !game.getGlobalTeam().isEmpty()) {
@@ -174,7 +182,11 @@ public class GamificationController {
 				team.setPlayerId(game.getGlobalTeam());
 				team.setGameId(game.getGameId());
 
+				try {
 				HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
+				} catch (Exception e) {
+					logger.info("Gamification engine global team creation warning; " + e.getClass() + " " + e.getMessage());
+				}				
 			}
 			
 
