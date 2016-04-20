@@ -4,23 +4,35 @@ import it.smartcommunitylab.climb.contextstore.model.Stop;
 import it.smartcommunitylab.climb.gamification.dashboard.model.events.WsnEvent;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
 
 public class EventsProcessor {
 
 	private static final transient Logger logger = LoggerFactory.getLogger(EventsProcessor.class);
 	
-	private Map<String, Stop> stopsMap;
+//	private Map<String, Stop> stopsMap;
+	private Multimap<String, Stop> childStopsMap;
 
 	public EventsProcessor(Map<String, Stop> stopsMap) {
-		this.stopsMap = stopsMap;
+//		this.stopsMap = stopsMap;
+		childStopsMap = ArrayListMultimap.create();
+		
+		Collection<Stop> stops = stopsMap.values();
+		for (Stop stop: stops) {
+			for (String childId: stop.getPassengerList()) {
+				childStopsMap.put(childId, stop);
+			}
+		}
+		
+		
 	}
 
 	public Collection<ChildStatus> process(List<WsnEvent> events) {
@@ -30,7 +42,7 @@ public class EventsProcessor {
 		
 		for (WsnEvent event : events) {
 
-			Date timestamp = event.getTimestamp();
+//			Date timestamp = event.getTimestamp();
 			ChildStatus cs = null;
 
 			switch (event.getEventType()) {
@@ -118,12 +130,21 @@ public class EventsProcessor {
 	private double computeScore(ChildStatus childStatus) {
 		double score = 0;
 		if (childStatus.isArrived()) {
-			for (String stopId : childStatus.getStops()) {
-				Stop stop = stopsMap.get(stopId);
-				if (stop != null) {
+			if (childStopsMap.containsKey(childStatus.getChildId())) {
+				Collection<Stop> stops = childStopsMap.get(childStatus.getChildId());
+				for (Stop stop : stops) {
 					score += stop.getDistance();
 				}
+			} else {
+				logger.warn("ChildId " + childStatus.getChildId() + " not associated to any stop.");
 			}
+
+//			for (String stopId : childStatus.getStops()) {
+//				Stop stop = stopsMap.get(stopId);
+//				if (stop != null) {
+//					score += stop.getDistance();
+//				}
+//			}
 		}
 		childStatus.setScore(score);
 		return score;

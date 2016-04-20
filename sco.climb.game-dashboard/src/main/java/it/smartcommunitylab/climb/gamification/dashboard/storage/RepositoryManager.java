@@ -146,6 +146,9 @@ public class RepositoryManager {
 			update.set("gameOwner", game.getGameOwner());
 			update.set("from", game.getFrom());
 			update.set("to", game.getTo());
+			update.set("lastDaySeen", game.getLastDaySeen());
+			update.set("fromHour", game.getFromHour());
+			update.set("toHour", game.getToHour());
 			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);
 		} else {

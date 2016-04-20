@@ -19,6 +19,10 @@ public class PedibusGame extends BaseObject {
 	private String token;
 	private String globalTeam;
 	
+	private String fromHour;
+	private String toHour;
+	private String lastDaySeen;
+	
 	public String getSchoolId() {
 		return schoolId;
 	}
@@ -85,4 +89,23 @@ public class PedibusGame extends BaseObject {
 	public void setGlobalTeam(String globalTeam) {
 		this.globalTeam = globalTeam;
 	}
+	public String getFromHour() {
+		return fromHour;
+	}
+	public void setFromHour(String fromHour) {
+		this.fromHour = fromHour;
+	}
+	public String getToHour() {
+		return toHour;
+	}
+	public void setToHour(String toHour) {
+		this.toHour = toHour;
+	}
+	public String getLastDaySeen() {
+		return lastDaySeen;
+	}
+	public void setLastDaySeen(String lastDaySeen) {
+		this.lastDaySeen = lastDaySeen;
+	}
+
 }

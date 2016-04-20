@@ -65,6 +65,7 @@ public class EventsPoller {
 
 	private static final transient Logger logger = LoggerFactory.getLogger(EventsPoller.class);
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	private static final SimpleDateFormat shortSdf = new SimpleDateFormat("yyyy-MM-dd");
 
 //	@Scheduled(cron = "0 * * * * *")
 	public Map<String, Integer> pollEvents() throws Exception {
@@ -87,29 +88,39 @@ public class EventsPoller {
 				List<String> routesList = getRoutes(game.getSchoolId(), ownerId, game.getToken());
 
 				Calendar cal = new GregorianCalendar(TimeZone.getDefault());
-				cal.setTime(cal.getTime());
 
-				String to = sdf.format(date);
+				String from, to;
+				
+				if (game.getLastDaySeen() != null) {
+					cal.setTime(shortSdf.parse(game.getLastDaySeen()));
+					cal.add(Calendar.DAY_OF_YEAR, 1);
+				} else {
+					cal.setTime(cal.getTime());
+				}
+				game.setLastDaySeen(shortSdf.format(cal.getTime()));
+				
+				String h[];
+				
+//				h = (game.getFromHour() != null ? game.getFromHour() : "00:01").split(":");
+				h = game.getFromHour().split(":");
+				cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(h[0]));
+				cal.set(Calendar.MINUTE, Integer.parseInt(h[1]));
+				cal.set(Calendar.SECOND, 0);
+				cal.set(Calendar.MILLISECOND, 0);				
 
-				cal.set(Calendar.HOUR_OF_DAY, 0);
-				cal.set(Calendar.MINUTE, 0);
-				cal.set(Calendar.SECOND, 1);
-				cal.set(Calendar.MILLISECOND, 0);
+				from = sdf.format(cal.getTime()); 
 
-				String from = sdf.format(cal.getTime());
-
+//				h = (game.getToHour() != null ? game.getToHour() : "23:59").split(":");
+				h = game.getToHour().split(":");
+				cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(h[0]));
+				cal.set(Calendar.MINUTE, Integer.parseInt(h[1]));
+				
+				to = sdf.format(cal.getTime());
+				
 				ObjectMapper mapper = new ObjectMapper();
 
 				for (String routeId : routesList) {
 					logger.info("Reading route " + routeId + " events.");
-					
-					WsnEvent lastEvent = storage.getLastEvent(ownerId, routeId);
-					if (lastEvent != null) {
-						Date lastDate = lastEvent.getTimestamp();
-						cal.setTime(lastDate);
-						cal.add(Calendar.SECOND, 1);
-						from = sdf.format(cal.getTime());
-					}
 					
 					String address = eventstoreURL + "/api/event/" + ownerId + "?" + "routeId=" + routeId + "&dateFrom=" + from + "&dateTo=" + to;
 
@@ -150,7 +161,9 @@ public class EventsPoller {
 						logger.info("No recent events for route " + routeId);
 					}
 				}
+				storage.savePedibusGame(game, ownerId, true);				
 			}
+
 			return results;
 	}
 	
