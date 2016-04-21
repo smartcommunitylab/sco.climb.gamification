@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -67,104 +68,112 @@ public class EventsPoller {
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	private static final SimpleDateFormat shortSdf = new SimpleDateFormat("yyyy-MM-dd");
 
-//	@Scheduled(cron = "0 * * * * *")
-	public Map<String, Integer> pollEvents() throws Exception {
+	
+	@Scheduled(cron = "0 0 12 * * *") // second, minute, hour, day, month, weekday
+	public void scheduledPollEvents() throws Exception {
+		pollEvents(true);
+	}
+	
+	public Map<String, Integer> pollEvents(boolean checkDate) throws Exception {
 		Map<String, Integer> results = Maps.newTreeMap();
 
-			List<PedibusGame> games = storage.getPedibusGames();
-			for (PedibusGame game : games) {
-				logger.info("Reading game " + game.getGameId() + " events.");
-				
+		List<PedibusGame> games = storage.getPedibusGames();
+		for (PedibusGame game : games) {
+			logger.info("Reading game " + game.getGameId() + " events.");
 
-				Date date = new Date();
-				
-				/*if (game.getFrom().compareTo(date) > 0 || game.getTo().compareTo(date) < 0) {
+			Date date = new Date();
+
+			if (checkDate) {
+				if (game.getFrom().compareTo(date) > 0 || game.getTo().compareTo(date) < 0) {
 					logger.info("Skipping game " + game.getGameId() + ", date out of range.");
 					continue;
-				}*/
-				
-				String ownerId = game.getOwnerId();
-
-				List<String> routesList = getRoutes(game.getSchoolId(), ownerId, game.getToken());
-
-				Calendar cal = new GregorianCalendar(TimeZone.getDefault());
-
-				String from, to;
-				
-				if (game.getLastDaySeen() != null) {
-					cal.setTime(shortSdf.parse(game.getLastDaySeen()));
-					cal.add(Calendar.DAY_OF_YEAR, 1);
-				} else {
-					cal.setTime(cal.getTime());
 				}
-				game.setLastDaySeen(shortSdf.format(cal.getTime()));
-				
-				String h[];
-				
-//				h = (game.getFromHour() != null ? game.getFromHour() : "00:01").split(":");
-				h = game.getFromHour().split(":");
-				cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(h[0]));
-				cal.set(Calendar.MINUTE, Integer.parseInt(h[1]));
-				cal.set(Calendar.SECOND, 0);
-				cal.set(Calendar.MILLISECOND, 0);				
-
-				from = sdf.format(cal.getTime()); 
-
-//				h = (game.getToHour() != null ? game.getToHour() : "23:59").split(":");
-				h = game.getToHour().split(":");
-				cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(h[0]));
-				cal.set(Calendar.MINUTE, Integer.parseInt(h[1]));
-				
-				to = sdf.format(cal.getTime());
-				
-				ObjectMapper mapper = new ObjectMapper();
-
-				for (String routeId : routesList) {
-					logger.info("Reading route " + routeId + " events.");
-					
-					String address = eventstoreURL + "/api/event/" + ownerId + "?" + "routeId=" + routeId + "&dateFrom=" + from + "&dateTo=" + to;
-
-					String routeEvents = HTTPUtils.get(address, game.getToken(), null, null);
-
-					List<WsnEvent> eventsList = Lists.newArrayList();
-
-					List<?> events = mapper.readValue(routeEvents, List.class);
-					
-					for (Object e : events) {
-						WsnEvent event = mapper.convertValue(e, WsnEvent.class);
-						eventsList.add(event);
-					}
-					if (!eventsList.isEmpty()) {
-						address = contextstoreURL + "/api/stop/" + ownerId + "/" + routeId;
-
-						String routeStops = HTTPUtils.get(address, game.getToken(), null, null);
-
-						Map<String, Stop> stopsMap = Maps.newTreeMap();
-
-						List<?> stops = mapper.readValue(routeStops, List.class);
-						for (Object e : stops) {
-							Stop stop = mapper.convertValue(e, Stop.class);
-							stopsMap.put(stop.getObjectId(), stop);
-						}
-
-						logger.info("Computing scores for route " + routeId);
-						EventsProcessor ep = new EventsProcessor(stopsMap);
-						Collection<ChildStatus> result = ep.process(eventsList);
-
-						sendScores(result, ownerId, game.getGameId());
-
-						results.put(routeId, eventsList.size());
-						storage.saveLastEvent(Collections.max(eventsList));
-						logger.info("Computed scores for route " + routeId + " = " + result);
-					} else {
-						results.put(routeId, -1);
-						logger.info("No recent events for route " + routeId);
-					}
-				}
-				storage.savePedibusGame(game, ownerId, true);				
 			}
 
-			return results;
+			String ownerId = game.getOwnerId();
+
+			List<String> routesList = getRoutes(game.getSchoolId(), ownerId, game.getToken());
+
+			Calendar cal = new GregorianCalendar(TimeZone.getDefault());
+
+			String from, to;
+
+			if (game.getLastDaySeen() != null) {
+				cal.setTime(shortSdf.parse(game.getLastDaySeen()));
+				cal.add(Calendar.DAY_OF_YEAR, 1);
+			} else {
+				cal.setTime(cal.getTime());
+			}
+			game.setLastDaySeen(shortSdf.format(cal.getTime()));
+
+			String h[];
+
+			// h = (game.getFromHour() != null ? game.getFromHour() :
+			// "00:01").split(":");
+			h = game.getFromHour().split(":");
+			cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(h[0]));
+			cal.set(Calendar.MINUTE, Integer.parseInt(h[1]));
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+
+			from = sdf.format(cal.getTime());
+
+			// h = (game.getToHour() != null ? game.getToHour() :
+			// "23:59").split(":");
+			h = game.getToHour().split(":");
+			cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(h[0]));
+			cal.set(Calendar.MINUTE, Integer.parseInt(h[1]));
+
+			to = sdf.format(cal.getTime());
+
+			ObjectMapper mapper = new ObjectMapper();
+
+			for (String routeId : routesList) {
+				logger.info("Reading route " + routeId + " events.");
+
+				String address = eventstoreURL + "/api/event/" + ownerId + "?" + "routeId=" + routeId + "&dateFrom=" + from + "&dateTo=" + to;
+
+				String routeEvents = HTTPUtils.get(address, game.getToken(), null, null);
+
+				List<WsnEvent> eventsList = Lists.newArrayList();
+
+				List<?> events = mapper.readValue(routeEvents, List.class);
+
+				for (Object e : events) {
+					WsnEvent event = mapper.convertValue(e, WsnEvent.class);
+					eventsList.add(event);
+				}
+				if (!eventsList.isEmpty()) {
+					address = contextstoreURL + "/api/stop/" + ownerId + "/" + routeId;
+
+					String routeStops = HTTPUtils.get(address, game.getToken(), null, null);
+
+					Map<String, Stop> stopsMap = Maps.newTreeMap();
+
+					List<?> stops = mapper.readValue(routeStops, List.class);
+					for (Object e : stops) {
+						Stop stop = mapper.convertValue(e, Stop.class);
+						stopsMap.put(stop.getObjectId(), stop);
+					}
+
+					logger.info("Computing scores for route " + routeId);
+					EventsProcessor ep = new EventsProcessor(stopsMap);
+					Collection<ChildStatus> result = ep.process(eventsList);
+
+//					sendScores(result, ownerId, game.getGameId());
+
+					results.put(routeId, eventsList.size());
+					storage.saveLastEvent(Collections.max(eventsList));
+					logger.info("Computed scores for route " + routeId + " = " + result);
+				} else {
+					results.put(routeId, -1);
+					logger.info("No recent events for route " + routeId);
+				}
+			}
+			storage.savePedibusGame(game, ownerId, true);
+		}
+
+		return results;
 	}
 	
 	private List<String> getRoutes(String schoolId, String ownerId, String token) throws Exception {

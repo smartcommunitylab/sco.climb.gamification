@@ -481,7 +481,7 @@ public class GamificationController {
 		}
 
 		try {
-			return eventsPoller.pollEvents();
+			return eventsPoller.pollEvents(false);
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
 			return null;
