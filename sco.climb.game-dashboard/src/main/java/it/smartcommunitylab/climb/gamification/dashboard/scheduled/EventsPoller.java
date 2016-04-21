@@ -160,7 +160,7 @@ public class EventsPoller {
 					EventsProcessor ep = new EventsProcessor(stopsMap);
 					Collection<ChildStatus> result = ep.process(eventsList);
 
-//					sendScores(result, ownerId, game.getGameId());
+					sendScores(result, ownerId, game.getGameId());
 
 					results.put(routeId, eventsList.size());
 					storage.saveLastEvent(Collections.max(eventsList));
