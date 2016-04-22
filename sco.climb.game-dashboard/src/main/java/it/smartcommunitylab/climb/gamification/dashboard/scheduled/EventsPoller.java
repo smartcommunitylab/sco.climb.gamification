@@ -69,7 +69,7 @@ public class EventsPoller {
 	private static final SimpleDateFormat shortSdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	
-	@Scheduled(cron = "0 0 12 * * *") // second, minute, hour, day, month, weekday
+	@Scheduled(cron = "0 0 9 * * *") // second, minute, hour, day, month, weekday
 	public void scheduledPollEvents() throws Exception {
 		pollEvents(true);
 	}
