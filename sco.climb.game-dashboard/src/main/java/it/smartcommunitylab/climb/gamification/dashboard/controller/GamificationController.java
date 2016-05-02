@@ -303,7 +303,7 @@ public class GamificationController {
 						logger.info("Gamification engine global team creation warning: " + e.getClass() + " " + e.getMessage());
 					}	
 				} else {
-					String address = gamificationURL + "/console/game/" + game.getGameId() + "/team/" + game.getGlobalTeam() + "/members";
+					String address = gamificationURL + "/console/game/" + game.getGameId() + "/team/" + URLEncoder.encode(game.getGlobalTeam(), "UTF-8") + "/members";
 					try {
 						HTTPUtils.post(address, allChildrenId, null, gamificationUser, gamificationPassword);
 					} catch (Exception e) {
