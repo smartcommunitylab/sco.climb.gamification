@@ -140,7 +140,7 @@ public class RepositoryManager {
 			Update update = new Update();
 			update.set("schoolId", game.getSchoolId());
 			update.set("schoolName", game.getSchoolName());
-			update.set("classRoom", game.getClassRooms());
+			update.set("classRooms", game.getClassRooms());
 			update.set("gameName", game.getGameName());
 			update.set("gameDescription", game.getGameDescription());
 			update.set("gameOwner", game.getGameOwner());
