@@ -143,7 +143,7 @@ public class GamificationController {
 					try {
 						HTTPUtils.post(address, player, null, gamificationUser, gamificationPassword);
 					} catch (Exception e) {
-						logger.info("Gamification engine player creation warning; " + e.getClass() + " " + e.getMessage());
+						logger.info("Gamification engine player creation warning: " + e.getClass() + " " + e.getMessage());
 					}
 				}
 				PedibusTeam pt = new PedibusTeam();
@@ -163,7 +163,7 @@ public class GamificationController {
 				try {
 					HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
 				} catch (Exception e) {
-					logger.info("Gamification engine team creation warning; " + e.getClass() + " " + e.getMessage());
+					logger.info("Gamification engine team creation warning: " + e.getClass() + " " + e.getMessage());
 				}
 			}
 			
@@ -185,7 +185,7 @@ public class GamificationController {
 				try {
 				HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
 				} catch (Exception e) {
-					logger.info("Gamification engine global team creation warning; " + e.getClass() + " " + e.getMessage());
+					logger.info("Gamification engine global team creation warning: " + e.getClass() + " " + e.getMessage());
 				}				
 			}
 			
@@ -243,7 +243,11 @@ public class GamificationController {
 						cd.put("surname", child.getSurname());
 						player.setCustomData(cd);
 
-						result = HTTPUtils.post(address, player, null, gamificationUser, gamificationPassword);
+						try {
+							HTTPUtils.post(address, player, null, gamificationUser, gamificationPassword);
+						} catch (Exception e) {
+							logger.info("Gamification engine player creation warning: " + e.getClass() + " " + e.getMessage());
+						}						
 					}
 				}
 				PedibusTeam pt = new PedibusTeam();
@@ -261,10 +265,19 @@ public class GamificationController {
 					team.setPlayerId(classRoom);
 					team.setGameId(game.getGameId());
 
-					result = HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
+					try {
+						HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
+					} catch (Exception e) {
+						logger.info("Gamification engine team creation warning: " + e.getClass() + " " + e.getMessage());
+					}					
+					
 				} else {
 					address = gamificationURL + "/console/game/" + game.getGameId() + "/team/" + classRoom + "/members";
-					result = HTTPUtils.post(address, childrenId, null, gamificationUser, gamificationPassword);
+					try {
+						HTTPUtils.post(address, childrenId, null, gamificationUser, gamificationPassword);
+					} catch (Exception e) {
+						logger.info("Gamification engine team update warning: " + e.getClass() + " " + e.getMessage());
+					}					
 				}
 			}
 			
@@ -284,12 +297,23 @@ public class GamificationController {
 					team.setPlayerId(game.getGlobalTeam());
 					team.setGameId(game.getGameId());
 
-					HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
+					try {
+						HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
+					} catch (Exception e) {
+						logger.info("Gamification engine global team creation warning: " + e.getClass() + " " + e.getMessage());
+					}	
+				} else {
+					String address = gamificationURL + "/console/game/" + game.getGameId() + "/team/" + game.getGlobalTeam() + "/members";
+					try {
+						HTTPUtils.post(address, allChildrenId, null, gamificationUser, gamificationPassword);
+					} catch (Exception e) {
+						logger.info("Gamification engine global team update warning: " + e.getClass() + " " + e.getMessage());
+					}					
 				}
 			}			
 
 			if (logger.isInfoEnabled()) {
-				logger.info("add pedibusGame");
+				logger.info("update pedibusGame");
 			}
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
