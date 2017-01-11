@@ -1,6 +1,7 @@
 package it.smartcommunitylab.climb.gamification.dashboard.controller;
 
 import it.smartcommunitylab.climb.contextstore.model.Child;
+import it.smartcommunitylab.climb.gamification.dashboard.common.Const;
 import it.smartcommunitylab.climb.gamification.dashboard.common.Utils;
 import it.smartcommunitylab.climb.gamification.dashboard.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.gamification.dashboard.model.Gamified;
@@ -8,12 +9,12 @@ import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusGame;
 import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusItineraryLeg;
 import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusPlayer;
 import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusTeam;
-import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.BadgeCollectionConcept;
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.CustomData;
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.ExecutionDataDTO;
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.PlayerStateDTO;
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.PointConcept;
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.TeamDTO;
+import it.smartcommunitylab.climb.gamification.dashboard.scheduled.ChildStatus;
 import it.smartcommunitylab.climb.gamification.dashboard.scheduled.EventsPoller;
 import it.smartcommunitylab.climb.gamification.dashboard.storage.DataSetSetup;
 import it.smartcommunitylab.climb.gamification.dashboard.storage.RepositoryManager;
@@ -22,6 +23,7 @@ import it.smartcommunitylab.climb.gamification.dashboard.utils.HTTPUtils;
 import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -129,6 +131,9 @@ public class GamificationController {
 					pp.setChildId(child.getObjectId());
 					pp.setWsnId(child.getWsnId());
 					pp.setGameId(game.getGameId());
+					pp.setName(child.getName());
+					pp.setSurname(child.getSurname());
+					pp.setClassRoom(child.getClassRoom());
 					storage.savePedibusPlayer(pp, ownerId, false);
 
 					address = gamificationURL + "/console/game/" + game.getGameId() + "/player";
@@ -442,22 +447,26 @@ public class GamificationController {
 	}
 
 	@RequestMapping(value = "/api/game/status/{ownerId}/{gameId}", method = RequestMethod.GET)
-	public @ResponseBody Map<String, Object> getGameStatus(@PathVariable String ownerId, @PathVariable String gameId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody Map<String, Object> getGameStatus(@PathVariable String ownerId, @PathVariable String gameId, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 
 		try {
 			PedibusGame game = storage.getPedibusGame(ownerId, gameId);
+			game.setToken("*****");
 			List<PedibusItineraryLeg> legs = storage.getPedibusItineraryLegsByGameId(ownerId, gameId);
 			PedibusItineraryLeg lastLeg = Collections.max(legs);
 			
 			// players score
+			/**
 			List<PedibusPlayer> players = storage.getPedibusPlayers(ownerId, gameId);
 
 			for (PedibusPlayer player : players) {
 				updateGamificationData(player, gameId, player.getChildId());
 			}
+			**/
 
 			// teams score
 			List<PedibusTeam> teams = storage.getPedibusTeams(ownerId, gameId);
@@ -484,7 +493,7 @@ public class GamificationController {
 			Map<String, Object> result = Maps.newTreeMap();
 			result.put("game", game);
 			result.put("legs", legs);
-			result.put("players", players);
+			//result.put("players", players);
 			result.put("teams", teams);
 
 			if (logger.isInfoEnabled()) {
@@ -498,14 +507,20 @@ public class GamificationController {
 		}
 	}
 
-	@RequestMapping(value = "/api/game/events/{ownerId}", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Integer> pollEvents(@PathVariable String ownerId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@RequestMapping(value = "/api/game/events/{ownerId}/{gameId}", method = RequestMethod.GET)
+	public @ResponseBody Map<String, Collection<ChildStatus>> pollEvents(@PathVariable String ownerId, @PathVariable String gameId, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-
 		try {
-			return eventsPoller.pollEvents(false);
+			Map<String, Collection<ChildStatus>> childrenStatusMap = eventsPoller.pollGameEvents(ownerId, gameId, false);
+			for(Collection<ChildStatus> childrenStatus : childrenStatusMap.values()) {
+				eventsPoller.sendScores(childrenStatus, gameId);
+			}
+			//update Calendar
+			eventsPoller.updateCalendarDayFromPedibus(ownerId, gameId, childrenStatusMap);
+			return childrenStatusMap;
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
 			return null;
@@ -513,7 +528,8 @@ public class GamificationController {
 	}
 
 	@RequestMapping(value = "/api/child/score/{ownerId}", method = RequestMethod.POST)
-	public @ResponseBody void increaseChildScore(@PathVariable String ownerId, @RequestParam String gameId, @RequestParam String playerId, @RequestParam Double score, HttpServletRequest request,
+	public @ResponseBody void increaseChildScore(@PathVariable String ownerId, @RequestParam String gameId, 
+			@RequestParam String playerId, @RequestParam Double score, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -534,7 +550,7 @@ public class GamificationController {
 			HTTPUtils.post(address, ed, null, gamificationUser, gamificationPassword);
 			
 			if (logger.isInfoEnabled()) {
-				logger.info("increased player score");
+				logger.info(String.format("increased game[%s] player[%s] score[%s]", gameId, playerId, score));
 			}			
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
@@ -605,7 +621,9 @@ public class GamificationController {
 		String result = HTTPUtils.get(address, null, gamificationUser, gamificationPassword);
 
 		PlayerStateDTO gamePlayer = mapper.readValue(result, PlayerStateDTO.class);
-
+		
+		entity.setGameStatus(gamePlayer);
+		
 		Set<?> pointConcept = (Set) gamePlayer.getState().get("PointConcept");
 		
 		if (pointConcept != null) {
@@ -618,6 +636,7 @@ public class GamificationController {
 			}
 		}
 
+		/**
 		Set<?> badgeCollectionConcept = (Set) gamePlayer.getState().get("BadgeCollectionConcept");
 		if (badgeCollectionConcept != null) {
 			Map<String, Collection> badges = Maps.newTreeMap();
@@ -628,6 +647,7 @@ public class GamificationController {
 			}
 			entity.setBadges(badges);
 		}
+		**/
 
 	}
 	

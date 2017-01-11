@@ -2,6 +2,7 @@ package it.smartcommunitylab.climb.gamification.dashboard.scheduled;
 
 import it.smartcommunitylab.climb.contextstore.model.Route;
 import it.smartcommunitylab.climb.contextstore.model.Stop;
+import it.smartcommunitylab.climb.gamification.dashboard.common.Const;
 import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusGame;
 import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusPlayer;
 import it.smartcommunitylab.climb.gamification.dashboard.model.events.WsnEvent;
@@ -9,12 +10,13 @@ import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.Exec
 import it.smartcommunitylab.climb.gamification.dashboard.storage.RepositoryManager;
 import it.smartcommunitylab.climb.gamification.dashboard.utils.HTTPUtils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -23,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -69,29 +70,37 @@ public class EventsPoller {
 	private static final SimpleDateFormat shortSdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	
-	@Scheduled(cron = "0 0 9 * * *") // second, minute, hour, day, month, weekday
+	//@Scheduled(cron = "0 0 9 * * *") // second, minute, hour, day, month, weekday
 	public void scheduledPollEvents() throws Exception {
 		pollEvents(true);
 	}
 	
-	public Map<String, Integer> pollEvents(boolean checkDate) throws Exception {
-		Map<String, Integer> results = Maps.newTreeMap();
-
+	public Map<String, Collection<ChildStatus>> pollEvents(boolean checkDate) throws Exception {
+		Map<String, Collection<ChildStatus>> results = Maps.newTreeMap();
 		List<PedibusGame> games = storage.getPedibusGames();
 		for (PedibusGame game : games) {
 			logger.info("Reading game " + game.getGameId() + " events.");
-
+			Map<String, Collection<ChildStatus>> childrenStatusMap = pollGameEvents(game.getOwnerId(), game.getGameId(), checkDate);
+			for(Collection<ChildStatus> childrenStatus : childrenStatusMap.values()) {
+				sendScores(childrenStatus, game.getGameId());
+			}
+			results.putAll(childrenStatusMap);
+		}
+		return results;
+	}
+	
+	public Map<String, Collection<ChildStatus>> pollGameEvents(String ownerId, String gameId, 
+			boolean checkDate) throws Exception {
+		Map<String, Collection<ChildStatus>> results = Maps.newTreeMap();
+		PedibusGame game = storage.getPedibusGame(ownerId, gameId);
+		if(game != null) {
 			Date date = new Date();
-
-			if (checkDate) {
-				if (game.getFrom().compareTo(date) > 0 || game.getTo().compareTo(date) < 0) {
+			if(checkDate) {
+				if(game.getFrom().compareTo(date) > 0 || game.getTo().compareTo(date) < 0) {
 					logger.info("Skipping game " + game.getGameId() + ", date out of range.");
-					continue;
+					return results;
 				}
 			}
-
-			String ownerId = game.getOwnerId();
-
 			List<String> routesList = getRoutes(game.getSchoolId(), ownerId, game.getToken());
 
 			Calendar cal = new GregorianCalendar(TimeZone.getDefault());
@@ -127,7 +136,7 @@ public class EventsPoller {
 			to = sdf.format(cal.getTime());
 
 			ObjectMapper mapper = new ObjectMapper();
-
+			
 			for (String routeId : routesList) {
 				logger.info("Reading route " + routeId + " events.");
 
@@ -158,21 +167,17 @@ public class EventsPoller {
 
 					logger.info("Computing scores for route " + routeId);
 					EventsProcessor ep = new EventsProcessor(stopsMap);
-					Collection<ChildStatus> result = ep.process(eventsList);
+					Collection<ChildStatus> status = ep.process(eventsList);
 
-					sendScores(result, ownerId, game.getGameId());
-
-					results.put(routeId, eventsList.size());
-					storage.saveLastEvent(Collections.max(eventsList));
-					logger.info("Computed scores for route " + routeId + " = " + result);
+					results.put(routeId, status);
+					logger.info("Computed scores for route " + routeId + " = " + status);
 				} else {
-					results.put(routeId, -1);
+					results.put(routeId, null);
 					logger.info("No recent events for route " + routeId);
 				}
-			}
-			storage.savePedibusGame(game, ownerId, true);
+			}	
+			storage.updatePedibusGameLastDaySeen(ownerId, game.getGameId(), game.getLastDaySeen());
 		}
-
 		return results;
 	}
 	
@@ -192,30 +197,73 @@ public class EventsPoller {
 		return routesList;
 	}
 	
-	private void sendScores(Collection<ChildStatus> childrenStatus, String ownerId, String gameId) throws Exception {
+	public void sendScores(Collection<ChildStatus> childrenStatus, String gameId) {
+		String address = gamificationURL + "/gengine/execute";
+		if(childrenStatus == null) { 
+			return;
+		}
 		for (ChildStatus childStatus: childrenStatus) {
-			PedibusPlayer player = storage.getPedibusPlayerByChildId(ownerId, gameId, childStatus.getChildId());
-			
-			if (player == null) {
-				logger.error("Player with childId = " + childStatus.getChildId() + " not found.");
-				continue;
+			if(childStatus.isArrived()) {
+				String playerId = childStatus.getChildId();
+				Double score = childStatus.getScore();
+						
+				ExecutionDataDTO ed = new ExecutionDataDTO();
+				ed.setGameId(gameId);
+				ed.setPlayerId(playerId);
+				ed.setActionId(actionIncrease);
+				
+				Map<String, Object> data = Maps.newTreeMap();
+				data.put(scoreName, score);
+				ed.setData(data);
+				
+				try {
+					if(logger.isInfoEnabled()) {
+						logger.info(String.format("increased game[%s] player[%s] score[%s]", gameId, playerId, score));
+					}
+					HTTPUtils.post(address, ed, null, gamificationUser, gamificationPassword);
+				} catch (Exception e) {
+					logger.warn(e.getMessage());
+				}				
 			}
-			String address = gamificationURL + "/gengine/execute";
-			
-			ExecutionDataDTO ed = new ExecutionDataDTO();
-			ed.setGameId(gameId);
-			ed.setPlayerId(player.getChildId());
-			ed.setActionId(actionIncrease);
-			
-			Map<String, Object> data = Maps.newTreeMap();
-			data.put(scoreName, childStatus.getScore());
-			ed.setData(data);
-			
-			HTTPUtils.post(address, ed, null, gamificationUser, gamificationPassword);	
 		}
 	}
 	
-	
-	
-
+	public void updateCalendarDayFromPedibus(String ownerId, String gameId,
+			Map<String, Collection<ChildStatus>> childrenStatusMap) {
+		
+		Map<String, Map<String, String>> classModeMap = new HashMap<String, Map<String,String>>();
+		
+		for(Collection<ChildStatus> childrenStatus : childrenStatusMap.values()) {
+			if(childrenStatus == null) {
+				continue;
+			}
+			for(ChildStatus childStatus : childrenStatus) {
+				if(childStatus.isArrived()) {
+					PedibusPlayer player = storage.getPedibusPlayerByChildId(ownerId, gameId, childStatus.getChildId());
+					if(player != null) {
+						String classRoom = player.getClassRoom();
+						Map<String, String> modeMap = classModeMap.get(classRoom);
+						if(modeMap == null) {
+							modeMap = new HashMap<String, String>();
+							classModeMap.put(classRoom, modeMap);
+						}
+						modeMap.put(player.getChildId(), Const.MODE_PEDIBUS);
+					}
+				}
+			}
+		}
+		
+		PedibusGame game = storage.getPedibusGame(ownerId, gameId);
+		if(game != null) {
+			try {
+				Date day = shortSdf.parse(game.getLastDaySeen());
+				for(String classRoom : classModeMap.keySet()) {
+					Map<String, String> modeMap = classModeMap.get(classRoom);
+					storage.updateCalendarDayFromPedibus(ownerId, gameId, classRoom, day, modeMap);
+				}
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+			}
+		}
+	}
 }

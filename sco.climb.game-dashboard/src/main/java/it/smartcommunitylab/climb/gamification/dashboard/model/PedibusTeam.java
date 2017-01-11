@@ -1,6 +1,7 @@
 package it.smartcommunitylab.climb.gamification.dashboard.model;
 
 import it.smartcommunitylab.climb.contextstore.model.BaseObject;
+import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.PlayerStateDTO;
 
 import java.util.Collection;
 import java.util.List;
@@ -17,6 +18,7 @@ public class PedibusTeam extends BaseObject implements Gamified {
 	private List<String> childrenId;
 	private Map<String, Collection> badges;
 	private Double score;
+	private PlayerStateDTO playerState;
 	private PedibusItineraryLeg previousLeg;
 	private PedibusItineraryLeg currentLeg;
 	
@@ -93,6 +95,16 @@ public class PedibusTeam extends BaseObject implements Gamified {
 
 	public void setScoreToEnd(Double scoreToEnd) {
 		this.scoreToEnd = scoreToEnd;
+	}
+
+	@Override
+	public void setGameStatus(PlayerStateDTO playerState) {
+		this.playerState = playerState;
+	}
+
+	@Override
+	public PlayerStateDTO getGameStatus() {
+		return this.playerState;
 	}
 
 }
