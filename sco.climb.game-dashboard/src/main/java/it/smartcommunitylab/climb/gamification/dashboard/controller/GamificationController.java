@@ -1,7 +1,7 @@
 package it.smartcommunitylab.climb.gamification.dashboard.controller;
 
 import it.smartcommunitylab.climb.contextstore.model.Child;
-import it.smartcommunitylab.climb.gamification.dashboard.common.Const;
+import it.smartcommunitylab.climb.gamification.dashboard.common.GEngineUtils;
 import it.smartcommunitylab.climb.gamification.dashboard.common.Utils;
 import it.smartcommunitylab.climb.gamification.dashboard.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.gamification.dashboard.model.Gamified;
@@ -23,7 +23,6 @@ import it.smartcommunitylab.climb.gamification.dashboard.utils.HTTPUtils;
 import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -95,6 +94,9 @@ public class GamificationController {
 
 	@Autowired
 	private EventsPoller eventsPoller;
+	
+	@Autowired
+	private GEngineUtils gengineUtils;
 
 	private ObjectMapper mapper = new ObjectMapper();
 
@@ -508,7 +510,8 @@ public class GamificationController {
 	}
 
 	@RequestMapping(value = "/api/game/events/{ownerId}/{gameId}", method = RequestMethod.GET)
-	public @ResponseBody Map<String, Collection<ChildStatus>> pollEvents(@PathVariable String ownerId, @PathVariable String gameId, 
+	public @ResponseBody Map<String, Collection<ChildStatus>> pollEvents(@PathVariable String ownerId, 
+			@PathVariable String gameId,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -527,39 +530,34 @@ public class GamificationController {
 		}
 	}
 
-	@RequestMapping(value = "/api/child/score/{ownerId}", method = RequestMethod.POST)
-	public @ResponseBody void increaseChildScore(@PathVariable String ownerId, @RequestParam String gameId, 
-			@RequestParam String playerId, @RequestParam Double score, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	@RequestMapping(value = "/api/child/score/{ownerId}/{gameId}", method = RequestMethod.GET)
+	public @ResponseBody void increaseChildScore(@PathVariable String ownerId, @PathVariable String gameId, 
+			@RequestParam String playerId, @RequestParam Double score, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
+		
+		ExecutionDataDTO ed = new ExecutionDataDTO();
+		ed.setGameId(gameId);
+		ed.setPlayerId(playerId);
+		ed.setActionId(actionIncrease);
 
-		try {
-			String address = gamificationURL + "/gengine/execute";
-
-			ExecutionDataDTO ed = new ExecutionDataDTO();
-			ed.setGameId(gameId);
-			ed.setPlayerId(playerId);
-			ed.setActionId(actionIncrease);
-
-			Map<String, Object> data = Maps.newTreeMap();
-			data.put(scoreName, score);
-			ed.setData(data);
-
-			HTTPUtils.post(address, ed, null, gamificationUser, gamificationPassword);
-			
-			if (logger.isInfoEnabled()) {
-				logger.info(String.format("increased game[%s] player[%s] score[%s]", gameId, playerId, score));
-			}			
-		} catch (Exception e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));
-		}
+		Map<String, Object> data = Maps.newTreeMap();
+		data.put(scoreName, score);
+		ed.setData(data);
+		
+		gengineUtils.executeAction(ed);
+		
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("increaseChildScore[%s]: increased game[%s] player[%s] score[%s]", ownerId,
+					gameId, playerId, score));
+		}			
 	}
 	
 	@RequestMapping(value = "/api/game/reset/{ownerId}", method = RequestMethod.POST)
-	public @ResponseBody void resetGame(@PathVariable String ownerId, @RequestParam String gameId, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	public @ResponseBody void resetGame(@PathVariable String ownerId, @RequestParam String gameId, 
+			HttpServletRequest request,	HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -584,7 +582,8 @@ public class GamificationController {
 	}	
 	
 	@RequestMapping(value = "/api/child/reset/{ownerId}", method = RequestMethod.POST)
-	public @ResponseBody void resetChild(@PathVariable String ownerId, @RequestParam String gameId, @RequestParam String playerId, HttpServletRequest request,
+	public @ResponseBody void resetChild(@PathVariable String ownerId, @RequestParam String gameId, 
+			@RequestParam String playerId, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -602,8 +601,6 @@ public class GamificationController {
 	}		
 	
 	private void resetChild(String gameId, String playerId) throws Exception {
-		String address = gamificationURL + "/gengine/execute";
-
 		ExecutionDataDTO ed = new ExecutionDataDTO();
 		ed.setGameId(gameId);
 		ed.setPlayerId(playerId);
@@ -611,11 +608,12 @@ public class GamificationController {
 
 		Map<String, Object> data = Maps.newTreeMap();
 		ed.setData(data);
-
-		HTTPUtils.post(address, ed, null, gamificationUser, gamificationPassword);
+		
+		gengineUtils.executeAction(ed);
 	}
 	
 
+	@SuppressWarnings("rawtypes")
 	private void updateGamificationData(Gamified entity, String gameId, String id) throws Exception {
 		String address = gamificationURL + "/gengine/state/" + gameId + "/" + URLEncoder.encode(id, "UTF-8");
 		String result = HTTPUtils.get(address, null, gamificationUser, gamificationPassword);

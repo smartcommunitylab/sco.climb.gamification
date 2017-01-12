@@ -1,15 +1,21 @@
 package it.smartcommunitylab.climb.gamification.dashboard.controller;
 
+import it.smartcommunitylab.climb.gamification.dashboard.common.GEngineUtils;
 import it.smartcommunitylab.climb.gamification.dashboard.common.Utils;
 import it.smartcommunitylab.climb.gamification.dashboard.exception.EntityNotFoundException;
 import it.smartcommunitylab.climb.gamification.dashboard.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.gamification.dashboard.model.CalendarDay;
 import it.smartcommunitylab.climb.gamification.dashboard.model.Excursion;
+import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusGame;
 import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusPlayer;
 import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusTeam;
+import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.Notification;
 import it.smartcommunitylab.climb.gamification.dashboard.storage.DataSetSetup;
 import it.smartcommunitylab.climb.gamification.dashboard.storage.RepositoryManager;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +63,9 @@ public class DashboardController {
 
 	@Autowired
 	private DataSetSetup dataSetSetup;
+	
+	@Autowired
+	private GEngineUtils gengineUtils;
 
 	@RequestMapping(value = "/api/player/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.GET)
 	public @ResponseBody List<PedibusPlayer> getPlayersByClassRoom(@PathVariable String ownerId, 
@@ -146,6 +155,39 @@ public class DashboardController {
 		List<Excursion> result = storage.getExcursions(ownerId, gameId, classRoom, dateFrom, dateTo);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("getExcursions[%s]: %s - %s - %s", ownerId, gameId, classRoom, result.size()));
+		}
+		return result;
+	}
+	
+	@RequestMapping(value = "/api/notification/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.GET)
+	public @ResponseBody List<Notification> getNotifications(@PathVariable String ownerId, 
+			@PathVariable String gameId, @PathVariable String classRoom, @RequestParam Long timestamp,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		List<Notification> result = new ArrayList<Notification>();
+		PedibusGame game = storage.getPedibusGame(ownerId, gameId);
+		if(game != null) {
+			List<Notification> classNotifications = gengineUtils.getNotification(gameId, classRoom, timestamp);
+			List<Notification> schoolNotifications = gengineUtils.getNotification(gameId, game.getGlobalTeam(), timestamp);
+			result.addAll(classNotifications);
+			result.addAll(schoolNotifications);
+			Collections.sort(result, new Comparator<Notification>() {
+				@Override
+				public int compare(Notification o1, Notification o2) {
+					if(o1.getTimestamp() < o2.getTimestamp()) {
+						return -1;
+					} else if(o1.getTimestamp() > o2.getTimestamp()) {
+						return 1;
+					} else { 
+						return 0; 
+					}
+				}
+			});
+		}
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("getNotifications[%s]: %s - %s - %s", ownerId, gameId, classRoom, result.size()));
 		}
 		return result;
 	}

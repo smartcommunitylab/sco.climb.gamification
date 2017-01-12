@@ -25,6 +25,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
 public class RepositoryManager {
+	@SuppressWarnings("unused")
 	private static final transient Logger logger = LoggerFactory.getLogger(RepositoryManager.class);
 	
 	private MongoTemplate mongoTemplate;
