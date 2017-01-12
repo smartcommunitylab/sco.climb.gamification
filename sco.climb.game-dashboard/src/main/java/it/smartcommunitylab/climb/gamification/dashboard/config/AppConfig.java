@@ -155,6 +155,12 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 				"/resources/img/");
 		registry.addResourceHandler("/images/**").addResourceLocations(
 				"/resources/img/");
+		
+		registry.addResourceHandler("swagger-ui.html")
+    .addResourceLocations("classpath:/META-INF/resources/");
+
+		registry.addResourceHandler("/webjars/**")
+    .addResourceLocations("classpath:/META-INF/resources/webjars/");		
 	}
 
 	@Bean
@@ -186,7 +192,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	
 	private List<SecurityScheme> getSecuritySchemes() {
 		List<SecurityScheme> result = new ArrayList<SecurityScheme>();
-		ApiKey apiKey = new ApiKey("token", "X-ACCESS-TOKEN", "header");
+		ApiKey apiKey = new ApiKey("X-ACCESS-TOKEN", "X-ACCESS-TOKEN", "header");
 		result.add(apiKey);
 		return result;
 	}
@@ -206,7 +212,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 		AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
 	  AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
 	  authorizationScopes[0] = authorizationScope;
-	  result.add(new SecurityReference("token", authorizationScopes));
+	  result.add(new SecurityReference("X-ACCESS-TOKEN", authorizationScopes));
 	  return result;
 	}
 
