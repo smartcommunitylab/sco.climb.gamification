@@ -20,7 +20,6 @@ import it.smartcommunitylab.climb.gamification.dashboard.storage.DataSetSetup;
 import it.smartcommunitylab.climb.gamification.dashboard.storage.RepositoryManager;
 import it.smartcommunitylab.climb.gamification.dashboard.utils.HTTPUtils;
 
-import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -59,18 +58,6 @@ public class GamificationController {
 	private String contextstoreURL;
 
 	@Autowired
-	@Value("${gamification.user}")
-	private String gamificationUser;
-
-	@Autowired
-	@Value("${gamification.password}")
-	private String gamificationPassword;
-	
-	@Autowired
-	@Value("${gamification.url}")
-	private String gamificationURL;
-	
-	@Autowired
 	@Value("${points.name}")
 	private String pointsName;
 
@@ -101,7 +88,8 @@ public class GamificationController {
 	private ObjectMapper mapper = new ObjectMapper();
 
 	@RequestMapping(value = "/api/game/{ownerId}", method = RequestMethod.POST)
-	public @ResponseBody void createPedibusGame(@PathVariable String ownerId, @RequestBody PedibusGame game, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody void createPedibusGame(@PathVariable String ownerId, @RequestBody PedibusGame game, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -138,7 +126,6 @@ public class GamificationController {
 					pp.setClassRoom(child.getClassRoom());
 					storage.savePedibusPlayer(pp, ownerId, false);
 
-					address = gamificationURL + "/console/game/" + game.getGameId() + "/player";
 					PlayerStateDTO player = new PlayerStateDTO();
 					player.setPlayerId(child.getObjectId());
 					player.setGameId(game.getGameId());
@@ -148,9 +135,9 @@ public class GamificationController {
 					player.setCustomData(cd);
 
 					try {
-						HTTPUtils.post(address, player, null, gamificationUser, gamificationPassword);
+						gengineUtils.createPlayer(game.getGameId(), player);
 					} catch (Exception e) {
-						logger.info("Gamification engine player creation warning: " + e.getClass() + " " + e.getMessage());
+						logger.warn("Gamification engine player creation warning: " + e.getClass() + " " + e.getMessage());
 					}
 				}
 				PedibusTeam pt = new PedibusTeam();
@@ -159,7 +146,6 @@ public class GamificationController {
 				pt.setClassRoom(classRoom);
 				storage.savePedibusTeam(pt, ownerId, false);
 
-				address = gamificationURL + "/console/game/" + game.getGameId() + "/team";
 				TeamDTO team = new TeamDTO();
 
 				team.setName(classRoom);
@@ -168,9 +154,9 @@ public class GamificationController {
 				team.setGameId(game.getGameId());
 
 				try {
-					HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
+					gengineUtils.createTeam(game.getGameId(), team);
 				} catch (Exception e) {
-					logger.info("Gamification engine team creation warning: " + e.getClass() + " " + e.getMessage());
+					logger.warn("Gamification engine team creation warning: " + e.getClass() + " " + e.getMessage());
 				}
 			}
 			
@@ -181,18 +167,16 @@ public class GamificationController {
 				pt.setClassRoom(game.getGlobalTeam());
 				storage.savePedibusTeam(pt, ownerId, false);
 
-				String address = gamificationURL + "/console/game/" + game.getGameId() + "/team";
 				TeamDTO team = new TeamDTO();
-
 				team.setName(game.getGlobalTeam());
 				team.setMembers(allChildrenId);
 				team.setPlayerId(game.getGlobalTeam());
 				team.setGameId(game.getGameId());
 
 				try {
-				HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
+					gengineUtils.createTeam(game.getGameId(), team);
 				} catch (Exception e) {
-					logger.info("Gamification engine global team creation warning: " + e.getClass() + " " + e.getMessage());
+					logger.warn("Gamification engine global team creation warning: " + e.getClass() + " " + e.getMessage());
 				}				
 			}
 			
@@ -206,7 +190,8 @@ public class GamificationController {
 	}
 
 	@RequestMapping(value = "/api/game/{ownerId}", method = RequestMethod.PUT)
-	public @ResponseBody void updatePedibusGame(@PathVariable String ownerId, @RequestBody PedibusGame game, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody void updatePedibusGame(@PathVariable String ownerId, @RequestBody PedibusGame game, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -241,7 +226,6 @@ public class GamificationController {
 					boolean updated = storage.savePedibusPlayer(pp, ownerId, true);
 
 					if (!updated) {
-						address = gamificationURL + "/console/game/" + game.getGameId() + "/player";
 						PlayerStateDTO player = new PlayerStateDTO();
 						player.setPlayerId(child.getObjectId());
 						player.setGameId(game.getGameId());
@@ -251,9 +235,9 @@ public class GamificationController {
 						player.setCustomData(cd);
 
 						try {
-							HTTPUtils.post(address, player, null, gamificationUser, gamificationPassword);
+							gengineUtils.createPlayer(game.getGameId(), player);
 						} catch (Exception e) {
-							logger.info("Gamification engine player creation warning: " + e.getClass() + " " + e.getMessage());
+							logger.warn("Gamification engine player creation warning: " + e.getClass() + " " + e.getMessage());
 						}						
 					}
 				}
@@ -264,7 +248,6 @@ public class GamificationController {
 				boolean updated = storage.savePedibusTeam(pt, ownerId, true);
 
 				if (!updated) {
-					address = gamificationURL + "/console/game/" + game.getGameId() + "/team";
 					TeamDTO team = new TeamDTO();
 
 					team.setName(classRoom);
@@ -273,17 +256,16 @@ public class GamificationController {
 					team.setGameId(game.getGameId());
 
 					try {
-						HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
+						gengineUtils.createTeam(game.getGameId(), team);
 					} catch (Exception e) {
-						logger.info("Gamification engine team creation warning: " + e.getClass() + " " + e.getMessage());
+						logger.warn("Gamification engine team creation warning: " + e.getClass() + " " + e.getMessage());
 					}					
 					
 				} else {
-					address = gamificationURL + "/console/game/" + game.getGameId() + "/team/" + classRoom + "/members";
 					try {
-						HTTPUtils.post(address, childrenId, null, gamificationUser, gamificationPassword);
+						gengineUtils.createTeamMembers(game.getGameId(), classRoom, childrenId);
 					} catch (Exception e) {
-						logger.info("Gamification engine team update warning: " + e.getClass() + " " + e.getMessage());
+						logger.warn("Gamification engine team update warning: " + e.getClass() + " " + e.getMessage());
 					}					
 				}
 			}
@@ -296,7 +278,6 @@ public class GamificationController {
 				boolean updated = storage.savePedibusTeam(pt, ownerId, true);
 
 				if (!updated) {
-					String address = gamificationURL + "/console/game/" + game.getGameId() + "/team";
 					TeamDTO team = new TeamDTO();
 
 					team.setName(game.getGlobalTeam());
@@ -305,16 +286,15 @@ public class GamificationController {
 					team.setGameId(game.getGameId());
 
 					try {
-						HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
+						gengineUtils.createTeam(game.getGameId(), team);
 					} catch (Exception e) {
-						logger.info("Gamification engine global team creation warning: " + e.getClass() + " " + e.getMessage());
+						logger.warn("Gamification engine global team creation warning: " + e.getClass() + " " + e.getMessage());
 					}	
 				} else {
-					String address = gamificationURL + "/console/game/" + game.getGameId() + "/team/" + URLEncoder.encode(game.getGlobalTeam(), "UTF-8") + "/members";
 					try {
-						HTTPUtils.post(address, allChildrenId, null, gamificationUser, gamificationPassword);
+						gengineUtils.createTeamMembers(game.getGameId(), game.getGlobalTeam(), allChildrenId);
 					} catch (Exception e) {
-						logger.info("Gamification engine global team update warning: " + e.getClass() + " " + e.getMessage());
+						logger.warn("Gamification engine global team update warning: " + e.getClass() + " " + e.getMessage());
 					}					
 				}
 			}			
@@ -328,7 +308,8 @@ public class GamificationController {
 	}
 
 	@RequestMapping(value = "/api/game/{ownerId}/{gameId}", method = RequestMethod.GET)
-	public @ResponseBody PedibusGame getPedibusGame(@PathVariable String ownerId, @PathVariable String gameId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody PedibusGame getPedibusGame(@PathVariable String ownerId, @PathVariable String gameId, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -347,7 +328,8 @@ public class GamificationController {
 	}
 
 	@RequestMapping(value = "/api/game/{ownerId}", method = RequestMethod.GET)
-	public @ResponseBody List<PedibusGame> getPedibusGames(@PathVariable String ownerId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody List<PedibusGame> getPedibusGames(@PathVariable String ownerId, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -366,7 +348,9 @@ public class GamificationController {
 	}
 
 	@RequestMapping(value = "/api/leg/{ownerId}", method = RequestMethod.POST)
-	public @ResponseBody void createPedibusItineraryLeg(@PathVariable String ownerId, @RequestBody PedibusItineraryLeg leg, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody void createPedibusItineraryLeg(@PathVariable String ownerId, 
+			@RequestBody PedibusItineraryLeg leg, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -384,7 +368,9 @@ public class GamificationController {
 	}
 	
 	@RequestMapping(value = "/api/legs/{ownerId}", method = RequestMethod.POST)
-	public @ResponseBody void createPedibusItineraryLeg(@PathVariable String ownerId, @RequestBody List<PedibusItineraryLeg> legs, @RequestParam(required = false) Boolean sum, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody void createPedibusItineraryLeg(@PathVariable String ownerId, 
+			@RequestBody List<PedibusItineraryLeg> legs, @RequestParam(required = false) Boolean sum, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -410,8 +396,8 @@ public class GamificationController {
 	}	
 
 	@RequestMapping(value = "/api/leg/{ownerId}/{legId}", method = RequestMethod.GET)
-	public @ResponseBody PedibusItineraryLeg getPedibusItineraryLeg(@PathVariable String ownerId, @PathVariable String legId, HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	public @ResponseBody PedibusItineraryLeg getPedibusItineraryLeg(@PathVariable String ownerId, 
+			@PathVariable String legId, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -430,7 +416,8 @@ public class GamificationController {
 	}
 
 	@RequestMapping(value = "/api/leg/{ownerId}", method = RequestMethod.GET)
-	public @ResponseBody List<PedibusItineraryLeg> getPedibusItineraryLegs(@PathVariable String ownerId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody List<PedibusItineraryLeg> getPedibusItineraryLegs(@PathVariable String ownerId, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
@@ -555,8 +542,8 @@ public class GamificationController {
 		}			
 	}
 	
-	@RequestMapping(value = "/api/game/reset/{ownerId}", method = RequestMethod.POST)
-	public @ResponseBody void resetGame(@PathVariable String ownerId, @RequestParam String gameId, 
+	@RequestMapping(value = "/api/game/reset/{ownerId}/{gameId}", method = RequestMethod.GET)
+	public @ResponseBody void resetGame(@PathVariable String ownerId, @PathVariable String gameId, 
 			HttpServletRequest request,	HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
@@ -581,8 +568,8 @@ public class GamificationController {
 		}
 	}	
 	
-	@RequestMapping(value = "/api/child/reset/{ownerId}", method = RequestMethod.POST)
-	public @ResponseBody void resetChild(@PathVariable String ownerId, @RequestParam String gameId, 
+	@RequestMapping(value = "/api/child/reset/{ownerId}/{gameId}", method = RequestMethod.GET)
+	public @ResponseBody void resetChild(@PathVariable String ownerId, @PathVariable String gameId, 
 			@RequestParam String playerId, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
@@ -615,10 +602,7 @@ public class GamificationController {
 
 	@SuppressWarnings("rawtypes")
 	private void updateGamificationData(Gamified entity, String gameId, String id) throws Exception {
-		String address = gamificationURL + "/gengine/state/" + gameId + "/" + URLEncoder.encode(id, "UTF-8");
-		String result = HTTPUtils.get(address, null, gamificationUser, gamificationPassword);
-
-		PlayerStateDTO gamePlayer = mapper.readValue(result, PlayerStateDTO.class);
+		PlayerStateDTO gamePlayer = gengineUtils.getPlayerStatus(gameId, id);
 		
 		entity.setGameStatus(gamePlayer);
 		

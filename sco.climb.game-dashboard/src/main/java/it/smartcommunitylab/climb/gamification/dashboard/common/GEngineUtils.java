@@ -2,6 +2,8 @@ package it.smartcommunitylab.climb.gamification.dashboard.common;
 
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.ExecutionDataDTO;
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.Notification;
+import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.PlayerStateDTO;
+import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.TeamDTO;
 import it.smartcommunitylab.climb.gamification.dashboard.utils.HTTPUtils;
 
 import java.net.URLEncoder;
@@ -44,4 +46,28 @@ public class GEngineUtils {
 		List<Notification> result = Arrays.asList(notifications);
 		return result;
 	}
+	
+	public void createPlayer(String gameId, PlayerStateDTO player) throws Exception {
+		String address = gamificationURL + "/console/game/" + gameId + "/player";
+		HTTPUtils.post(address, player, null, gamificationUser, gamificationPassword);
+	}
+	
+	public void createTeam(String gameId, TeamDTO team) throws Exception {
+		String address = gamificationURL + "/console/game/" + gameId + "/team";
+		HTTPUtils.post(address, team, null, gamificationUser, gamificationPassword);
+	}
+	
+	public void createTeamMembers(String gameId, String teamId, List<String> memeberList) throws Exception {
+		String address = gamificationURL + "/console/game/" + gameId + "/team/" 
+				+ URLEncoder.encode(teamId, "UTF-8") + "/members";
+		HTTPUtils.post(address, memeberList, null, gamificationUser, gamificationPassword);
+	}
+	
+	public PlayerStateDTO getPlayerStatus(String gameId, String playerId) throws Exception {
+		String address = gamificationURL + "/gengine/state/" + gameId + "/" + URLEncoder.encode(playerId, "UTF-8");
+		String json = HTTPUtils.get(address, null, gamificationUser, gamificationPassword);
+		PlayerStateDTO result = mapper.readValue(json, PlayerStateDTO.class);
+		return result;
+	}
+	
 }
