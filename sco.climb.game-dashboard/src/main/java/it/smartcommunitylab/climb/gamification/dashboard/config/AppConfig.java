@@ -16,8 +16,6 @@
 
 package it.smartcommunitylab.climb.gamification.dashboard.config;
 
-import it.smartcommunitylab.climb.gamification.dashboard.storage.RepositoryManager;
-
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,41 +25,29 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.multipart.MultipartResolver;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import com.mongodb.MongoClient;
+import com.mongodb.MongoException;
+
+import it.smartcommunitylab.climb.gamification.dashboard.storage.RepositoryManager;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.ApiKey;
 import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.SecurityReference;
-import springfox.documentation.service.SecurityReference.SecurityReferenceBuilder;
 import springfox.documentation.service.SecurityScheme;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoException;
-
 @Configuration
-@ComponentScan("it.smartcommunitylab.climb.gamification.dashboard")
-@PropertySource("classpath:gamedashboard.properties")
-@EnableWebMvc
 @EnableAsync
 @EnableScheduling
 @EnableSwagger2
@@ -115,57 +101,63 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	RepositoryManager getRepositoryManager() throws UnknownHostException, MongoException {
 		return new RepositoryManager(getMongo(), defaultLang);
 	}
-
-	@Bean
-	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-		return new PropertySourcesPlaceholderConfigurer();
-	}
-
-	@Bean
-	public ViewResolver getViewResolver() {
-		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-		resolver.setPrefix("/resources/");
-		resolver.setSuffix(".jsp");
-		return resolver;
-	}
-
+//
+//	@Bean
+//	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+//		return new PropertySourcesPlaceholderConfigurer();
+//	}
+//
+//	@Bean
+//	public ViewResolver getViewResolver() {
+//		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+//		resolver.setPrefix("/resources/");
+//		resolver.setSuffix(".jsp");
+//		return resolver;
+//	}
+//
+//	@Override
+//	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//		registry.addResourceHandler("/*").addResourceLocations(
+//				"/resources/");
+//		registry.addResourceHandler("/resources/*").addResourceLocations(
+//				"/resources/");
+//		registry.addResourceHandler("/css/**").addResourceLocations(
+//				"/resources/css/");
+//		registry.addResourceHandler("/fonts/**").addResourceLocations(
+//				"/resources/fonts/");
+//		registry.addResourceHandler("/js/**").addResourceLocations(
+//				"/resources/js/");
+//		registry.addResourceHandler("/lib/**").addResourceLocations(
+//				"/resources/lib/");
+//		registry.addResourceHandler("/i18n/**").addResourceLocations(
+//				"/resources/i18n/");
+//		registry.addResourceHandler("/templates/**").addResourceLocations(
+//				"/resources/templates/");
+//		registry.addResourceHandler("/html/**").addResourceLocations(
+//				"/resources/html/");
+//		registry.addResourceHandler("/file/**").addResourceLocations(
+//				"/resources/file/");
+//		registry.addResourceHandler("/img/**").addResourceLocations(
+//				"/resources/img/");
+//		registry.addResourceHandler("/images/**").addResourceLocations(
+//				"/resources/img/");
+//		
+//		registry.addResourceHandler("swagger-ui.html")
+//    .addResourceLocations("classpath:/META-INF/resources/");
+//
+//		registry.addResourceHandler("/webjars/**")
+//    .addResourceLocations("classpath:/META-INF/resources/webjars/");		
+//	}
+//
+//	@Bean
+//	public MultipartResolver multipartResolver() {
+//		return new CommonsMultipartResolver();
+//	}
+	
 	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/*").addResourceLocations(
-				"/resources/");
-		registry.addResourceHandler("/resources/*").addResourceLocations(
-				"/resources/");
-		registry.addResourceHandler("/css/**").addResourceLocations(
-				"/resources/css/");
-		registry.addResourceHandler("/fonts/**").addResourceLocations(
-				"/resources/fonts/");
-		registry.addResourceHandler("/js/**").addResourceLocations(
-				"/resources/js/");
-		registry.addResourceHandler("/lib/**").addResourceLocations(
-				"/resources/lib/");
-		registry.addResourceHandler("/i18n/**").addResourceLocations(
-				"/resources/i18n/");
-		registry.addResourceHandler("/templates/**").addResourceLocations(
-				"/resources/templates/");
-		registry.addResourceHandler("/html/**").addResourceLocations(
-				"/resources/html/");
-		registry.addResourceHandler("/file/**").addResourceLocations(
-				"/resources/file/");
-		registry.addResourceHandler("/img/**").addResourceLocations(
-				"/resources/img/");
-		registry.addResourceHandler("/images/**").addResourceLocations(
-				"/resources/img/");
-		
-		registry.addResourceHandler("swagger-ui.html")
-    .addResourceLocations("classpath:/META-INF/resources/");
-
-		registry.addResourceHandler("/webjars/**")
-    .addResourceLocations("classpath:/META-INF/resources/webjars/");		
-	}
-
-	@Bean
-	public MultipartResolver multipartResolver() {
-		return new CommonsMultipartResolver();
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/**")
+		.allowedMethods("PUT", "DELETE", "GET", "POST");
 	}
 	
 	@SuppressWarnings("deprecation")
