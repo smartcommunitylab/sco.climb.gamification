@@ -1,0 +1,42 @@
+<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
+  <md-toolbar layout="row">
+    <div class="md-toolbar-tools">
+      <h2>
+          <span>Side Panel</span>
+        </h2>
+      <span flex></span>
+      <md-button class="md-icon-button" aria-label="Close Side Panel" ng-click="closeSideNavPanel()">
+        <md-tooltip>Close Side Panel</md-tooltip>
+        <md-icon class="md-default-theme" class="material-icons">&#xE5CD;</md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-content layout-padding="">
+    <md-list>
+      <md-list-item ng-click="go('home.class')">
+        <md-icon class="md-default-theme" class="material-icons">&#xE0C9;</md-icon>
+        <p>Classe</p>
+      </md-list-item>
+      <md-list-item ng-click="go('home.map')">
+        <md-icon class="md-default-theme" class="material-icons">&#xE878;</md-icon>
+        <p>Mappa</p>
+      </md-list-item>
+    </md-list>
+  </md-content>
+</md-sidenav>
+
+<md-toolbar class="desktop">
+  <div class="md-toolbar-tools">
+    <md-button class="md-icon-button" aria-label="Side Panel" ng-click="openSideNavPanel()">
+      <md-tooltip>Side Panel</md-tooltip>
+      <md-icon class="md-default-theme" class="material-icons">&#xE5D2;</md-icon>
+    </md-button>
+    <h2>          <span>Heading</span>
+        </h2>
+  </div>
+</md-toolbar>
+<main class="md-padding" layout="row" flex>
+  <md-content flex>
+    <ui-view name="content"></ui-view>
+  </md-content>
+</main>
