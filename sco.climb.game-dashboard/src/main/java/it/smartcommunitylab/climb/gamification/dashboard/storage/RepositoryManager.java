@@ -227,6 +227,22 @@ public class RepositoryManager {
 		}
 	}
 	
+	public void saveAdminToken(String name, String token) {
+		Query query = new Query(new Criteria("name").is(name));
+		Token tokenDB = mongoTemplate.findOne(query, Token.class);
+		if(tokenDB == null) {
+			Token newToken = new Token();
+			newToken.setToken(token);
+			newToken.setName(name);
+			newToken.getPaths().add("*");
+			mongoTemplate.save(newToken);
+		} else {
+			Update update = new Update();
+			update.set("token", token);
+			mongoTemplate.updateFirst(query, update, Token.class);
+		}
+	}
+	
 	public void savePedibusGame(PedibusGame game, String ownerId, boolean canUpdate) throws StorageException {
 		Query query = new Query(new Criteria("gameId").is(game.getGameId()).and("ownerId").is(ownerId));
 		PedibusGame gameDB = mongoTemplate.findOne(query, PedibusGame.class);
@@ -302,7 +318,8 @@ public class RepositoryManager {
 			update.set("description", leg.getDescription());
 			update.set("position", leg.getPosition());
 			update.set("geocoding", leg.getGeocoding());
-			update.set("externalUrl", leg.getExternalUrl());
+			update.set("externalUrls", leg.getExternalUrls());
+			update.set("imageUrl", leg.getImageUrl());
 			update.set("polyline", leg.getPolyline());
 			update.set("score", leg.getScore());
 			update.set("lastUpdate", now);

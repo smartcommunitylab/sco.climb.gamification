@@ -37,6 +37,7 @@ public class DataSetSetup {
 			admin.setToken(adminToken);
 			storage.saveDataSetInfo(admin);
 			dataSetMap.put(admin.getOwnerId(), admin);
+			storage.saveAdminToken(adminUser, adminToken);
 		}
 	}
 	
