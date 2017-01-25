@@ -1,5 +1,6 @@
 package it.smartcommunitylab.climb.gamification.dashboard.storage;
 
+import it.smartcommunitylab.climb.gamification.dashboard.common.Const;
 import it.smartcommunitylab.climb.gamification.dashboard.exception.StorageException;
 import it.smartcommunitylab.climb.gamification.dashboard.model.CalendarDay;
 import it.smartcommunitylab.climb.gamification.dashboard.model.Excursion;
@@ -25,7 +26,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
 public class RepositoryManager {
-	@SuppressWarnings("unused")
 	private static final transient Logger logger = LoggerFactory.getLogger(RepositoryManager.class);
 	
 	private MongoTemplate mongoTemplate;
@@ -144,12 +144,13 @@ public class RepositoryManager {
 		return result;
 	}	
 	
-	public void saveCalendarDay(String ownerId, String gameId, String classRoom,
+	public boolean saveCalendarDay(String ownerId, String gameId, String classRoom,
 			CalendarDay calendarDay) {
 		Query query = new Query(new Criteria("ownerId").is(ownerId).and("gameId").is(gameId)
 				.and("classRoom").is(classRoom).and("day").is(calendarDay.getDay()));
 		CalendarDay calendarDayDB = mongoTemplate.findOne(query, CalendarDay.class);
 		Date now = new Date();
+		Boolean merged = false; 
 		if(calendarDayDB == null) {
 			calendarDay.setCreationDate(now);
 			calendarDay.setLastUpdate(now);
@@ -160,15 +161,28 @@ public class RepositoryManager {
 			calendarDay.setClosed(true);
 			mongoTemplate.save(calendarDay);
 		} else {
-			Map<String, String> newModeMap = calendarDayDB.getModeMap();
-			newModeMap.putAll(calendarDay.getModeMap());
+			//merge pedibus data with calendar data
+			Map<String, String> oldModeMap = calendarDayDB.getModeMap();
+			for(String childId : calendarDay.getModeMap().keySet()) {
+				String mode = calendarDay.getModeMap().get(childId);
+				String oldMode = oldModeMap.get(childId);
+				if(oldMode == null) {
+					continue;
+				} else if(mode.equals(Const.MODE_PIEDI_SOLO) && oldMode.equals(Const.MODE_PEDIBUS)) {
+					continue;
+				} else {
+					calendarDay.getModeMap().put(childId, oldMode);
+					merged = true;
+				}
+			}
 			Update update = new Update();
 			update.set("meteo", calendarDay.getMeteo());
-			update.set("modeMap", newModeMap);
+			update.set("modeMap", calendarDay.getModeMap());
 			update.set("closed", Boolean.TRUE);
 			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, CalendarDay.class);
 		}
+		return merged;
 	}
 	
 	public void updateCalendarDayFromPedibus(String ownerId, String gameId, String classRoom, 
@@ -189,12 +203,12 @@ public class RepositoryManager {
 			calendarDay.setModeMap(modeMap);
 			mongoTemplate.save(calendarDay);
 		} else {
-			Map<String, String> newModeMap = calendarDayDB.getModeMap();
-			newModeMap.putAll(modeMap);
-			Update update = new Update();
-			update.set("modeMap", newModeMap);
-			update.set("lastUpdate", now);
-			mongoTemplate.updateFirst(query, update, CalendarDay.class);
+			if(calendarDayDB.isClosed()) {
+				return;
+			} else {
+				logger.warn(String.format("updateCalendarDayFromPedibus[%s]:existing calendar day not closed %s - %s",
+						ownerId, gameId, classRoom));
+			}
 		}
 	}
 	
@@ -285,6 +299,31 @@ public class RepositoryManager {
 		}
 	}
 	
+	public void resetPollingFlag(String ownerId, String gameId) {
+		Query query = new Query(new Criteria("gameId").is(gameId).and("ownerId").is(ownerId));
+		PedibusGame gameDB = mongoTemplate.findOne(query, PedibusGame.class);
+		Date now = new Date();
+		if (gameDB != null) {
+			Update update = new Update();
+			update.set("pollingFlag", Boolean.TRUE);
+			update.set("lastUpdate", now);
+			mongoTemplate.updateFirst(query, update, PedibusGame.class);
+		}
+	}
+	
+	public void updatePollingFlag(String ownerId, String gameId, boolean flag) {
+		Query query = new Query(new Criteria("gameId").is(gameId).and("ownerId").is(ownerId));
+		PedibusGame gameDB = mongoTemplate.findOne(query, PedibusGame.class);
+		Date now = new Date();
+		if (gameDB != null) {
+			Update update = new Update();
+			update.set("pollingFlag", flag);
+			update.set("lastUpdate", now);
+			mongoTemplate.updateFirst(query, update, PedibusGame.class);
+		}
+	}
+
+	
 	public void saveExcursion(String ownerId, String gameId, String classRoom, Integer children,
 			Double distance, Date day) {
 		Excursion excursion = new Excursion();
@@ -349,7 +388,8 @@ public class RepositoryManager {
 			mongoTemplate.updateFirst(query, update, PedibusPlayer.class);
 			return true;
 		} else {
-			throw new StorageException("Cannot update existing PedibusPlayer with childId " + player.getChildId());
+			logger.warn("Cannot update existing PedibusPlayer with childId " + player.getChildId());
+			return false;
 		}
 	}	
 	
@@ -433,5 +473,6 @@ public class RepositoryManager {
 	private String generateObjectId() {
 		return UUID.randomUUID().toString();
 	}
+
 
 }

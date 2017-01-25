@@ -23,6 +23,8 @@ public class PedibusGame extends BaseObject {
 	private String toHour;
 	private String lastDaySeen;
 	
+	private boolean pollingFlag = false;
+	
 	public String getSchoolId() {
 		return schoolId;
 	}
@@ -106,6 +108,12 @@ public class PedibusGame extends BaseObject {
 	}
 	public void setLastDaySeen(String lastDaySeen) {
 		this.lastDaySeen = lastDaySeen;
+	}
+	public boolean isPollingFlag() {
+		return pollingFlag;
+	}
+	public void setPollingFlag(boolean pollingFlag) {
+		this.pollingFlag = pollingFlag;
 	}
 
 }
