@@ -325,7 +325,7 @@ public class RepositoryManager {
 
 	
 	public void saveExcursion(String ownerId, String gameId, String classRoom, Integer children,
-			Double distance, Date day) {
+			Double distance, Date day, String meteo) {
 		Excursion excursion = new Excursion();
 		Date now = new Date();
 		excursion.setOwnerId(ownerId);
@@ -337,6 +337,7 @@ public class RepositoryManager {
 		excursion.setClassRoom(classRoom);
 		excursion.setChildren(children);
 		excursion.setDistance(distance);
+		excursion.setMeteo(meteo);
 		mongoTemplate.save(excursion);
 	}
 	

@@ -9,6 +9,7 @@ import it.smartcommunitylab.climb.gamification.dashboard.model.Excursion;
 import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusGame;
 import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusPlayer;
 import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusTeam;
+import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.ExecutionDataDTO;
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.Notification;
 import it.smartcommunitylab.climb.gamification.dashboard.storage.DataSetSetup;
 import it.smartcommunitylab.climb.gamification.dashboard.storage.RepositoryManager;
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,6 +38,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import com.google.common.collect.Maps;
 
 @Controller
 public class DashboardController {
@@ -50,6 +54,34 @@ public class DashboardController {
 	@Autowired
 	private GEngineUtils gengineUtils;
 
+	@Autowired
+	@Value("${action.calendar}")	
+	private String actionCalendar;	
+
+	@Autowired
+	@Value("${action.trip}")	
+	private String actionTrip;
+	
+	@Autowired
+	@Value("${param.date}")	
+	private String paramDate;	
+	
+	@Autowired
+	@Value("${param.meteo}")	
+	private String paramMeteo;
+	
+	@Autowired
+	@Value("${param.mode}")	
+	private String paramMode;
+	
+	@Autowired
+	@Value("${param.participants}")	
+	private String paramParticipants;
+	
+	@Autowired
+	@Value("${param.class.distance}")	
+	private String paramClassDistance;
+	
 	@RequestMapping(value = "/api/player/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.GET)
 	public @ResponseBody List<PedibusPlayer> getPlayersByClassRoom(@PathVariable String ownerId, 
 			@PathVariable String gameId, @PathVariable String classRoom, 
@@ -78,18 +110,37 @@ public class DashboardController {
 	}
 	
 	@RequestMapping(value = "/api/calendar/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.POST)
-	public @ResponseBody void saveCalendarDay(@PathVariable String ownerId, 
+	public @ResponseBody Boolean saveCalendarDay(@PathVariable String ownerId, 
 			@PathVariable String gameId, @PathVariable String classRoom,
 			@RequestBody CalendarDay calendarDay,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		storage.saveCalendarDay(ownerId, gameId, classRoom, calendarDay);
-		//TODO send action to GE
+		Boolean result = storage.saveCalendarDay(ownerId, gameId, classRoom, calendarDay);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("saveCalendarDay[%s]: %s - %s", ownerId, gameId, classRoom));
 		}
+		for(String childId : calendarDay.getModeMap().keySet()) {
+			ExecutionDataDTO ed = new ExecutionDataDTO();
+			ed.setGameId(gameId);
+			ed.setPlayerId(childId);
+			ed.setActionId(actionCalendar);
+			
+			Map<String, Object> data = Maps.newTreeMap();
+			data.put(paramMode, calendarDay.getModeMap().get(childId));
+			data.put(paramDate, System.currentTimeMillis());
+			data.put(paramMeteo, calendarDay.getMeteo());
+			ed.setData(data);
+			
+			try {
+				gengineUtils.executeAction(ed);
+			} catch (Exception e) {
+				logger.warn(String.format("saveCalendarDay[%s]: error in GE excecute action %s - %s",
+						ownerId, gameId, classRoom));
+			}
+		}
+		return result;
 	}
 	
 	@RequestMapping(value = "/api/calendar/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.GET)
@@ -112,16 +163,34 @@ public class DashboardController {
 	@RequestMapping(value = "/api/excursion/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.POST)
 	public @ResponseBody void saveExcursion(@PathVariable String ownerId, 
 			@PathVariable String gameId, @PathVariable String classRoom,
-			@RequestParam Integer children, @RequestParam Double distance, @RequestParam Long date,
+			@RequestParam Integer children, @RequestParam Double distance, 
+			@RequestParam String meteo, @RequestParam Long date,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		Date day = new Date(date);
-		storage.saveExcursion(ownerId, gameId, classRoom, children, distance, day);
-		//TODO send action to GE
+		storage.saveExcursion(ownerId, gameId, classRoom, children, distance, day, meteo);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("saveExcursion[%s]: %s - %s - %s - %s", ownerId, gameId, classRoom, children, distance));
+		}
+		ExecutionDataDTO ed = new ExecutionDataDTO();
+		ed.setGameId(gameId);
+		ed.setPlayerId(classRoom);
+		ed.setActionId(actionTrip);
+		
+		Map<String, Object> data = Maps.newTreeMap();
+		data.put(paramParticipants, children);
+		data.put(paramClassDistance, distance);
+		data.put(paramDate, date);
+		data.put(paramMeteo, meteo);
+		ed.setData(data);
+		
+		try {
+			gengineUtils.executeAction(ed);
+		} catch (Exception e) {
+			logger.warn(String.format("saveExcursion[%s]: error in GE excecute action %s - %s",
+					ownerId, gameId, classRoom));
 		}
 	}	
 	

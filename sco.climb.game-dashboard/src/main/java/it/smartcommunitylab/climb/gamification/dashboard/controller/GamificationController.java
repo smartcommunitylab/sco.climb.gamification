@@ -510,9 +510,12 @@ public class GamificationController {
 		}
 		try {
 			PedibusGame game = storage.getPedibusGame(ownerId, gameId);
-			Map<String, Collection<ChildStatus>> childrenStatusMap = eventsPoller.pollGameEvents(ownerId, gameId, false);
+			Map<String, Collection<ChildStatus>> childrenStatusMap = eventsPoller.pollGameEvents(game, false);
 			for(Collection<ChildStatus> childrenStatus : childrenStatusMap.values()) {
 				eventsPoller.sendScores(childrenStatus, game);
+			}
+			if(!eventsPoller.isEmptyResponse(childrenStatusMap)) {
+				storage.updatePedibusGameLastDaySeen(game.getOwnerId(), game.getGameId(), game.getLastDaySeen());
 			}
 			//update Calendar
 			eventsPoller.updateCalendarDayFromPedibus(ownerId, gameId, childrenStatusMap);

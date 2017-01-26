@@ -76,6 +76,7 @@ public class EventsPoller {
 
 	
 	//@Scheduled(cron = "0 0,5,10,15 8-18 * * MON-FRI") // second, minute, hour, day, month, weekday
+	//@Scheduled(cron = "0 */2 8-18 * * MON-FRI") // second, minute, hour, day, month, weekday
 	public void scheduledPollEvents() throws Exception {
 		if(logger.isInfoEnabled()) {
 			logger.info("scheduledPollEvents");
@@ -97,24 +98,24 @@ public class EventsPoller {
 		for (PedibusGame game : games) {
 			if(game.isPollingFlag()) {
 				logger.info("Reading game " + game.getGameId() + " events.");
-				Map<String, Collection<ChildStatus>> childrenStatusMap = pollGameEvents(game.getOwnerId(), game.getGameId(), checkDate);
-				for(Collection<ChildStatus> childrenStatus : childrenStatusMap.values()) {
-					sendScores(childrenStatus, game);
-				}
-				if(!childrenStatusMap.isEmpty()) {
+				Map<String, Collection<ChildStatus>> childrenStatusMap = pollGameEvents(game, checkDate);
+				if(!isEmptyResponse(childrenStatusMap)) {
+					for(Collection<ChildStatus> childrenStatus : childrenStatusMap.values()) {
+						sendScores(childrenStatus, game);
+					}
 					storage.updatePollingFlag(game.getOwnerId(), game.getGameId(), Boolean.FALSE);
+					storage.updatePedibusGameLastDaySeen(game.getOwnerId(), game.getGameId(), game.getLastDaySeen());
+					updateCalendarDayFromPedibus(game.getOwnerId(), game.getGameId(), childrenStatusMap);
 				}
-				updateCalendarDayFromPedibus(game.getOwnerId(), game.getGameId(), childrenStatusMap);
 				results.putAll(childrenStatusMap);
 			}
 		}
 		return results;
 	}
 	
-	public Map<String, Collection<ChildStatus>> pollGameEvents(String ownerId, String gameId, 
+	public Map<String, Collection<ChildStatus>> pollGameEvents(PedibusGame game, 
 			boolean checkDate) throws Exception {
 		Map<String, Collection<ChildStatus>> results = Maps.newTreeMap();
-		PedibusGame game = storage.getPedibusGame(ownerId, gameId);
 		if(game != null) {
 			Date date = new Date();
 			if(checkDate) {
@@ -123,7 +124,7 @@ public class EventsPoller {
 					return results;
 				}
 			}
-			List<String> routesList = getRoutes(game.getSchoolId(), ownerId, game.getToken());
+			List<String> routesList = getRoutes(game.getSchoolId(), game.getOwnerId(), game.getToken());
 
 			Calendar cal = new GregorianCalendar(TimeZone.getDefault());
 
@@ -162,7 +163,7 @@ public class EventsPoller {
 			for (String routeId : routesList) {
 				logger.info("Reading route " + routeId + " events.");
 
-				String address = eventstoreURL + "/api/event/" + ownerId + "?" + "routeId=" + routeId + "&dateFrom=" + from + "&dateTo=" + to;
+				String address = eventstoreURL + "/api/event/" + game.getOwnerId() + "?" + "routeId=" + routeId + "&dateFrom=" + from + "&dateTo=" + to;
 
 				String routeEvents = HTTPUtils.get(address, game.getToken(), null, null);
 
@@ -175,7 +176,7 @@ public class EventsPoller {
 					eventsList.add(event);
 				}
 				if (!eventsList.isEmpty()) {
-					address = contextstoreURL + "/api/stop/" + ownerId + "/" + routeId;
+					address = contextstoreURL + "/api/stop/" + game.getOwnerId() + "/" + routeId;
 
 					String routeStops = HTTPUtils.get(address, game.getToken(), null, null);
 
@@ -198,7 +199,6 @@ public class EventsPoller {
 					logger.info("No recent events for route " + routeId);
 				}
 			}	
-			storage.updatePedibusGameLastDaySeen(ownerId, game.getGameId(), game.getLastDaySeen());
 		}
 		return results;
 	}
@@ -294,5 +294,16 @@ public class EventsPoller {
 				logger.warn(e.getMessage());
 			}
 		}
+	}
+	
+	public boolean isEmptyResponse(Map<String, Collection<ChildStatus>> childrenStatusMap) {
+		boolean result = true;
+		for(Collection<ChildStatus> status : childrenStatusMap.values()) {
+			if((status != null) && !status.isEmpty()) {
+				result = false;
+				break;
+			}
+		}
+		return result;
 	}
 }
