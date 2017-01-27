@@ -4,35 +4,29 @@ import it.smartcommunitylab.climb.contextstore.model.Stop;
 import it.smartcommunitylab.climb.gamification.dashboard.model.events.WsnEvent;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
 
 public class EventsProcessor {
 
 	private static final transient Logger logger = LoggerFactory.getLogger(EventsProcessor.class);
 	
-//	private Map<String, Stop> stopsMap;
-	private Multimap<String, Stop> childStopsMap;
+	private Map<String, Stop> childStopsMap;
 
 	public EventsProcessor(Map<String, Stop> stopsMap) {
-//		this.stopsMap = stopsMap;
-		childStopsMap = ArrayListMultimap.create();
-		
+		childStopsMap = new HashMap<String, Stop>();
 		Collection<Stop> stops = stopsMap.values();
 		for (Stop stop: stops) {
 			for (String childId: stop.getPassengerList()) {
 				childStopsMap.put(childId, stop);
 			}
 		}
-		
-		
 	}
 
 	public Collection<ChildStatus> process(List<WsnEvent> events) {
@@ -131,20 +125,11 @@ public class EventsProcessor {
 		double score = 0;
 		if (childStatus.isArrived()) {
 			if (childStopsMap.containsKey(childStatus.getChildId())) {
-				Collection<Stop> stops = childStopsMap.get(childStatus.getChildId());
-				for (Stop stop : stops) {
-					score += stop.getDistance();
-				}
+				Stop stop = childStopsMap.get(childStatus.getChildId());
+				score = stop.getDistance();
 			} else {
 				logger.warn("ChildId " + childStatus.getChildId() + " not associated to any stop.");
 			}
-
-//			for (String stopId : childStatus.getStops()) {
-//				Stop stop = stopsMap.get(stopId);
-//				if (stop != null) {
-//					score += stop.getDistance();
-//				}
-//			}
 		}
 		childStatus.setScore(score);
 		return score;
