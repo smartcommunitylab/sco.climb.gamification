@@ -26,7 +26,8 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -38,8 +39,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.view.RedirectView;
 
 
 @Controller
@@ -63,7 +62,7 @@ public class ConsoleController {
 	@Autowired
 	private RepositoryManager storage;
 	
-	private static final Logger logger = Logger.getLogger(ConsoleController.class);
+	private static final transient Logger logger = LoggerFactory.getLogger(ConsoleController.class);
 		
 	@RequestMapping(value = "/")
 	public String root() {

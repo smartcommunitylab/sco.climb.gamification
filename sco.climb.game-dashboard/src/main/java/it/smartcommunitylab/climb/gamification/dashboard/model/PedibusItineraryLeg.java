@@ -1,5 +1,8 @@
 package it.smartcommunitylab.climb.gamification.dashboard.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import it.smartcommunitylab.climb.contextstore.model.BaseObject;
 
 public class PedibusItineraryLeg extends BaseObject implements Comparable<PedibusItineraryLeg> {
@@ -10,7 +13,8 @@ public class PedibusItineraryLeg extends BaseObject implements Comparable<Pedibu
 	private String description;
 	private int position;
 	private double[] geocoding; // lon/lat (for mongodb)
-	private String externalUrl;
+	private List<String> externalUrls = new ArrayList<String>();
+	private String imageUrl;
 	private String polyline;
 	private int score;
 	
@@ -50,12 +54,6 @@ public class PedibusItineraryLeg extends BaseObject implements Comparable<Pedibu
 	public void setGeocoding(double[] geocoding) {
 		this.geocoding = geocoding;
 	}
-	public String getExternalUrl() {
-		return externalUrl;
-	}
-	public void setExternalUrl(String externalUrl) {
-		this.externalUrl = externalUrl;
-	}
 	public String getPolyline() {
 		return polyline;
 	}
@@ -78,5 +76,17 @@ public class PedibusItineraryLeg extends BaseObject implements Comparable<Pedibu
 	@Override
 	public int compareTo(PedibusItineraryLeg o) {
 		return position - o.position;
+	}
+	public List<String> getExternalUrls() {
+		return externalUrls;
+	}
+	public void setExternalUrls(List<String> externalUrls) {
+		this.externalUrls = externalUrls;
+	}
+	public String getImageUrl() {
+		return imageUrl;
+	}
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 }

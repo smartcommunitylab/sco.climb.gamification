@@ -22,6 +22,7 @@ import it.smartcommunitylab.climb.gamification.dashboard.utils.HTTPUtils;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -56,23 +57,27 @@ public class GamificationController {
 	@Autowired
 	@Value("${contextstore.url}")
 	private String contextstoreURL;
-
-	@Autowired
-	@Value("${points.name}")
-	private String pointsName;
-
-	@Autowired
-	@Value("${action.increase.name}")
-	private String actionIncrease;
 	
 	@Autowired
-	@Value("${action.reset.name}")
+	@Value("${action.reset}")
 	private String actionReset;	
 
 	@Autowired
-	@Value("${score.name}")
-	private String scoreName;
+	@Value("${action.pedibus}")	
+	private String actionPedibus;	
 
+	@Autowired
+	@Value("${param.kid.distance}")	
+	private String paramDistance;	
+
+	@Autowired
+	@Value("${param.date}")	
+	private String paramDate;	
+
+	@Autowired
+	@Value("${score.name}")	
+	private String scoreName;	
+	
 	@Autowired
 	private RepositoryManager storage;
 
@@ -504,9 +509,13 @@ public class GamificationController {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		try {
-			Map<String, Collection<ChildStatus>> childrenStatusMap = eventsPoller.pollGameEvents(ownerId, gameId, false);
+			PedibusGame game = storage.getPedibusGame(ownerId, gameId);
+			Map<String, Collection<ChildStatus>> childrenStatusMap = eventsPoller.pollGameEvents(game, false);
 			for(Collection<ChildStatus> childrenStatus : childrenStatusMap.values()) {
-				eventsPoller.sendScores(childrenStatus, gameId);
+				eventsPoller.sendScores(childrenStatus, game);
+			}
+			if(!eventsPoller.isEmptyResponse(childrenStatusMap)) {
+				storage.updatePedibusGameLastDaySeen(game.getOwnerId(), game.getGameId(), game.getLastDaySeen());
 			}
 			//update Calendar
 			eventsPoller.updateCalendarDayFromPedibus(ownerId, gameId, childrenStatusMap);
@@ -528,10 +537,12 @@ public class GamificationController {
 		ExecutionDataDTO ed = new ExecutionDataDTO();
 		ed.setGameId(gameId);
 		ed.setPlayerId(playerId);
-		ed.setActionId(actionIncrease);
+		ed.setActionId(actionPedibus);
 
 		Map<String, Object> data = Maps.newTreeMap();
-		data.put(scoreName, score);
+		data.put(paramDistance, score);
+		Date date = new Date();
+		data.put(paramDate, date.getTime());
 		ed.setData(data);
 		
 		gengineUtils.executeAction(ed);
@@ -612,7 +623,7 @@ public class GamificationController {
 			Iterator<?> it = pointConcept.iterator();
 			while (it.hasNext()) {
 				PointConcept pc = mapper.convertValue(it.next(), PointConcept.class);
-				if (pointsName.equals(pc.getName())) {
+				if (scoreName.equals(pc.getName())) {
 					entity.setScore(pc.getScore());
 				}
 			}
