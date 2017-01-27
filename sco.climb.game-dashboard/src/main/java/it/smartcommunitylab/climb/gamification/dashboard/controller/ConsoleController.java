@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -90,7 +91,7 @@ public class ConsoleController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/pedibus-game")
-	public ModelAndView pedibusGame(ModelMap model, Principal principal) {
+	public String pedibusGame(Model model, Principal principal) {
 		String name = principal.getName();
 		DataSetInfo dataSetInfo = null;
 		try {
@@ -108,7 +109,7 @@ public class ConsoleController {
 		//model.addAttribute("api", (token.getPaths() != null && token.getPaths().size() > 0) ? token.getPaths().get(0) : "");
 		model.addAttribute("api", dashboardWsUrl);
 		model.addAttribute("gname", name);
-		return new ModelAndView("pedibus-game", model);
+		return "pedibus-game";
 	}
 	
 
