@@ -1,0 +1,44 @@
+<div>
+  <div class="climb-image">
+    <img src="img/CLIMB_logo.png">
+  </div>
+  <md-content layout="vertical" flex id="content">
+    <div layout="row" layout-align="center center" layout-fill ng-if="!isAuth">
+      <md-whiteframe class="md-whiteframe-z1" layout="column" flex="30" layout-padding>
+        <md-content md-theme="docs-dark">
+          <md-input-container>
+            <label>Email</label>
+            <input ng-model="user.username">
+          </md-input-container>
+          <md-input-container>
+            <label>Password</label>
+            <input ng-model="user.password" type="password">
+          </md-input-container>
+          <md-input-container layout-align="center center">
+            <div layout="row" layout-sm="column" layout-margin>
+              <md-button class="md-raised md-primary" flex="50" flex-sm="100" ng-click="auth()">Login</md-button>
+            </div>
+          </md-input-container>
+        </md-content>
+      </md-whiteframe>
+    </div>
+    <div layout="row" layout-align="center center" layout-fill ng-if="isAuth">
+      <md-whiteframe class="md-whiteframe-z1" layout="column" flex="30" layout-padding>
+        <md-content md-theme="docs-dark">
+          <md-select ng-model="classes" placeholder="Classes" class="md-no-underline">
+            <md-option value="1a">1A</md-option>
+            <md-option value="1b">1B</md-option>
+            <md-option value="2a">2A</md-option>
+            <md-option value="2b">2B</md-option>
+          </md-select>
+          <md-input-container layout-align="center center">
+            <div layout="row" layout-sm="column" layout-margin>
+              <md-button class="md-raised md-primary" flex="50" flex-sm="100" ng-click="login()">Entra</md-button>
+            </div>
+          </md-input-container>
+        </md-content>
+      </md-whiteframe>
+    </div>
+  </md-content>
+
+</div>

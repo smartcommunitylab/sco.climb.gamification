@@ -14,6 +14,12 @@ angular.module('climbGame.services.conf', [])
   configService.getGameStatusURL = function () {
     return URL + '/game-dashboard/api/game/status/';
   };
+  configService.getCalendarURL = function () {
+    return URL + '/game-dashboard/api/calendar/';
+  };
+  configService.getPlayersURL = function () {
+    return URL + '/game-dashboard/api/player/';
+  };
   configService.httpTimout = function () {
     return httpTimeout;
   }
