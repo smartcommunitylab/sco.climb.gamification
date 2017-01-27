@@ -12,12 +12,14 @@ angular.module('climbGame', [
   'leaflet-directive',
   'climbGame.controllers.home',
   'climbGame.controllers.map',
-  'climbGame.controllers.class',
+  'climbGame.controllers.calendar',
+  'climbGame.controllers.login',
   'climbGame.services.data',
   'climbGame.services.conf',
   'climbGame.services.map',
   'climbGame.services.login',
-  'climbGame.services.map'
+  'climbGame.services.map',
+  'climbGame.services.calendar'
 
   ])
   .config(function ($mdThemingProvider) {
@@ -35,12 +37,22 @@ angular.module('climbGame', [
       $urlRouterProvider.otherwise("/");
 
       $stateProvider
+
         .state('home', {
           url: '/',
           views: {
             '@': {
               templateUrl: 'templates/home.html',
               controller: 'HomeCtrl'
+            }
+          }
+        })
+        .state('home.login', {
+          url: 'login',
+          views: {
+            'content@home': {
+              templateUrl: 'templates/login.html',
+              controller: 'loginCtrl'
             }
           }
         })
@@ -58,8 +70,8 @@ angular.module('climbGame', [
 
           views: {
             'content@home': {
-              templateUrl: 'templates/class.html',
-              controller: 'classCtrl'
+              templateUrl: 'templates/calendar.html',
+              controller: 'calendarCtrl'
             }
           }
         })

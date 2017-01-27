@@ -2,7 +2,7 @@
 
 body {
   font-family: 'Ubuntu', sans-serif;
-  color: orangered;
+  /*  color: orangered;*/
 }
 
 .fill-height {
@@ -103,6 +103,170 @@ md-sidenav {
   padding-bottom: 12px;
 }
 
+
+/*login*/
+
+.climb-image {
+  display: block;
+  margin: auto;
+  width: 40%;
+}
+
+
+/*map*/
+
 .angular-leaflet-map {
   z-index: 0;
+}
+
+.map-resources {
+  position: absolute;
+  bottom: 0px;
+  height: 100px;
+  width: 100%;
+  opacity: 0.5;
+  background-color: white;
+}
+
+.leg-image {
+  width: 50px;
+  height: 50px;
+  display: inline-block;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.map-gallery {
+  height: 80px;
+  width: 80px;
+  margin: 10px;
+}
+
+
+/*calendar*/
+
+.cal-sub-bar {
+  height: 100px;
+}
+
+.cal-notif {
+  color: white;
+  width: 100%;
+  background-color: #F39C12;
+}
+
+.cal-notif-arrow {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 50px 0 50px 50px;
+  border-color: transparent transparent transparent #f39d12;
+}
+
+.cal-challenge {
+  color: white;
+  text-align: right;
+  width: 100%;
+  background-color: #F39C12;
+}
+
+.cal-challenge-arrow {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 50px 50px 50px 0;
+  border-color: transparent #f39d12 transparent transparent;
+}
+
+.cal-fab {
+  position: fixed;
+  bottom: 50px;
+  right: 16px;
+}
+
+.cal-menu-col {
+  background-color: #F39C12 !important;
+}
+
+.cal-foot-friend-col {
+  background-color: #ef5350 !important;
+}
+
+.cal-foot-adult-col {
+  background-color: #ffee58 !important;
+}
+
+.cal-bus-col {
+  background-color: #66bb6a !important;
+}
+
+.cal-car-square-col {
+  background-color: #1565c0 !important;
+}
+
+.cal-car-school-col {
+  background-color: #bdbdbd!important;
+}
+
+.cal-away-col {
+  background-color: #f2f2f2 !important;
+}
+
+.cal-total {
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  margin-left: 0px;
+  margin-right: 16px;
+}
+
+.state-row {
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+}
+
+.days-row {
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+}
+
+.weather-row {
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+}
+
+.weather-icon {
+  line-height: 50px;
+  font-size: 25px;
+}
+
+.cal-baby {
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+}
+
+.cal-baby-cell {
+  height: 100%;
+  margin: 1px 1px 1px 1px;
+}
+
+.cal-header {
+  background-color: #f2f2f2;
+}
+
+.body-app {
+  overflow: hidden;
+}
+
+.baby-list {
+  height: 400px;
+  overflow: auto;
 }

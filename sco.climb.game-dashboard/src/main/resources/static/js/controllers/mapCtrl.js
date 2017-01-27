@@ -1,8 +1,11 @@
-//(function () {
-//  'use strict';
 angular.module("climbGame.controllers.map", [])
   .controller("mapCtrl", ["$scope", "leafletData", "mapService", function ($scope, leafletData, mapService) {
     var init = function () {
+      //      $scope.center = {
+      //        lat: -27.644606381943312,
+      //        lng: -48.47648620605469,
+      //        zoom: 10
+      //      };
       angular.extend($scope, {
         defaults: {
           zoomControl: false
@@ -13,7 +16,7 @@ angular.module("climbGame.controllers.map", [])
           zoom: 2
         },
         pathLine: {},
-        markers: {},
+        pathMarkers: [],
         layers: {
           baselayers: {
             osm: {
@@ -253,19 +256,47 @@ angular.module("climbGame.controllers.map", [])
     init();
     mapService.getStatus().then(function (data) {
         //visualize the status trought path
-        $scope.pathMarkers
-        $scope.pathLine = {
-          p1: {
-            color: '#009688',
-            weight: 8,
-            latlngs: mapService.decode(data.legs[0].polyline)
-              // message: "<h3>Route from London to Rome</h3><p>Distance: 1862km</p>",
+        $scope.legs = data.legs;
+        for (var i = 0; i < data.legs.length; i++) {
+          $scope.pathLine[i] = {
+              color: '#3f51b5',
+              weight: 5,
+              latlngs: mapService.decode(data.legs[i].polyline)
+            }
+            //create div of external url
+          var externalUrl = "<div>";
+          for (var k = 0; k < data.legs[i].externalUrls.length; k++) {
+            externalUrl = externalUrl + '<div class="row"> ' + ' <a href="' + data.legs[i].externalUrls[k] + '">' + data.legs[i].externalUrls[k] + '</div>';
           }
+          externalUrl = externalUrl + '</div>';
+          $scope.pathMarkers.push({
+            getMessageScope: function () {
+              return $scope;
+            },
+            lat: data.legs[i].geocoding[1],
+            lng: data.legs[i].geocoding[0],
+            //message: '<div ng-controller="PathDetailMapCtrl" class="map-balloon">' +
+            message: '<div class="map-balloon">' +
+              '<h4 class="text-pop-up">' + (i + 1) + '. ' + data.legs[i].name + '</h4>' +
+              '<div class="row">' +
+              '<div class="col">' + externalUrl + '</div>' +
+              '</div>' +
+              '</div>',
+            icon: {
+              //              type: 'div',
+              //              iconSize: [32, 32],
+              //              //              html: '<p class="number-map">' + (i + 1) + ' </p><img src="./img/POI_full.png">',
+              //              iconUrl: './img/POI_full.png',
+              //              popupAnchor: [0, 0]
+              iconUrl: "./img/POI_full.png",
+              iconSize: [20, 20],
+              iconAnchor: [10, 10],
+              popupAnchor: [0, -5]
+            }
+          });
         }
       },
       function (err) {
 
       });
-      }])
-  //})()
-;
+  }]);
