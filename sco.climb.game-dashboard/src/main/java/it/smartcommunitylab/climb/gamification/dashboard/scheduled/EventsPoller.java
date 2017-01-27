@@ -75,7 +75,7 @@ public class EventsPoller {
 	private static final SimpleDateFormat shortSdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	
-	//@Scheduled(cron = "0 0,5,10,15 8-18 * * MON-FRI") // second, minute, hour, day, month, weekday
+	@Scheduled(cron = "0 0,5,10,15 8-18 * * MON-FRI") // second, minute, hour, day, month, weekday
 	//@Scheduled(cron = "0 */2 8-18 * * MON-FRI") // second, minute, hour, day, month, weekday
 	public void scheduledPollEvents() throws Exception {
 		if(logger.isInfoEnabled()) {
@@ -84,7 +84,7 @@ public class EventsPoller {
 		pollEvents(true);
 	}
 	
-	//@Scheduled(cron = "0 0 7 * * *") // second, minute, hour, day, month, weekday
+	@Scheduled(cron = "0 0 7 * * *") // second, minute, hour, day, month, weekday
 	public void resetPollingFlag() {
 		List<PedibusGame> games = storage.getPedibusGames();
 		for (PedibusGame game : games) {
