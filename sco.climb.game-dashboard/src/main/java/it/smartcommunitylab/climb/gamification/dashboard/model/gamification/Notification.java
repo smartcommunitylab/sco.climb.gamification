@@ -1,11 +1,16 @@
 package it.smartcommunitylab.climb.gamification.dashboard.model.gamification;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Notification {
 	private String gameId;
 	private String playerId;
 	private long timestamp;
 	private String badge;
 	private String collectionName;
+	private String key;
+	private Map<String, Object> data = new HashMap<String, Object>();	
 	
 	public Notification() {
 		timestamp = System.currentTimeMillis();
@@ -49,5 +54,21 @@ public class Notification {
 
 	public void setCollectionName(String collectionName) {
 		this.collectionName = collectionName;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+	public Map<String, Object> getData() {
+		return data;
+	}
+
+	public void setData(Map<String, Object> data) {
+		this.data = data;
 	}
 }

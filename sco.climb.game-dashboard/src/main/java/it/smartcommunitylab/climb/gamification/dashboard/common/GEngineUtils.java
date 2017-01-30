@@ -18,6 +18,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class GEngineUtils {
+	public static String challengeConcept = "ChallengeConcept"; 
+	
 	@Autowired
 	@Value("${gamification.url}")
 	private String gamificationURL;
