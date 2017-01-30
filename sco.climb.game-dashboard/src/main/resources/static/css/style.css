@@ -226,6 +226,14 @@ md-sidenav {
   text-align: center;
   margin-left: 0px;
   margin-right: 16px;
+  padding-left: 16px;
+  border-color: blue;
+  border-style: solid;
+  border-width: 2px 0px 0px 0px;
+}
+
+.cal-listbabies {
+  padding: 0px!important;
 }
 
 .state-row {
@@ -248,7 +256,11 @@ md-sidenav {
 
 .weather-icon {
   line-height: 50px;
-  font-size: 25px;
+  font-size: 22px;
+}
+
+.wheater-button {
+  padding: 0px!important;
 }
 
 .single-weather {
@@ -270,6 +282,10 @@ md-sidenav {
   background-color: #f2f2f2;
 }
 
+.cal-header-future {
+  opacity: 0.5;
+}
+
 .body-app {
   overflow: hidden;
 }
@@ -287,9 +303,43 @@ md-dialog {
 .send-dialog-delete {
   color: white;
   background-color: #bdbdbd;
+  display: table;
+  margin: 0 auto;
 }
 
 .send-dialog-confirm {
+  color: white;
+  background-color: #F39C12;
+  display: table;
+  margin: 0 auto;
+}
+
+.cal-interactive-button {
+  color: #F39C12;
+}
+
+.first-row-button {
+  height: 30px!important;
+}
+
+.cal-today-first {
+  border-color: blue;
+  border-style: solid;
+  border-width: 2px 2px 0px 2px;
+}
+
+.cal-today-middle {
+  border-color: blue;
+  border-style: solid;
+  border-width: 0px 2px 0px 2px;
+}
+
+.cal-future-middle {
+  /*  opacity: 0.5;*/
+  background-color: #f2f2f2;
+}
+
+.cal-button-scroll {
   color: white;
   background-color: #F39C12;
 }

@@ -6,6 +6,9 @@ angular.module("climbGame.controllers.calendar", [])
       $scope.selectedMean = "";
       $scope.selectedMeanColor = "cal-menu-col";
       $scope.labelWeek = "";
+      $scope.cal = {
+        meanOpen: false
+      }
       $scope.classMap = {};
       $scope.weekData = [];
       $scope.todayData = {
@@ -72,8 +75,11 @@ angular.module("climbGame.controllers.calendar", [])
         return color;
       }
       $scope.selectWather = function (weather) {
-        $scope.selectedWeather = weather;
-      }
+          $scope.selectedWeather = weather;
+        }
+        //      $scope.openMeans = function () {
+        //        $scope.cal.meanOpen = !$scope.cal.meanOpen;
+        //      }
       $scope.selectGeneralMean = function (mean) {
         $scope.selectedMean = mean;
         $scope.selectedMeanColor = $scope.returnColorByType($scope.selectedMean);
@@ -94,10 +100,10 @@ angular.module("climbGame.controllers.calendar", [])
           preserveScope: true, // do not forget this if use parent scope
           template: '<md-dialog>' +
             '  <div>Invia dati definitivi al sistema, completata l\'operazione non sara piu possibile modificarli.</div>' +
-            '    <div layout="row"><div layout"column" flex="50"><md-button ng-click="closeDialog()" class=" send-dialog-delete">' +
+            '    <div layout="row"  layout-align="start center" ><div layout"column" flex="50" ><md-button ng-click="closeDialog()" class=" send-dialog-delete">' +
             '      Annulla' +
             '   </div> </md-button>' +
-            '<div layout"column" flex="50"><md-button ng-click = "sendData()" class = "send-dialog-confirm" > ' +
+            '<div layout"column" flex="50" ><md-button ng-click = "sendData()" class = "send-dialog-confirm" > ' +
             '      Invia' +
             '    </md-button></div>' +
             '</div></md-dialog>',
@@ -118,6 +124,7 @@ angular.module("climbGame.controllers.calendar", [])
               calendarService.sendData($scope.todayData).then(function () {
                 //sent data
                 $mdToast.show($mdToast.simple().content('Dati inviati'));
+                $scope.closeDialog();
 
               }, function (error) {
                 //get error
@@ -178,11 +185,11 @@ angular.module("climbGame.controllers.calendar", [])
         clearInterval($scope.scrolldownTimer);
       }
       $scope.isFuture = function (dayIndex) {
-        return (new Date() < $scope.week[dayIndex]);
+        return (new Date().setHours(0, 0, 0, 0) < $scope.week[dayIndex].setHours(0, 0, 0, 0));
       }
 
       $scope.isPast = function (dayIndex) {
-        return (new Date() > $scope.week[dayIndex]);
+        return (new Date().setHours(0, 0, 0, 0) > $scope.week[dayIndex].setHours(0, 0, 0, 0));
       }
 
       function getMonday(d) {
