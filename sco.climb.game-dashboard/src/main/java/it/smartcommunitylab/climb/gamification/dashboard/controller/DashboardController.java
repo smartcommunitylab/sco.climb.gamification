@@ -9,8 +9,10 @@ import it.smartcommunitylab.climb.gamification.dashboard.model.Excursion;
 import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusGame;
 import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusPlayer;
 import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusTeam;
+import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.Challenge;
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.ExecutionDataDTO;
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.Notification;
+import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.PlayerStateDTO;
 import it.smartcommunitylab.climb.gamification.dashboard.storage.DataSetSetup;
 import it.smartcommunitylab.climb.gamification.dashboard.storage.RepositoryManager;
 
@@ -240,6 +242,36 @@ public class DashboardController {
 		}
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("getNotifications[%s]: %s - %s - %s", ownerId, gameId, classRoom, result.size()));
+		}
+		return result;
+	}
+	
+	@RequestMapping(value = "/api/challenge/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.GET)
+	public @ResponseBody List<Challenge> getChallenge(@PathVariable String ownerId, 
+			@PathVariable String gameId, @PathVariable String classRoom, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		List<Challenge> result = new ArrayList<Challenge>();
+		PedibusGame game = storage.getPedibusGame(ownerId, gameId);
+		if(game != null) {
+			PlayerStateDTO playerStatus = gengineUtils.getPlayerStatus(gameId, classRoom);
+			Challenge classChallenge = new Challenge();
+			classChallenge.setGameId(gameId);
+			classChallenge.setPlayerId(classRoom);
+			classChallenge.setState(playerStatus.getState().get(GEngineUtils.challengeConcept));
+			result.add(classChallenge);
+			
+			playerStatus = gengineUtils.getPlayerStatus(gameId, game.getGlobalTeam());
+			Challenge schoolChallenge = new Challenge();
+			schoolChallenge.setGameId(gameId);
+			schoolChallenge.setPlayerId(game.getGlobalTeam());
+			schoolChallenge.setState(playerStatus.getState().get(GEngineUtils.challengeConcept));
+			result.add(schoolChallenge);
+		}
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("getChallenge[%s]: %s - %s - %s", ownerId, gameId, classRoom, result.size()));
 		}
 		return result;
 	}
