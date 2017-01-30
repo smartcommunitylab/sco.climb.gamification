@@ -251,6 +251,10 @@ md-sidenav {
   font-size: 25px;
 }
 
+.single-weather {
+  width: 100%!important;
+}
+
 .cal-baby {
   height: 40px;
   line-height: 40px;
@@ -273,4 +277,19 @@ md-sidenav {
 .baby-list {
   height: 400px;
   overflow: auto;
+}
+
+md-dialog {
+  max-width: 500px;
+  padding: 20px;
+}
+
+.send-dialog-delete {
+  color: white;
+  background-color: #bdbdbd;
+}
+
+.send-dialog-confirm {
+  color: white;
+  background-color: #F39C12;
 }
