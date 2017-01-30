@@ -212,6 +212,10 @@ md-sidenav {
   background-color: #f2f2f2 !important;
 }
 
+.cal-pedibus-col {
+  background-color: #ffee58 !important;
+}
+
 .cal-total {
   position: fixed;
   bottom: 0px;

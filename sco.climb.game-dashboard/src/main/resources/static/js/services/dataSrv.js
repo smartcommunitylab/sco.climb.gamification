@@ -78,22 +78,15 @@ angular.module('climbGame.services.data', [])
     var deferr = $q.defer();
     $http({
       method: 'POST',
-      url: configService.getPlayersURL() + loginService.getOwnerId() + '/' + loginService.getGameId() + '/' + loginService.getClassRoom(),
+      url: configService.getCalendarURL() + loginService.getOwnerId() + '/' + loginService.getGameId() + '/' + loginService.getClassRoom(),
       headers: {
         'Accept': 'application/json',
         'x-access-token': loginService.getUserToken()
       },
       data: {
-        "classRoom": loginService.getClassRoom(),
-        "closed": true,
-        "creationDate": null,
         "day": data.day,
-        "gameId": loginService.getGameId(),
-        "lastUpdate": null,
         "meteo": data.meteo,
         "modeMap": data.modeMap,
-        "objectId": null,
-        "ownerId": loginService.getOwnerId()
       },
       timeout: configService.httpTimout()
 
