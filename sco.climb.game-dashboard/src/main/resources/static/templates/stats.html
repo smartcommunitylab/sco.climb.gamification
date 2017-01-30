@@ -1,0 +1,18 @@
+<div class="stats">
+    <div layout="column" flex="80" flex-offset="10">
+        <h1 class="md-title title-progress">{{'stats_distance' | translate:'{done: ' + distance.done + ', total: ' + distance.total + '}'}}</h1>
+        <div layout="row" layout-align="start" layout-margin>
+            <h1 class="md-display-1">{{distance.done}}</h1>
+            <md-progress-linear md-mode="determinate" ng-value="getDistanceDonePercentage()"></md-progress-linear>
+            <h1 class="md-display-1">{{distance.total}}</h1>
+        </div>
+    </div>
+    <div layout="row">
+        <div layout="column" flex>{{'stats_piedi_bici_soli_amici' | translate}}</div>
+        <div layout="column" flex>{{'stats_piedi_bici_adulto' | translate}}</div>
+        <div layout="column" flex>{{'stats_bus' | translate}}</div>
+        <div layout="column" flex>{{'stats_auto_piazzola' | translate}}</div>
+        <div layout="column" flex>{{'stats_scuola' | translate}}</div>
+        <div layout="column" flex>{{'stats_bonus' | translate}}</div>
+    </div>
+</div>
