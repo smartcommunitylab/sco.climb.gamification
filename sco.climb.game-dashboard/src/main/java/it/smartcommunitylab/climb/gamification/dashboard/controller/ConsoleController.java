@@ -16,6 +16,8 @@
 
 package it.smartcommunitylab.climb.gamification.dashboard.controller;
 import it.smartcommunitylab.climb.gamification.dashboard.common.Utils;
+import it.smartcommunitylab.climb.gamification.dashboard.exception.EntityNotFoundException;
+import it.smartcommunitylab.climb.gamification.dashboard.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.gamification.dashboard.security.DataSetInfo;
 import it.smartcommunitylab.climb.gamification.dashboard.security.Token;
 import it.smartcommunitylab.climb.gamification.dashboard.storage.RepositoryManager;
@@ -37,6 +39,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
@@ -112,7 +115,40 @@ public class ConsoleController {
 		return "pedibus-game";
 	}
 	
+	@RequestMapping(value = "/token", method = RequestMethod.POST)
+	public @ResponseBody Token getToken(@RequestParam String username, @RequestParam String password) throws Exception {
+		DataSetInfo dataSetInfo = storage.findOneData(DataSetInfo.class, null, username);
+		if(dataSetInfo == null) {
+			logger.warn("getToken: owner not found " + username);
+			throw new EntityNotFoundException("owner not found");
+		}
+		if (!dataSetInfo.getPassword().equals(password)) {
+			logger.warn("getToken:username or password not valid " + username);
+			throw new UnauthorizedException("username or password not valid");
+		}
+		Token token = storage.findTokenByToken(dataSetInfo.getToken());
+		if(logger.isInfoEnabled()) {
+			logger.info("getToken:" + username);
+		}
+		return token;
+	}
 
+	@ExceptionHandler(EntityNotFoundException.class)
+	@ResponseStatus(value=HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public Map<String,String> handleEntityNotFoundError(HttpServletRequest request, Exception exception) {
+		logger.error(exception.getMessage());
+		return Utils.handleError(exception);
+	}
+	
+	@ExceptionHandler(UnauthorizedException.class)
+	@ResponseStatus(value=HttpStatus.FORBIDDEN)
+	@ResponseBody
+	public Map<String,String> handleUnauthorizedError(HttpServletRequest request, Exception exception) {
+		logger.error(exception.getMessage());
+		return Utils.handleError(exception);
+	}
+	
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)
 	@ResponseBody
