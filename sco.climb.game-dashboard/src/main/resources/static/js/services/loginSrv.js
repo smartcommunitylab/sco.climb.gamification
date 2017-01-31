@@ -2,16 +2,35 @@ angular.module('climbGame.services.login', [])
   .factory('loginService', function () {
     var loginService = {};
     loginService.getOwnerId = function () {
-      return 'VELA';
+      return loginService.ownId;
     }
     loginService.getGameId = function () {
-      return '588889c0e4b0464e16ac40a0';
+      return loginService.gameId;
     }
     loginService.getUserToken = function () {
-      return 'e2lEbKBXKE04CoS1';
+      return loginService.userToken;
+    }
+    loginService.getAllClasses = function () {
+      return loginService.classes;
     }
     loginService.getClassRoom = function () {
-      return '1^';
+      return loginService.classRoom;
     }
+    loginService.setOwnerId = function (id) {
+      loginService.ownId = id;
+    }
+    loginService.setGameId = function (id) {
+      loginService.gameId = id;
+    }
+    loginService.setUserToken = function (token) {
+      loginService.userToken = token;
+    }
+    loginService.setAllClasses = function (classes) {
+      loginService.classes = classes;
+    }
+    loginService.setClassRoom = function (classRoom) {
+      loginService.classRoom = classRoom;
+    }
+
     return loginService;
   });

@@ -12,13 +12,14 @@ angular.module('climbGame', [
     'climbGame.controllers.calendar',
     'climbGame.controllers.stats',
     'climbGame.controllers.login',
+    'climbGame.controllers.classSelection',
     'climbGame.services.data',
     'climbGame.services.conf',
     'climbGame.services.map',
     'climbGame.services.login',
     'climbGame.services.map',
-    'climbGame.services.calendar'
-  ])
+    'climbGame.services.calendar',
+    'climbGame.services.classSelection'])
 
 .config(function ($mdThemingProvider) {
   $mdThemingProvider.theme('default')
@@ -52,7 +53,7 @@ angular.module('climbGame', [
         views: {
           '@': {
             templateUrl: 'templates/login.html',
-            controller: 'LoginCtrl'
+            controller: 'loginCtrl'
           }
         }
       })
@@ -61,7 +62,7 @@ angular.module('climbGame', [
         views: {
           '@': {
             templateUrl: 'templates/class-selection.html',
-            controller: 'ClassSelectionCtrl'
+            controller: 'classSelectionCtrl'
           }
         }
       })
