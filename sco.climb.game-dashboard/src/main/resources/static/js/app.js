@@ -1,27 +1,25 @@
-//(function () {
-
 //  'use strict';
-
-// Declare app level module which depends on filters, and services
-
+/* global angular */
 angular.module('climbGame', [
-  'ngAnimate',
-  'ui.router',
-  'ngMaterial',
-  'ngAria',
-  'leaflet-directive',
-  'climbGame.controllers.home',
-  'climbGame.controllers.map',
-  'climbGame.controllers.calendar',
-  'climbGame.controllers.login',
-  'climbGame.services.data',
-  'climbGame.services.conf',
-  'climbGame.services.map',
-  'climbGame.services.login',
-  'climbGame.services.map',
-  'climbGame.services.calendar'
-
+    'ngAnimate',
+    'ui.router',
+    'ngMaterial',
+    'ngAria',
+    'leaflet-directive',
+    'pascalprecht.translate',
+    'climbGame.controllers.home',
+    'climbGame.controllers.map',
+    'climbGame.controllers.calendar',
+    'climbGame.controllers.stats',
+    'climbGame.controllers.login',
+    'climbGame.services.data',
+    'climbGame.services.conf',
+    'climbGame.services.map',
+    'climbGame.services.login',
+    'climbGame.services.map',
+    'climbGame.services.calendar'
   ])
+
   .config(function ($mdThemingProvider) {
     $mdThemingProvider.theme('default')
       .primaryPalette('light-blue', {
@@ -29,16 +27,27 @@ angular.module('climbGame', [
       })
       .accentPalette('deep-orange', {
         'default': '500'
-      });
+      })
   })
+
+  .config(['$translateProvider', function ($translateProvider) {
+    // $translateProvider.translations('it', {});
+    $translateProvider.preferredLanguage('it')
+    $translateProvider.useStaticFilesLoader({
+      prefix: 'i18n/',
+      suffix: '.json'
+    })
+
+    // $translateProvider.useSanitizeValueStrategy('sanitize');
+    // $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
+    $translateProvider.useSanitizeValueStrategy('escapeParameters')
+  }])
+
   .config(['$stateProvider', '$urlRouterProvider', '$logProvider',
     function ($stateProvider, $urlRouterProvider) {
+      $urlRouterProvider.otherwise('/')
 
-      $urlRouterProvider.otherwise("/");
-
-      $stateProvider
-
-        .state('home', {
+      $stateProvider.state('home', {
           url: '/',
           views: {
             '@': {
@@ -67,7 +76,6 @@ angular.module('climbGame', [
         })
         .state('home.class', {
           url: 'class',
-
           views: {
             'content@home': {
               templateUrl: 'templates/calendar.html',
@@ -75,26 +83,35 @@ angular.module('climbGame', [
             }
           }
         })
-    }])
-  //take all whitespace out of string
+        .state('home.stats', {
+          url: 'stats',
+          views: {
+            'content@home': {
+              templateUrl: 'templates/stats.html',
+              controller: 'statsCtrl'
+            }
+          }
+        })
+    }
+  ])
+
+  // take all whitespace out of string
   .filter('nospace', function () {
     return function (value) {
-      return (!value) ? '' : value.replace(/ /g, '');
-    };
+      return (!value) ? '' : value.replace(/ /g, '')
+    }
   })
-  //replace uppercase to regular case
+
+  // replace uppercase to regular case
   .filter('humanizeDoc', function () {
     return function (doc) {
-      if (!doc) return;
+      if (!doc) return
       if (doc.type === 'directive') {
         return doc.name.replace(/([A-Z])/g, function ($1) {
-          return '-' + $1.toLowerCase();
-        });
+          return '-' + $1.toLowerCase()
+        })
       }
 
-      return doc.label || doc.name;
-    };
-  });
-
-//})()
-;
+      return doc.label || doc.name
+    }
+  })
