@@ -35,9 +35,9 @@
         <div layout="column" flex="25" class="cal-header">Stato</div>
         <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" ng-class="{'cal-today-first':today(dayIndex)}" class="cal-header">
           <span ng-if="!today(dayIndex) && isPast(dayIndex)">Dati Inviati</span>
-          <span ng-if="!today(dayIndex) && isFuture(dayIndex)" class="cal-header-future">INVIA DATI</span>
+          <span ng-if="!today(dayIndex) && isFuture(dayIndex)" class="cal-header-future">{{'cal_send_data_button'|translate}}</span>
           <!--          <md-button ng-if="today(dayIndex)" ng-click="sendData()" class="cal-interactive-button first-row-button">INVIA DATI</md-button>-->
-          <span ng-if="today(dayIndex)" ng-click="sendData()" class="cal-interactive-button">INVIA DATI</span>
+          <span ng-if="today(dayIndex)" ng-click="sendData()" class="cal-interactive-button">{{'cal_send_data_button'|translate}}</span>
         </div>
       </div>
       <div layout="row" class="days-row">
@@ -89,7 +89,6 @@
     </div>
   </div>
   <div class="cal-total" layout="row">
-
     <div layout="column" flex="5">
     </div>
     <div layout="column" flex="25" class="cal-name">

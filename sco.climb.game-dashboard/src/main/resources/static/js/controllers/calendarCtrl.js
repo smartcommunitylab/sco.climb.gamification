@@ -38,6 +38,7 @@ angular.module("climbGame.controllers.calendar", [])
           }
           calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(function (calendar) {
               createWeekData(calendar);
+              updateTodayData(calendar);
 
             },
             function (err) {
@@ -132,30 +133,6 @@ angular.module("climbGame.controllers.calendar", [])
             }
           }
         });
-        //        var confirm = $mdDialog.confirm().title('Invio dati').content('Invia dati definitivi al sistema, completata l\'operazione non sara piu possibile modificarli.').ariaLabel('Invia dati definitivi al sistema, completata l\'operazione non sara piu possibile modificarli.').ok('Invia dati').cancel('Annulla');
-        //
-        //        $mdDialog.show(confirm).then(function () {
-        //          //check if data are ok then send it
-        //          $scope.todayData.meteo = $scope.selectedWeather;
-        //          $scope.todayData.day = new Date().setHours(0, 0, 0, 0);
-        //          var babiesMap = {};
-        //          for (var i = 0; i < $scope.todayData.babies.length; i++) {
-        //            if ($scope.todayData.babies[i].mean) {
-        //              babiesMap[$scope.todayData.babies[i].childId] = $scope.todayData.babies[i].mean;
-        //            }
-        //          }
-        //          $scope.todayData.modeMap = babiesMap;
-        //          calendarService.sendData($scope.todayData).then(function () {
-        //            //sent data
-        //            $mdToast.show($mdToast.simple().content('Dati inviati'));
-        //
-        //          }, function (error) {
-        //            //get error
-        //          });
-        //        }, function () {
-        //          //close popup
-        //
-        //        });
 
       }
 
@@ -246,6 +223,25 @@ angular.module("climbGame.controllers.calendar", [])
         $scope.labelWeek = $filter('date')(weekArray[0], 'dd') + " - " +
           $filter('date')(weekArray[weekArray.length - 1], 'dd MMM yyyy');
       }
+
+      function updateTodayData(calendar) {
+        //if there is today data merge it with $scope.todayData
+        var today = new Date().setHours(0, 0, 0, 0);
+        for (var i = 0; i < calendar.length; i++) {
+          if (calendar[i].day == today) {
+            //merge it
+            for (var k = 0; k < $scope.todayData.babies.length; k++) {
+              if (calendar[i].modeMap[$scope.todayData.babies[k].childId]) {
+                $scope.todayData.babies[k].color = $scope.returnColorByType(calendar[i].modeMap[$scope.todayData.babies[k].childId]);
+                $scope.todayData.babies[k].mean = calendar[i].modeMap[$scope.todayData.babies[k].childId];
+              }
+            }
+            break;
+          }
+
+        }
+
+      };
 
       function createWeekData(calendar) {
         $scope.weekData = [];
