@@ -1,9 +1,11 @@
 {
     "stats_distance": "Raggiunti {{done}} km su {{total}}!",
-    "stats_piedi_bici_soli_amici": "A piedi o in bici da soli o con gli amici",
-    "stats_piedi_bici_adulto": "A piedi o in bici accompagnati da un adulto",
+    "stats_ranking_global": "Statistica globale:",
+    "stats_legenda": "Legenda:",
+    "stats_zeroimpact_solo": "A piedi o in bici da soli o con gli amici",
+    "stats_pedibus": "A piedi o in bici accompagnati da un adulto",
     "stats_bus": "Con scuolabus o autobus",
-    "stats_auto_piazzola": "In auto fino alla piazzola di sosta",
-    "stats_auto_scuola": "In auto fino a scuola",
+    "stats_pandr": "In auto fino alla piazzola di sosta",
+    "stats_car": "In auto fino a scuola",
     "stats_bonus": "Bonus"
 }

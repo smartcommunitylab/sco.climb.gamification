@@ -7,12 +7,44 @@
             <h1 class="md-display-1">{{distance.total}}</h1>
         </div>
     </div>
+    <div layout="row" layout-align="start center">
+        <div flex="50">
+            <h1 class="md-title">{{'stats_ranking_global' | translate}}</h1>
+        </div>
+        <div flex="50" class="legenda">
+            {{'stats_legenda' | translate}} <i class="icon icon-foot"></i><i class="icon icon-star"></i> 10 km
+        </div>
+    </div>
     <div layout="row">
-        <div layout="column" flex>{{'stats_piedi_bici_soli_amici' | translate}}</div>
-        <div layout="column" flex>{{'stats_piedi_bici_adulto' | translate}}</div>
-        <div layout="column" flex>{{'stats_bus' | translate}}</div>
-        <div layout="column" flex>{{'stats_auto_piazzola' | translate}}</div>
-        <div layout="column" flex>{{'stats_scuola' | translate}}</div>
-        <div layout="column" flex>{{'stats_bonus' | translate}}</div>
+        <table>
+            <tr>
+                <th class="mode-zeroimpact-solo">{{'stats_zeroimpact_solo' | translate}}</th>
+                <th class="mode-pedibus">{{'stats_pedibus' | translate}}</th>
+                <th class="mode-bus">{{'stats_bus' | translate}}</th>
+                <th class="mode-pandr">{{'stats_pandr' | translate}}</th>
+                <th class="mode-car">{{'stats_car' | translate}}</th>
+                <th class="bonus">{{'stats_bonus' | translate}}</th>
+            </tr>
+            <tr>
+                <td class="mode-zeroimpact-solo">
+                    <i class="icon icon-foot" ng-repeat="i in getCount(data.zeroimpact_solo) track by $index"></i>
+                </td>
+                <td class="mode-pedibus">
+                    <i class="icon icon-foot" ng-repeat="i in getCount(data.pedibus) track by $index"></i>
+                </td>
+                <td class="mode-bus">
+                    <i class="icon icon-foot" ng-repeat="i in getCount(data.bus) track by $index"></i>
+                </td>
+                <td class="mode-pandr">
+                    <i class="icon icon-foot" ng-repeat="i in getCount(data.pandr) track by $index"></i>
+                </td>
+                <td class="mode-car">
+                    <i class="icon icon-foot" ng-repeat="i in getCount(data.car) track by $index"></i>
+                </td>
+                <td class="bonus">
+                    <i class="icon icon-star" ng-repeat="i in getCount(data.bonus) track by $index"></i>
+                </td>
+            </tr>
+        </table>
     </div>
 </div>
