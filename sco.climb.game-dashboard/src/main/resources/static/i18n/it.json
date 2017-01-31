@@ -1,4 +1,7 @@
 {
+  "menu_class": "Classe",
+  "menu_map": "Mappa",
+  "menu_stats": "Statistiche",
   "stats_distance": "Raggiunti {{done}} km su {{total}}!",
   "stats_ranking_global": "Statistica globale:",
   "stats_legenda": "Legenda:",
