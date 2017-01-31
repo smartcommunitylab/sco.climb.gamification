@@ -377,3 +377,82 @@ md-dialog {
   height: 40px;
   background-color: #f39c12;
 }
+
+.stats .legenda {
+  text-align: right;
+}
+
+.stats table {
+  width: 100%;
+  height: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.stats .icon {
+  font-size: 25px;
+}
+
+.stats table .icon {
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.stats table th,
+.stats table td {
+  width: 16.66667%;
+  border: 1px solid #999999;
+}
+
+.stats table th.mode-zeroimpact-solo {
+  background-color: #ef5350;
+}
+
+.stats table th.mode-pedibus {
+  background-color: #ffee58;
+}
+
+.stats table th.mode-bus {
+  background-color: #66bb6a;
+}
+
+.stats table th.mode-pandr {
+  background-color: #1565c0;
+}
+
+.stats table th.mode-car {
+  background-color: #bdbdbd;
+}
+
+.stats table th.bonus {
+  background-color: #29b6f6;
+}
+
+.stats table td {
+  padding: 0.5em;
+  word-wrap: break-word;
+  vertical-align: top;
+}
+
+.stats table td.mode-zeroimpact-solo {
+  color: #ef5350;
+}
+
+.stats table td.mode-pedibus {
+  color: #ffee58;
+}
+
+.stats table td.mode-bus {
+  color: #66bb6a;
+}
+
+.stats table td.mode-pandr {
+  color: #1565c0;
+}
+
+.stats table td.mode-car {
+  color: #bdbdbd;
+}
+
+.stats table td.bonus {
+  color: #29b6f6;
+}
