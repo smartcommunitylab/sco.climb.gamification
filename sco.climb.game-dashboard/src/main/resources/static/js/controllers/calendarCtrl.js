@@ -95,45 +95,66 @@ angular.module("climbGame.controllers.calendar", [])
       }
 
       $scope.sendData = function () {
-        $mdDialog.show({
-          //targetEvent: $event,
-          scope: $scope, // use parent scope in template
-          preserveScope: true, // do not forget this if use parent scope
-          template: '<md-dialog>' +
-            '  <div>Invia dati definitivi al sistema, completata l\'operazione non sara piu possibile modificarli.</div>' +
-            '    <div layout="row"  layout-align="start center" ><div layout"column" flex="50" ><md-button ng-click="closeDialog()" class=" send-dialog-delete">' +
-            '      Annulla' +
-            '   </div> </md-button>' +
-            '<div layout"column" flex="50" ><md-button ng-click = "sendData()" class = "send-dialog-confirm" > ' +
-            '      Invia' +
-            '    </md-button></div>' +
-            '</div></md-dialog>',
-          controller: function DialogController($scope, $mdDialog) {
-            $scope.closeDialog = function () {
-              $mdDialog.hide();
-            }
-            $scope.sendData = function () {
-              $scope.todayData.meteo = $scope.selectedWeather;
-              $scope.todayData.day = new Date().setHours(0, 0, 0, 0);
-              var babiesMap = {};
-              for (var i = 0; i < $scope.todayData.babies.length; i++) {
-                if ($scope.todayData.babies[i].mean) {
-                  babiesMap[$scope.todayData.babies[i].childId] = $scope.todayData.babies[i].mean;
-                }
+        if (dataAreComplete()) {
+          $mdDialog.show({
+            //targetEvent: $event,
+            scope: $scope, // use parent scope in template
+            preserveScope: true, // do not forget this if use parent scope
+            template: '<md-dialog>' +
+              '  <div class="cal-dialog-title"> Invio dati  </div><md-divider></md-divider>' +
+              '  <div class="cal-dialog-text">Invia dati definitivi al sistema, completata l\'operazione non sara piu possibile modificarli.</div>' +
+              '    <div layout="row"  layout-align="start center" ><div layout"column" flex="50" ><md-button ng-click="closeDialog()" class=" send-dialog-delete">' +
+              '      Annulla' +
+              '   </div> </md-button>' +
+              '<div layout"column" flex="50" ><md-button ng-click = "sendData()" class = "send-dialog-confirm" > ' +
+              '      Invia' +
+              '    </md-button></div>' +
+              '</div></md-dialog>',
+            controller: function DialogController($scope, $mdDialog) {
+              $scope.closeDialog = function () {
+                $mdDialog.hide();
               }
-              $scope.todayData.modeMap = babiesMap;
-              calendarService.sendData($scope.todayData).then(function () {
-                //sent data
-                $mdToast.show($mdToast.simple().content('Dati inviati'));
-                $scope.closeDialog();
+              $scope.sendData = function () {
+                $scope.todayData.meteo = $scope.selectedWeather;
+                $scope.todayData.day = new Date().setHours(0, 0, 0, 0);
+                var babiesMap = {};
+                for (var i = 0; i < $scope.todayData.babies.length; i++) {
+                  if ($scope.todayData.babies[i].mean) {
+                    babiesMap[$scope.todayData.babies[i].childId] = $scope.todayData.babies[i].mean;
+                  }
+                }
+                $scope.todayData.modeMap = babiesMap;
+                calendarService.sendData($scope.todayData).then(function () {
+                  //TODO check if merged or not
+                  //sent data
+                  $mdToast.show($mdToast.simple().content('Dati inviati'));
+                  $scope.closeDialog();
 
-              }, function (error) {
-                //get error
-              });
+                }, function (error) {
+                  //TODO get error
+                });
+              }
             }
-          }
-        });
-
+          });
+        } else {
+          $mdDialog.show({
+            //targetEvent: $event,
+            scope: $scope, // use parent scope in template
+            preserveScope: true, // do not forget this if use parent scope
+            template: '<md-dialog>' +
+              '  <div class="cal-dialog-title"> Dati incompleti  </div><md-divider></md-divider>' +
+              '  <div class="cal-dialog-text">Per poter inviare i dato e necessario compilare tutti i campi.</div>' +
+              '    <div layout="row"  layout-align="start center" ><div layout"column" flex="100" ><md-button ng-click="closeDialog()" class=" send-dialog-delete">' +
+              '      Ho capito' +
+              '   </div> </md-button>' +
+              '</div></md-dialog>',
+            controller: function DialogController($scope, $mdDialog) {
+              $scope.closeDialog = function () {
+                $mdDialog.hide();
+              }
+            }
+          });
+        }
       }
 
       $scope.prevWeek = function () {
@@ -167,6 +188,20 @@ angular.module("climbGame.controllers.calendar", [])
 
       $scope.isPast = function (dayIndex) {
         return (new Date().setHours(0, 0, 0, 0) > $scope.week[dayIndex].setHours(0, 0, 0, 0));
+      }
+
+      function dataAreComplete() {
+        //meteo and means must  be chosen
+        if (!$scope.selectedWeather) {
+          return false;
+        }
+        for (var i = 0; i < $scope.todayData.babies.length; i++) {
+          if (!$scope.todayData.babies[i].mean) {
+            return false;
+          }
+        }
+        //all babies  have a mean
+        return true;
       }
 
       function getMonday(d) {

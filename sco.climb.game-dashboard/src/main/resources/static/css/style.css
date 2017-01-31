@@ -344,12 +344,27 @@ md-dialog {
   background-color: #F39C12;
 }
 
+.cal-dialog-title {
+  color: #4153a0;
+  text-align: center;
+  font-size: 24px;
+  margin: 10px;
+}
+
+.cal-dialog-text {
+  text-align: justify;
+  font-size: 18px;
+  margin: 10px;
+}
+
+
 /* Stats */
+
 .stats .title-progress {
   text-align: center;
 }
 
-.stats md-progress-linear .md-container, 
+.stats md-progress-linear .md-container,
 .stats md-progress-linear .md-container .md-bar {
   height: 40px;
 }

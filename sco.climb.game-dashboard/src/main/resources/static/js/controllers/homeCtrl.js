@@ -10,7 +10,7 @@ angular.module('climbGame.controllers.home', [])
     '$mdSidenav',
 
     function ($rootScope, $scope, $log, $state, $timeout, $location, $mdSidenav) {
-      $state.go('home.stats')
+      $state.go('home.class')
 
       $scope.go = function (path) {
         $scope.closeSideNavPanel()
