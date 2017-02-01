@@ -7,7 +7,7 @@ angular.module('climbGame', [
     'ngAria',
     'leaflet-directive',
     'pascalprecht.translate',
-    'climbGame.controllers.home',
+  'climbGame.controllers.home',
     'climbGame.controllers.map',
     'climbGame.controllers.calendar',
     'climbGame.controllers.stats',
@@ -44,11 +44,29 @@ angular.module('climbGame', [
   $translateProvider.useSanitizeValueStrategy('escapeParameters')
   }])
 
-.config(['$stateProvider', '$urlRouterProvider', '$logProvider',
+.config(['$stateProvider', '$urlRouterProvider',
     function ($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise('/login')
+    //  $urlRouterProvider.otherwise('/')
+    $urlRouterProvider.otherwise(function ($injector, $location) {
+      var $state = $injector.get('$state');
+      var loginService = $injector.get('loginService');
+      if (loginService.getOwnerId() && loginService.getClassRoom()) {
+        $state.go('home');
+      } else
+      //if only user go to class
+      if (loginService.getOwnerId()) {
+        $state.go('classSelection');
 
-    $stateProvider.state('login', {
+      } else {
+        $state.go('login');
+      }
+      //login default
+      //
+      return $location.path();
+
+    });
+    $stateProvider
+      .state('login', {
         url: '/login',
         views: {
           '@': {
@@ -111,8 +129,7 @@ angular.module('climbGame', [
           }
         }
       })
-    }
-  ])
+}])
 
 // take all whitespace out of string
 .filter('nospace', function () {

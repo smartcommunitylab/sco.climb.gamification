@@ -80,8 +80,11 @@
             </div>
             <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" ng-class="{'cal-today-middle':today(dayIndex),'cal-future-middle':isFuture(dayIndex)}">
               <md-button ng-if="!today(dayIndex)" class="cal-baby-cell" ng-class="weekData[dayIndex][baby.childId].color"></md-button>
+              <md-button ng-if="today(dayIndex)" class="cal-baby-cell" ng-click="selectBabyMean(babyIndex)" ng-class="todayData.babies[babyIndex].color"></md-button>
+              <!--
               <md-button ng-if="today(dayIndex) && weekData[dayIndex][baby.childId]" class="cal-baby-cell" ng-class="weekData[dayIndex][baby.childId].color"></md-button>
               <md-button ng-if="today(dayIndex) && !weekData[dayIndex][baby.childId]" class="cal-baby-cell" ng-click="selectBabyMean(babyIndex)" ng-class="todayData.babies[babyIndex].color"></md-button>
+-->
             </div>
           </div>
         </md-list>
@@ -96,22 +99,22 @@
     </div>
     <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index">
       <div layout="row">
-        <div layout="column" flex="15" class="cal-foot-friend-col">
+        <div layout="column" flex="15" class="cal-foot-friend-col" ng-class="{'cal-header-future':isFuture(dayIndex)}">
           <span ng-if="weekData[dayIndex].zeroImpact_solo">{{weekData[dayIndex].zeroImpact_solo}}</span><span ng-if="!weekData[dayIndex].zeroImpact_solo">0</span>
         </div>
-        <div layout="column" flex="15" class="cal-foot-adult-col">
-          <span ng-if="weekData[dayIndex].zeroImpact_solo || weekData[dayIndex].pedibus">{{(weekData[dayIndex].zeroImpact_wAdult + weekData[dayIndex].pedibus)}}</span><span ng-if="!weekData[dayIndex].zeroImpact_wAdult && !weekData[dayIndex].pedibus ">0</span>
+        <div layout="column" flex="15" class="cal-foot-adult-col" ng-class="{'cal-header-future':isFuture(dayIndex)}">
+          <span ng-if="weekData[dayIndex].zeroImpact_wAdult || weekData[dayIndex].pedibus">{{(weekData[dayIndex].zeroImpact_wAdult + weekData[dayIndex].pedibus)}}</span><span ng-if="!weekData[dayIndex].zeroImpact_wAdult && !weekData[dayIndex].pedibus ">0</span>
         </div>
-        <div layout="column" flex="15" class="cal-bus-col">
+        <div layout="column" flex="15" class="cal-bus-col" ng-class="{'cal-header-future':isFuture(dayIndex)}">
           <span ng-if="weekData[dayIndex].bus">{{weekData[dayIndex].bus}}</span><span ng-if="!weekData[dayIndex].bus">0</span>
         </div>
-        <div layout="column" flex="15" class="cal-car-square-col">
+        <div layout="column" flex="15" class="cal-car-square-col" ng-class="{'cal-header-future':isFuture(dayIndex)}">
           <span ng-if="weekData[dayIndex].pandr">{{weekData[dayIndex].pandr}}</span><span ng-if="!weekData[dayIndex].pandr">0</span>
         </div>
-        <div layout="column" flex="15" class="cal-car-school-col">
+        <div layout="column" flex="15" class="cal-car-school-col" ng-class="{'cal-header-future':isFuture(dayIndex)}">
           <span ng-if="weekData[dayIndex].car">{{weekData[dayIndex].car}}</span><span ng-if="!weekData[dayIndex].car">0</span>
         </div>
-        <div layout="column" flex="15" class="cal-away-col">
+        <div layout="column" flex="15" class="cal-away-col" ng-class="{'cal-header-future':isFuture(dayIndex)}">
           <span ng-if="weekData[dayIndex].absent">{{weekData[dayIndex].absent}}</span><span ng-if="!weekData[dayIndex].absent">0</span>
         </div>
       </div>

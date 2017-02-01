@@ -12,7 +12,8 @@ angular.module("climbGame.controllers.calendar", [])
       $scope.classMap = {};
       $scope.weekData = [];
       $scope.todayData = {
-        babies: []
+        babies: [],
+        means: {}
       };
 
 
@@ -69,6 +70,7 @@ angular.module("climbGame.controllers.calendar", [])
           break;
         case "absent":
           color = "cal-away-col"
+          break;
         case "pedibus":
           color = "cal-pedibus-col"
           break;

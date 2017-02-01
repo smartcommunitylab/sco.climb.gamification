@@ -2,6 +2,8 @@
   "menu_class": "Classe",
   "menu_map": "Mappa",
   "menu_stats": "Statistiche",
+  "menu_change_class": "Cambia sezione",
+  "menu_logout": "Logout",
   "stats_distance": "Raggiunti {{done}} km su {{total}}!",
   "stats_ranking_global": "Statistica globale:",
   "stats_legenda": "Legenda:",
@@ -11,5 +13,6 @@
   "stats_pandr": "In auto fino alla piazzola di sosta",
   "stats_car": "In auto fino a scuola",
   "stats_bonus": "Bonus",
-  "cal_send_data_button": "INVIA DATI"
+  "cal_send_data_button": "INVIA DATI",
+  "toast_uname_not_valid": "Nome utente o password non validi"
 }
