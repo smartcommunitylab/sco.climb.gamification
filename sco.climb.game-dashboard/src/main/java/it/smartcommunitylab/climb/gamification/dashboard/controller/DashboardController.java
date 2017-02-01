@@ -310,6 +310,17 @@ public class DashboardController {
 			if(pointConcept != null) {
 				result.getScoreModeMap().put(Const.MODE_PIEDI_ADULTO, pointConcept.getScore());
 			}
+			key = env.getProperty("stat." + Const.MODE_PEDIBUS);
+			pointConcept = gengineUtils.getPointConcept(playerStatus, key);
+			if(pointConcept != null) {
+				Double score = result.getScoreModeMap().get(Const.MODE_PIEDI_ADULTO);
+				if(score != null) {
+					score = score + pointConcept.getScore();
+				} else {
+					score = pointConcept.getScore();
+				}
+				result.getScoreModeMap().put(Const.MODE_PIEDI_ADULTO, score);
+			}
 			
 			key = env.getProperty("stat." + Const.MODE_SCUOLABUS);
 			pointConcept = gengineUtils.getPointConcept(playerStatus, key);
