@@ -88,9 +88,22 @@ angular.module("climbGame.controllers.calendar", [])
         $scope.selectedMeanColor = $scope.returnColorByType($scope.selectedMean);
       }
       $scope.selectBabyMean = function (index) {
+        if (!$scope.selectedMean) {
+          $mdToast.show($mdToast.simple().content('Selezionare un mezzo di trasporto'));
+          return;
+        }
         //set baby[$index]= selected mean;
+        //add mean to index and remove the other
+        if ($scope.todayData.babies[index].mean) {
+          $scope.todayData.means[$scope.todayData.babies[index].mean]--;
+        }
         $scope.todayData.babies[index].color = $scope.returnColorByType($scope.selectedMean);
         $scope.todayData.babies[index].mean = $scope.selectedMean;
+        if (!$scope.todayData.means[$scope.todayData.babies[index].mean]) {
+          $scope.todayData.means[$scope.todayData.babies[index].mean] = 0;
+        }
+        $scope.todayData.means[$scope.todayData.babies[index].mean]++;
+
       }
       $scope.today = function (index) {
         return (index == $scope.todayIndex);
@@ -271,6 +284,10 @@ angular.module("climbGame.controllers.calendar", [])
               if (calendar[i].modeMap[$scope.todayData.babies[k].childId]) {
                 $scope.todayData.babies[k].color = $scope.returnColorByType(calendar[i].modeMap[$scope.todayData.babies[k].childId]);
                 $scope.todayData.babies[k].mean = calendar[i].modeMap[$scope.todayData.babies[k].childId];
+                if (!$scope.todayData.means[$scope.todayData.babies[k].mean]) {
+                  $scope.todayData.means[$scope.todayData.babies[k].mean] = 0;
+                }
+                $scope.todayData.means[$scope.todayData.babies[k].mean]++;
               }
             }
             break;
