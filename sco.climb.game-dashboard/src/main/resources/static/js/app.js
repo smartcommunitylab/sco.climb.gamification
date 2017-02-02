@@ -93,15 +93,17 @@ angular.module('climbGame', [
             }
           }
         })
-        //        .state('home.login', {
-        //          url: 'login',
-        //          views: {
-        //            'content@home': {
-        //              templateUrl: 'templates/login.html',
-        //              controller: 'loginCtrl'
-        //            }
-        //          }
-        //        })
+        /*
+        .state('home.login', {
+          url: 'login',
+          views: {
+            'content@home': {
+              templateUrl: 'templates/login.html',
+              controller: 'loginCtrl'
+            }
+          }
+        })
+        */
         .state('home.map', {
           url: 'map',
           views: {
@@ -142,13 +144,13 @@ angular.module('climbGame', [
   // replace uppercase to regular case
   .filter('humanizeDoc', function () {
     return function (doc) {
-      if (!doc) return
-      if (doc.type === 'directive') {
-        return doc.name.replace(/([A-Z])/g, function ($1) {
-          return '-' + $1.toLowerCase()
-        })
+      if (doc) {
+        if (doc.type === 'directive') {
+          return doc.name.replace(/([A-Z])/g, function ($1) {
+            return '-' + $1.toLowerCase()
+          })
+        }
+        return doc.label || doc.name
       }
-
-      return doc.label || doc.name
     }
   })
