@@ -17,6 +17,7 @@ public class PedibusItineraryLeg extends BaseObject implements Comparable<Pedibu
 	private String imageUrl;
 	private String polyline;
 	private int score;
+	private String transport;
 	
 	public String getGameId() {
 		return gameId;
@@ -88,5 +89,11 @@ public class PedibusItineraryLeg extends BaseObject implements Comparable<Pedibu
 	}
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
+	}
+	public String getTransport() {
+		return transport;
+	}
+	public void setTransport(String transport) {
+		this.transport = transport;
 	}
 }

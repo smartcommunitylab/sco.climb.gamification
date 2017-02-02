@@ -408,15 +408,15 @@ md-dialog {
 
 .stats table th,
 .stats table td {
-  width: 16.66667%;
+  width: 20%;
   border: 1px solid #999999;
 }
 
-.stats table th.mode-zeroimpact-solo {
+.stats table th.mode-zeroImpact_solo {
   background-color: #ef5350;
 }
 
-.stats table th.mode-pedibus {
+.stats table th.mode-zeroImpact_wAdult {
   background-color: #ffee58;
 }
 
@@ -426,10 +426,6 @@ md-dialog {
 
 .stats table th.mode-pandr {
   background-color: #1565c0;
-}
-
-.stats table th.mode-car {
-  background-color: #bdbdbd;
 }
 
 .stats table th.bonus {
@@ -442,11 +438,11 @@ md-dialog {
   vertical-align: top;
 }
 
-.stats table td.mode-zeroimpact-solo {
+.stats table td.mode-zeroImpact_solo {
   color: #ef5350;
 }
 
-.stats table td.mode-pedibus {
+.stats table td.mode-zeroImpact_wAdult {
   color: #ffee58;
 }
 
@@ -456,10 +452,6 @@ md-dialog {
 
 .stats table td.mode-pandr {
   color: #1565c0;
-}
-
-.stats table td.mode-car {
-  color: #bdbdbd;
 }
 
 .stats table td.bonus {
