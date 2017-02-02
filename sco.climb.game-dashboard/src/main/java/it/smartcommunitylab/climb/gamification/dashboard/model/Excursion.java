@@ -11,6 +11,7 @@ public class Excursion extends BaseObject {
 	private String meteo;
 	private Integer children;
 	private Double distance;
+	private String name;
 	
 	public String getGameId() {
 		return gameId;
@@ -47,5 +48,11 @@ public class Excursion extends BaseObject {
 	}
 	public void setDistance(Double distance) {
 		this.distance = distance;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 }

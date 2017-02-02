@@ -172,14 +172,14 @@ public class DashboardController {
 	@RequestMapping(value = "/api/excursion/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.POST)
 	public @ResponseBody void saveExcursion(@PathVariable String ownerId, 
 			@PathVariable String gameId, @PathVariable String classRoom,
+			@RequestParam String name, @RequestParam String meteo, @RequestParam Long date, 
 			@RequestParam Integer children, @RequestParam Double distance, 
-			@RequestParam String meteo, @RequestParam Long date,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		Date day = new Date(date);
-		storage.saveExcursion(ownerId, gameId, classRoom, children, distance, day, meteo);
+		storage.saveExcursion(ownerId, gameId, classRoom, name, children, distance, day, meteo);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("saveExcursion[%s]: %s - %s - %s - %s", ownerId, gameId, classRoom, children, distance));
 		}

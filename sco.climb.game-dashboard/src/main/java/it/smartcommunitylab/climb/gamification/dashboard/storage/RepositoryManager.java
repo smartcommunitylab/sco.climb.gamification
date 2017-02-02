@@ -324,7 +324,7 @@ public class RepositoryManager {
 	}
 
 	
-	public void saveExcursion(String ownerId, String gameId, String classRoom, Integer children,
+	public void saveExcursion(String ownerId, String gameId, String classRoom, String name, Integer children,
 			Double distance, Date day, String meteo) {
 		Excursion excursion = new Excursion();
 		Date now = new Date();
