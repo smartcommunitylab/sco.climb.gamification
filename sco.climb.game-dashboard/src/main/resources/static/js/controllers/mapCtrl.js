@@ -1,11 +1,6 @@
 angular.module("climbGame.controllers.map", [])
   .controller("mapCtrl", ["$scope", "leafletData", "mapService", function ($scope, leafletData, mapService) {
     var init = function () {
-      //      $scope.center = {
-      //        lat: -27.644606381943312,
-      //        lng: -48.47648620605469,
-      //        zoom: 10
-      //      };
       angular.extend($scope, {
         defaults: {
           zoomControl: false
@@ -257,6 +252,15 @@ angular.module("climbGame.controllers.map", [])
     mapService.getStatus().then(function (data) {
         //visualize the status trought path
         $scope.legs = data.legs;
+        $scope.globalTeam = data.game.globalTeam;
+        // get actual situation
+        for (var i = 0; i < data.teams.length; i++) {
+          if (data.teams[i].classRoom == $scope.globalTeam) {
+            $scope.globalScore = data.teams[i].score;
+            $scope.currentLeg = data.teams[i].currentLeg;
+            break;
+          }
+        }
         for (var i = 0; i < data.legs.length; i++) {
           $scope.pathLine[i] = {
               color: '#3f51b5',
@@ -269,13 +273,13 @@ angular.module("climbGame.controllers.map", [])
             externalUrl = externalUrl + '<div class="row"> ' + ' <a href="' + data.legs[i].externalUrls[k] + '">' + data.legs[i].externalUrls[k] + '</div>';
           }
           externalUrl = externalUrl + '</div>';
+          var icon = getMarkerIcon(data.legs[i])
           $scope.pathMarkers.push({
             getMessageScope: function () {
               return $scope;
             },
             lat: data.legs[i].geocoding[1],
             lng: data.legs[i].geocoding[0],
-            //message: '<div ng-controller="PathDetailMapCtrl" class="map-balloon">' +
             message: '<div class="map-balloon">' +
               '<h4 class="text-pop-up">' + (i + 1) + '. ' + data.legs[i].name + '</h4>' +
               '<div class="row">' +
@@ -283,20 +287,48 @@ angular.module("climbGame.controllers.map", [])
               '</div>' +
               '</div>',
             icon: {
-              //              type: 'div',
-              //              iconSize: [32, 32],
-              //              //              html: '<p class="number-map">' + (i + 1) + ' </p><img src="./img/POI_full.png">',
-              //              iconUrl: './img/POI_full.png',
-              //              popupAnchor: [0, 0]
-              iconUrl: "./img/POI_full.png",
+              iconUrl: icon,
               iconSize: [20, 20],
               iconAnchor: [10, 10],
               popupAnchor: [0, -5]
             }
           });
+          addPlayerPosition();
         }
       },
       function (err) {
-
+        //error with status
       });
+
+    function addPlayerPosition() {
+      $scope.pathMarkers.push({
+        getMessageScope: function () {
+          return $scope;
+        },
+        lat: data.legs[i].geocoding[1],
+        lng: data.legs[i].geocoding[0],
+        message: '<div class="map-balloon">' +
+          '<h4 class="text-pop-up">' + (i + 1) + '. ' + data.legs[i].name + '</h4>' +
+          '<div class="row">' +
+          '<div class="col">' + externalUrl + '</div>' +
+          '</div>' +
+          '</div>',
+        icon: {
+          iconUrl: "POI_walk_full",
+          iconSize: [20, 20],
+          iconAnchor: [10, 10],
+          popupAnchor: [0, -5]
+        }
+      });
+    }
+
+    function getMarkerIcon(leg) {
+      //check leg and give me icon based on my status and type of mean
+      if (leg.position < $scope.currentLeg.position) {
+        return './img/POI_full.png';
+      }
+      return './img/POI_empty.png';
+
+    }
+
   }]);

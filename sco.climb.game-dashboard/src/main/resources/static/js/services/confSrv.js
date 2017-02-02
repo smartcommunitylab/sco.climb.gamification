@@ -20,6 +20,12 @@ angular.module('climbGame.services.conf', [])
   configService.getPlayersURL = function () {
     return URL + '/game-dashboard/api/player/';
   };
+  configService.getTokenURL = function () {
+    return URL + '/game-dashboard/token';
+  };
+  configService.getGameId = function () {
+    return URL + '/game-dashboard/api/game/';
+  };
   configService.httpTimout = function () {
     return httpTimeout;
   }
