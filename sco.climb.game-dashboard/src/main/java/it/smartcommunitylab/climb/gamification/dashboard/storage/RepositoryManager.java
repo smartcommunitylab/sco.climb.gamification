@@ -168,10 +168,10 @@ public class RepositoryManager {
 				String oldMode = oldModeMap.get(childId);
 				if(oldMode == null) {
 					continue;
-				} else if(mode.equals(Const.MODE_PIEDI_SOLO) && oldMode.equals(Const.MODE_PEDIBUS)) {
-					continue;
-				} else {
-					calendarDay.getModeMap().put(childId, oldMode);
+				} else if(mode.equals(Const.MODE_PIEDI_ADULTO) && oldMode.equals(Const.MODE_PEDIBUS)) {
+					calendarDay.getModeMap().put(childId, Const.MODE_PEDIBUS);
+				} else if(oldMode.equals(Const.MODE_PEDIBUS)){
+					calendarDay.getModeMap().put(childId, Const.MODE_PEDIBUS);
 					merged = true;
 				}
 			}
