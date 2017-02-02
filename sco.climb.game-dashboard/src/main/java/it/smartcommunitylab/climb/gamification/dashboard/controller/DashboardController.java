@@ -339,6 +339,12 @@ public class DashboardController {
 			if(pointConcept != null) {
 				result.getScoreModeMap().put(Const.MODE_AUTO, pointConcept.getScore());
 			}
+			
+			key = env.getProperty("stat." + Const.MODE_BONUS);
+			pointConcept = gengineUtils.getPointConcept(playerStatus, key);
+			if(pointConcept != null) {
+				result.getScoreModeMap().put(Const.MODE_BONUS, pointConcept.getScore());
+			}
 		}
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("getStats[%s]: %s", ownerId, gameId));
