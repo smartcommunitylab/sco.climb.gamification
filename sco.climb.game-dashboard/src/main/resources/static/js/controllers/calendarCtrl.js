@@ -139,8 +139,9 @@ angular.module("climbGame.controllers.calendar", [])
                   }
                 }
                 $scope.todayData.modeMap = babiesMap;
-                calendarService.sendData($scope.todayData).then(function () {
+                calendarService.sendData($scope.todayData).then(function (returnValue) {
                   //TODO check if merged or not
+
                   //sent data
                   $mdToast.show($mdToast.simple().content('Dati inviati'));
                   $scope.closeDialog();
