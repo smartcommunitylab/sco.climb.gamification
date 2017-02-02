@@ -338,6 +338,7 @@ public class RepositoryManager {
 		excursion.setChildren(children);
 		excursion.setDistance(distance);
 		excursion.setMeteo(meteo);
+		excursion.setName(name);
 		mongoTemplate.save(excursion);
 	}
 	
