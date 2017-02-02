@@ -155,6 +155,14 @@ md-sidenav {
   background-color: #F39C12;
 }
 
+.cal-name {
+  display: inline-block;
+  width: 180px;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+}
+
 .cal-notif-arrow {
   width: 0;
   height: 0;
@@ -342,6 +350,19 @@ md-dialog {
 .cal-button-scroll {
   color: white;
   background-color: #F39C12;
+}
+
+.cal-dialog-title {
+  color: #4153a0;
+  text-align: center;
+  font-size: 24px;
+  margin: 10px;
+}
+
+.cal-dialog-text {
+  text-align: justify;
+  font-size: 18px;
+  margin: 10px;
 }
 
 

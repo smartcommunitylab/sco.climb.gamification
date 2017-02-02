@@ -16,5 +16,10 @@ public class Const {
 	public static final String MODE_PARK_RIDE = "pandr";
 	public static final String MODE_AUTO = "car";
 	public static final String MODE_ASSENTE = "absent";
+	public static final String MODE_BONUS = "bonus";
+	
+	public static final String TRANSPORT_FOOT = "piedi";
+	public static final String TRANSPORT_BOAT = "nave";
+	public static final String TRANSPORT_AIRPLANE = "volo";
 	
 }

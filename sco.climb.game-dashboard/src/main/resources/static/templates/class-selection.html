@@ -3,25 +3,20 @@
     <img src="img/CLIMB_logo.png">
   </div>
   <md-content layout="vertical" flex id="content">
+
     <div layout="row" layout-align="center center" layout-fill>
       <md-whiteframe class="md-whiteframe-z1" layout="column" flex="30" layout-padding>
         <md-content md-theme="docs-dark">
-          <md-input-container>
-            <label>Email</label>
-            <input ng-model="user.username">
-          </md-input-container>
-          <md-input-container>
-            <label>Password</label>
-            <input ng-model="user.password" type="password">
-          </md-input-container>
+          <md-select ng-model="selectedClass" placeholder="Classes" class="md-no-underline">
+            <md-option ng-repeat="class in formClasses" ng-value="class">{{class.value}}</md-option>
+          </md-select>
           <md-input-container layout-align="center center">
             <div layout="row" layout-sm="column" layout-margin>
-              <md-button class="md-raised md-primary" flex="50" flex-sm="100" ng-click="login()">Login</md-button>
+              <md-button class="md-raised md-primary" flex="50" flex-sm="100" ng-click="login()">Entra</md-button>
             </div>
           </md-input-container>
         </md-content>
       </md-whiteframe>
     </div>
-
   </md-content>
 </div>

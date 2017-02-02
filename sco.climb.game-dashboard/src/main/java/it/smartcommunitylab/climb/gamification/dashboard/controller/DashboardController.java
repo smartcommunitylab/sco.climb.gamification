@@ -1,5 +1,6 @@
 package it.smartcommunitylab.climb.gamification.dashboard.controller;
 
+import it.smartcommunitylab.climb.gamification.dashboard.common.Const;
 import it.smartcommunitylab.climb.gamification.dashboard.common.GEngineUtils;
 import it.smartcommunitylab.climb.gamification.dashboard.common.Utils;
 import it.smartcommunitylab.climb.gamification.dashboard.exception.EntityNotFoundException;
@@ -9,10 +10,12 @@ import it.smartcommunitylab.climb.gamification.dashboard.model.Excursion;
 import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusGame;
 import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusPlayer;
 import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusTeam;
+import it.smartcommunitylab.climb.gamification.dashboard.model.Stats;
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.Challenge;
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.ExecutionDataDTO;
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.Notification;
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.PlayerStateDTO;
+import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.PointConcept;
 import it.smartcommunitylab.climb.gamification.dashboard.storage.DataSetSetup;
 import it.smartcommunitylab.climb.gamification.dashboard.storage.RepositoryManager;
 
@@ -30,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -46,6 +50,9 @@ import com.google.common.collect.Maps;
 @Controller
 public class DashboardController {
 	private static final transient Logger logger = LoggerFactory.getLogger(DashboardController.class);
+	
+	@Autowired
+	private Environment env;
 	
 	@Autowired
 	private RepositoryManager storage;
@@ -165,14 +172,14 @@ public class DashboardController {
 	@RequestMapping(value = "/api/excursion/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.POST)
 	public @ResponseBody void saveExcursion(@PathVariable String ownerId, 
 			@PathVariable String gameId, @PathVariable String classRoom,
+			@RequestParam String name, @RequestParam String meteo, @RequestParam Long date, 
 			@RequestParam Integer children, @RequestParam Double distance, 
-			@RequestParam String meteo, @RequestParam Long date,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
 		Date day = new Date(date);
-		storage.saveExcursion(ownerId, gameId, classRoom, children, distance, day, meteo);
+		storage.saveExcursion(ownerId, gameId, classRoom, name, children, distance, day, meteo);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("saveExcursion[%s]: %s - %s - %s - %s", ownerId, gameId, classRoom, children, distance));
 		}
@@ -230,9 +237,9 @@ public class DashboardController {
 			Collections.sort(result, new Comparator<Notification>() {
 				@Override
 				public int compare(Notification o1, Notification o2) {
-					if(o1.getTimestamp() < o2.getTimestamp()) {
+					if(o1.getTimestamp() > o2.getTimestamp()) {
 						return -1;
-					} else if(o1.getTimestamp() > o2.getTimestamp()) {
+					} else if(o1.getTimestamp() < o2.getTimestamp()) {
 						return 1;
 					} else { 
 						return 0; 
@@ -272,6 +279,75 @@ public class DashboardController {
 		}
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("getChallenge[%s]: %s - %s - %s", ownerId, gameId, classRoom, result.size()));
+		}
+		return result;
+	}
+	
+	@RequestMapping(value = "/api/stat/{ownerId}/{gameId}", method = RequestMethod.GET)
+	public @ResponseBody Stats getStats(@PathVariable String ownerId, @PathVariable String gameId,  
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
+			throw new UnauthorizedException("Unauthorized Exception: token not valid");
+		}
+		Stats result = new Stats();
+		PedibusGame game = storage.getPedibusGame(ownerId, gameId);
+		if(game != null) {
+			PlayerStateDTO playerStatus = gengineUtils.getPlayerStatus(gameId, game.getGlobalTeam());
+			PointConcept pointConcept = gengineUtils.getPointConcept(playerStatus, env.getProperty("score.name"));
+			if(pointConcept != null) {
+				result.setGameScore(pointConcept.getScore());
+			}
+			result.setMaxGameScore(Double.valueOf(env.getProperty("score.final")));
+			
+			String key = env.getProperty("stat." + Const.MODE_PIEDI_SOLO);
+			pointConcept = gengineUtils.getPointConcept(playerStatus, key);
+			if(pointConcept != null) {
+				result.getScoreModeMap().put(Const.MODE_PIEDI_SOLO, pointConcept.getScore());
+			}
+			
+			key = env.getProperty("stat." + Const.MODE_PIEDI_ADULTO);
+			pointConcept = gengineUtils.getPointConcept(playerStatus, key);
+			if(pointConcept != null) {
+				result.getScoreModeMap().put(Const.MODE_PIEDI_ADULTO, pointConcept.getScore());
+			}
+			key = env.getProperty("stat." + Const.MODE_PEDIBUS);
+			pointConcept = gengineUtils.getPointConcept(playerStatus, key);
+			if(pointConcept != null) {
+				Double score = result.getScoreModeMap().get(Const.MODE_PIEDI_ADULTO);
+				if(score != null) {
+					score = score + pointConcept.getScore();
+				} else {
+					score = pointConcept.getScore();
+				}
+				result.getScoreModeMap().put(Const.MODE_PIEDI_ADULTO, score);
+			}
+			
+			key = env.getProperty("stat." + Const.MODE_SCUOLABUS);
+			pointConcept = gengineUtils.getPointConcept(playerStatus, key);
+			if(pointConcept != null) {
+				result.getScoreModeMap().put(Const.MODE_SCUOLABUS, pointConcept.getScore());
+			}
+			
+			key = env.getProperty("stat." + Const.MODE_PARK_RIDE);
+			pointConcept = gengineUtils.getPointConcept(playerStatus, key);
+			if(pointConcept != null) {
+				result.getScoreModeMap().put(Const.MODE_PARK_RIDE, pointConcept.getScore());
+			}
+			
+			key = env.getProperty("stat." + Const.MODE_AUTO);
+			pointConcept = gengineUtils.getPointConcept(playerStatus, key);
+			if(pointConcept != null) {
+				result.getScoreModeMap().put(Const.MODE_AUTO, pointConcept.getScore());
+			}
+			
+			key = env.getProperty("stat." + Const.MODE_BONUS);
+			pointConcept = gengineUtils.getPointConcept(playerStatus, key);
+			if(pointConcept != null) {
+				result.getScoreModeMap().put(Const.MODE_BONUS, pointConcept.getScore());
+			}
+		}
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("getStats[%s]: %s", ownerId, gameId));
 		}
 		return result;
 	}

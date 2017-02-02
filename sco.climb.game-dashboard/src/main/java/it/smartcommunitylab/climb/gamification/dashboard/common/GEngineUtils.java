@@ -3,12 +3,15 @@ package it.smartcommunitylab.climb.gamification.dashboard.common;
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.ExecutionDataDTO;
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.Notification;
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.PlayerStateDTO;
+import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.PointConcept;
 import it.smartcommunitylab.climb.gamification.dashboard.model.gamification.TeamDTO;
 import it.smartcommunitylab.climb.gamification.dashboard.utils.HTTPUtils;
 
 import java.net.URLEncoder;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +36,23 @@ public class GEngineUtils {
 	private String gamificationPassword;
 	
 	private ObjectMapper mapper = new ObjectMapper();
+	
+	@SuppressWarnings("rawtypes")
+	public PointConcept getPointConcept(PlayerStateDTO state, String key) {
+		PointConcept result = null;
+		Set<?> pointConcept = (Set) state.getState().get("PointConcept");
+		if(pointConcept != null) {
+			Iterator<?> it = pointConcept.iterator();
+			while(it.hasNext()) {
+				PointConcept pc = mapper.convertValue(it.next(), PointConcept.class);
+				if(pc.getName().equals(key)) {
+					result = pc;
+					break;
+				}
+			}
+		}
+		return result;
+	}
 
 	public void executeAction(ExecutionDataDTO executionData) throws Exception {
 		String address = gamificationURL + "/gengine/execute";

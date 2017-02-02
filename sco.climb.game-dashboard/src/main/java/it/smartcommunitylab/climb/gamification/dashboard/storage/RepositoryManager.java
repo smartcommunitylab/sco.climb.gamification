@@ -324,7 +324,7 @@ public class RepositoryManager {
 	}
 
 	
-	public void saveExcursion(String ownerId, String gameId, String classRoom, Integer children,
+	public void saveExcursion(String ownerId, String gameId, String classRoom, String name, Integer children,
 			Double distance, Date day, String meteo) {
 		Excursion excursion = new Excursion();
 		Date now = new Date();
@@ -338,6 +338,7 @@ public class RepositoryManager {
 		excursion.setChildren(children);
 		excursion.setDistance(distance);
 		excursion.setMeteo(meteo);
+		excursion.setName(name);
 		mongoTemplate.save(excursion);
 	}
 	
@@ -362,6 +363,7 @@ public class RepositoryManager {
 			update.set("imageUrl", leg.getImageUrl());
 			update.set("polyline", leg.getPolyline());
 			update.set("score", leg.getScore());
+			update.set("transport", leg.getTransport());
 			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);
 		} else {

@@ -2,6 +2,8 @@
   "menu_class": "Classe",
   "menu_map": "Mappa",
   "menu_stats": "Statistiche",
+  "menu_change_class": "Cambia sezione",
+  "menu_logout": "Logout",
   "stats_gamescore": "Raggiunti {{done}} km su {{total}}!",
   "stats_ranking_global": "Statistica globale:",
   "stats_legenda": "Legenda:",
@@ -11,5 +13,14 @@
   "stats_pandr": "In auto fino alla piazzola di sosta",
   "stats_car": "In auto fino a scuola",
   "stats_bonus": "Bonus",
-  "cal_send_data_button": "INVIA DATI"
+  "cal_send_data_button": "INVIA DATI",
+  "toast_uname_not_valid": "Nome utente o password non validi",
+  "cal_header_state": "Stato",
+  "cal_header_sent": "Dati Inviati",
+  "cal_mean_zeroImpact_solo": "A piedi o in bici da solo o con gli amici",
+  "cal_mean_zeroImpact_wAdult": "A piedi o accompagnati da un adulto",
+  "cal_mean_bus": "Con scuolabus o autobus",
+  "cal_mean_pandr": "In macchina fino alla piazzola di sosta",
+  "cal_mean_car": "In macchina fino a scuola",
+  "cal_mean_absent": "Assente"
 }
