@@ -4,7 +4,9 @@ angular.module('climbGame.services.conf', [])
   var configService = {};
   var DEVELOPMENT = true;
   var URL = 'https://' + (DEVELOPMENT ? 'climbdev' : 'climb') + '.smartcommunitylab.it';
-
+  var FOOT_CONSTANT = "piedi";
+  var BOAT_CONSTANT = "nave";
+  var PLANE_CONSTANT = "volo";
   var httpTimeout = 10000;
 
   var APP_BUILD = '';
@@ -29,5 +31,16 @@ angular.module('climbGame.services.conf', [])
   configService.httpTimout = function () {
     return httpTimeout;
   }
+
+  configService.getFootConstant = function () {
+    return FOOT_CONSTANT;
+  }
+  configService.getBoatConstant = function () {
+    return BOAT_CONSTANT;
+  }
+  configService.getPlaneConstant = function () {
+    return PLANE_CONSTANT;
+  }
+
   return configService;
 });

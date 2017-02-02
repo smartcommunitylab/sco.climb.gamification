@@ -1,5 +1,5 @@
 angular.module("climbGame.controllers.map", [])
-  .controller("mapCtrl", ["$scope", "leafletData", "mapService", function ($scope, leafletData, mapService) {
+  .controller("mapCtrl", ["$scope", "leafletData", "mapService", "configService", function ($scope, leafletData, mapService, configService) {
     var init = function () {
       angular.extend($scope, {
         defaults: {
@@ -29,74 +29,86 @@ angular.module("climbGame.controllers.map", [])
       });
       var controlsStyle = {
         leftarrow: {
-          backgroundColor: 'white',
-          backgroundImage: "url(https://cdn0.iconfinder.com/data/icons/navigation-set-arrows-part-one/32/ChevronLeft-128.png)",
+          backgroundColor: '#f39c12',
+          backgroundImage: 'url("./img/arrow_left.png")',
+          color: 'white',
           backgroundSize: "30px 30px",
           width: '30px',
           height: '30px',
           position: 'absolute',
           top: '80px',
           left: '60px',
+          padding: '1px',
+          border: '1px solid white'
         },
         rightarrow: {
-          backgroundColor: 'white',
-          backgroundImage: "url(https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-arrow-right-128.png)",
+          backgroundColor: '#f39c12',
+          backgroundImage: 'url("./img/arrow_right.png")',
           backgroundSize: "30px 30px",
           width: '30px',
           height: '30px',
           position: 'absolute',
           top: '80px',
           left: '140px',
+          border: '1px solid white'
         },
         uparrow: {
-          backgroundColor: 'white',
-          backgroundImage: "url(http://www.iconarchive.com/download/i87622/icons8/ios7/Arrows-Up-4.ico)",
+          backgroundColor: '#f39c12',
+          backgroundImage: 'url("./img/arrow_up.png")',
+
           backgroundSize: "30px 30px",
           width: '30px',
           height: '30px',
           position: 'absolute',
           top: '40px',
           left: '100px',
+          border: '1px solid white'
         },
         downarrow: {
-          backgroundColor: 'white',
-          backgroundImage: "url(http://icons.veryicon.com/ico/System/iOS%207/Arrows%20Down%204.ico)",
+          backgroundColor: '#f39c12',
+          backgroundImage: 'url("./img/arrow_down.png")',
+
           backgroundSize: "30px 30px",
           width: '30px',
           height: '30px',
           position: 'absolute',
           top: '120px',
           left: '100px',
+          border: '1px solid white'
         },
         zoomin: {
-          backgroundColor: 'white',
-          backgroundImage: "url(http://www.iconarchive.com/download/i91602/icons8/windows-8/Science-Plus2-Math.ico)",
+          backgroundColor: '#f39c12',
+          backgroundImage: 'url("./img/zoom-in.png")',
+
           backgroundSize: "30px 30px",
           width: '30px',
           height: '30px',
           position: 'absolute',
           top: '40px',
           left: '20px',
+          border: '1px solid white'
         },
         zoomout: {
-          backgroundColor: 'white',
-          backgroundImage: "url(http://www.iconarchive.com/download/i91592/icons8/windows-8/Science-Minus2-Math.ico)",
+          backgroundColor: '#f39c12',
+          backgroundImage: 'url("./img/zoom-out.png")',
           backgroundSize: "30px 30px",
           width: '30px',
           height: '30px',
           position: 'absolute',
           top: '120px',
           left: '20px',
+          border: '1px solid white'
         },
         home: {
-          backgroundColor: 'white',
-          backgroundImage: "url(https://cdn4.iconfinder.com/data/icons/pictype-free-vector-icons/16/home-512.png)",
+          backgroundColor: '#f39c12',
+          backgroundImage: 'url("./img/home.png")',
           backgroundSize: "30px 30px",
           width: '30px',
           height: '30px',
           position: 'absolute',
           top: '80px',
           left: '20px',
+          border: '1px solid white'
         }
       };
       var assignStyle = function (containerStyle, styleValues) {
@@ -270,7 +282,7 @@ angular.module("climbGame.controllers.map", [])
             //create div of external url
           var externalUrl = "<div>";
           for (var k = 0; k < data.legs[i].externalUrls.length; k++) {
-            externalUrl = externalUrl + '<div class="row"> ' + ' <a href="' + data.legs[i].externalUrls[k] + '">' + data.legs[i].externalUrls[k] + '</div>';
+            externalUrl = externalUrl + '<div class="row"> ' + ' <a href="' + data.legs[i].externalUrls[k] + '" target="_blank">' + data.legs[i].externalUrls[k] + '</div>';
           }
           externalUrl = externalUrl + '</div>';
           var icon = getMarkerIcon(data.legs[i])
@@ -288,8 +300,8 @@ angular.module("climbGame.controllers.map", [])
               '</div>',
             icon: {
               iconUrl: icon,
-              iconSize: [20, 20],
-              iconAnchor: [10, 10],
+              iconSize: [50, 50],
+              iconAnchor: [25, 25],
               popupAnchor: [0, -5]
             }
           });
@@ -301,33 +313,61 @@ angular.module("climbGame.controllers.map", [])
       });
 
     function addPlayerPosition() {
-      $scope.pathMarkers.push({
-        getMessageScope: function () {
-          return $scope;
-        },
-        lat: data.legs[i].geocoding[1],
-        lng: data.legs[i].geocoding[0],
-        message: '<div class="map-balloon">' +
-          '<h4 class="text-pop-up">' + (i + 1) + '. ' + data.legs[i].name + '</h4>' +
-          '<div class="row">' +
-          '<div class="col">' + externalUrl + '</div>' +
-          '</div>' +
-          '</div>',
-        icon: {
-          iconUrl: "POI_walk_full",
-          iconSize: [20, 20],
-          iconAnchor: [10, 10],
-          popupAnchor: [0, -5]
-        }
-      });
+      //      $scope.pathMarkers.push({
+      //        getMessageScope: function () {
+      //          return $scope;
+      //        },
+      //        lat: data.legs[i].geocoding[1],
+      //        lng: data.legs[i].geocoding[0],
+      //        message: '<div class="map-balloon">' +
+      //          '<h4 class="text-pop-up">' + (i + 1) + '. ' + data.legs[i].name + '</h4>' +
+      //          '<div class="row">' +
+      //          '<div class="col">' + externalUrl + '</div>' +
+      //          '</div>' +
+      //          '</div>',
+      //        icon: {
+      //          iconUrl: "POI_walk_full",
+      //          iconSize: [20, 20],
+      //          iconAnchor: [10, 10],
+      //          popupAnchor: [0, -5]
+      //        }
+      //      });
     }
 
     function getMarkerIcon(leg) {
       //check leg and give me icon based on my status and type of mean
-      if (leg.position < $scope.currentLeg.position) {
-        return './img/POI_full.png';
+      if (leg.position == 0) {
+        return './img/POI_start.png'
       }
-      return './img/POI_empty.png';
+      if (leg.position == $scope.legs.length - 1) {
+        return './img/POI_destination.png'
+      }
+      switch (leg.transport) {
+      case configService.getFootConstant():
+        if (leg.position < $scope.currentLeg.position) {
+          return './img/POI_walk_full.png';
+        }
+        return './img/POI_walk_empty.png';
+        break;
+      case configService.getPlaneConstant():
+        if (leg.position < $scope.currentLeg.position) {
+          return './img/POI_airplane_full.png';
+        }
+        return './img/POI_airplane_empty.png';
+        break;
+      case configService.getBoatConstant():
+        if (leg.position < $scope.currentLeg.position) {
+          return './img/POI_boat_full.png';
+        }
+        return './img/POI_boat_empty.png';
+        break;
+      default:
+        if (leg.position < $scope.currentLeg.position) {
+          return './img/POI_full.png';
+        }
+        return './img/POI_empty.png';
+      }
+
 
     }
 
