@@ -124,7 +124,8 @@ md-sidenav {
   bottom: 0px;
   height: 100px;
   width: 100%;
-  opacity: 0.5;
+  /*  opacity: 0.5;
+  */
   background-color: white;
 }
 
