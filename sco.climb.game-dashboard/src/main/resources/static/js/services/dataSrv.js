@@ -5,7 +5,7 @@ angular.module('climbGame.services.data', [])
 
     // get status of the game
     dataService.getStatus = function () {
-      var deferr = $q.defer()
+      var deferred = $q.defer()
       $http({
         method: 'GET',
         url: configService.getGameStatusURL() + loginService.getOwnerId() + '/' + loginService.getGameId(),
@@ -14,18 +14,18 @@ angular.module('climbGame.services.data', [])
           'x-access-token': loginService.getUserToken()
         },
         timeout: configService.httpTimout()
-      }).then(function (data, status, headers, config) {
-        deferr.resolve(data)
-      }, function (data, status, headers, config) {
-        console.log(data)
-        deferr.reject(data)
+      }).then(function (response) {
+        deferred.resolve(response.data)
+      }, function (reason) {
+        console.log(reason)
+        deferred.reject(reason)
       })
-      return deferr.promise
+      return deferred.promise
     }
 
     // get calendar's days
     dataService.getCalendar = function (from, to) {
-      var deferr = $q.defer()
+      var deferred = $q.defer()
       $http({
         method: 'GET',
         url: configService.getCalendarURL() + loginService.getOwnerId() + '/' + loginService.getGameId() + '/' + loginService.getClassRoom(),
@@ -38,18 +38,18 @@ angular.module('climbGame.services.data', [])
           'x-access-token': loginService.getUserToken()
         },
         timeout: configService.httpTimout()
-      }).then(function (data, status, headers, config) {
-        deferr.resolve(data)
-      }, function (data, status, headers, config) {
-        console.log(data)
-        deferr.reject(data)
+      }).then(function (response) {
+        deferred.resolve(response.data)
+      }, function (reason) {
+        console.log(reason)
+        deferred.reject(reason)
       })
-      return deferr.promise
+      return deferred.promise
     }
 
     // get components of the class
     dataService.getClassPlayers = function () {
-      var deferr = $q.defer()
+      var deferred = $q.defer()
       $http({
         method: 'GET',
         url: configService.getPlayersURL() + loginService.getOwnerId() + '/' + loginService.getGameId() + '/' + loginService.getClassRoom(),
@@ -58,17 +58,17 @@ angular.module('climbGame.services.data', [])
           'x-access-token': loginService.getUserToken()
         },
         timeout: configService.httpTimout()
-      }).then(function (data, status, headers, config) {
-        deferr.resolve(data)
-      }, function (data, status, headers, config) {
-        console.log(data)
-        deferr.reject(data)
+      }).then(function (response) {
+        deferred.resolve(response.data)
+      }, function (reason) {
+        console.log(reason)
+        deferred.reject(reason)
       })
-      return deferr.promise
+      return deferred.promise
     }
 
     dataService.sendData = function (data) {
-      var deferr = $q.defer()
+      var deferred = $q.defer()
       $http({
         method: 'POST',
         url: configService.getCalendarURL() + loginService.getOwnerId() + '/' + loginService.getGameId() + '/' + loginService.getClassRoom(),
@@ -82,13 +82,13 @@ angular.module('climbGame.services.data', [])
           'modeMap': data.modeMap
         },
         timeout: configService.httpTimout()
-      }).then(function (data, status, headers, config) {
-        deferr.resolve(data)
-      }, function (data, status, headers, config) {
-        console.log(data)
-        deferr.reject(data)
+      }).then(function (response) {
+        deferred.resolve(response.data)
+      }, function (reason) {
+        console.log(reason)
+        deferred.reject(reason)
       })
-      return deferr.promise
+      return deferred.promise
     }
     return dataService
   })
