@@ -325,7 +325,7 @@ public class GamificationController {
 			PedibusGame result = storage.getPedibusGame(ownerId, gameId);
 
 			if (logger.isInfoEnabled()) {
-				logger.info("get pedibusGame");
+				logger.info(String.format("getPedibusGame[%s]: %s", ownerId, gameId));
 			}
 			return result;
 		} catch (Exception e) {
@@ -345,7 +345,7 @@ public class GamificationController {
 			List<PedibusGame> result = storage.getPedibusGames(ownerId);
 
 			if (logger.isInfoEnabled()) {
-				logger.info("get pedibusGames");
+				logger.info(String.format("getPedibusGames[%s]: %s", ownerId, result.size()));
 			}
 			return result;
 		} catch (Exception e) {
@@ -413,7 +413,7 @@ public class GamificationController {
 			PedibusItineraryLeg result = storage.getPedibusItineraryLeg(ownerId, legId);
 
 			if (logger.isInfoEnabled()) {
-				logger.info("get pedibusItineraryLegs");
+				logger.info(String.format("getPedibusItineraryLeg[%s]: %s", ownerId, legId));
 			}
 			return result;
 		} catch (Exception e) {
@@ -433,7 +433,7 @@ public class GamificationController {
 			List<PedibusItineraryLeg> result = storage.getPedibusItineraryLegs(ownerId);
 
 			if (logger.isInfoEnabled()) {
-				logger.info("get pedibusItineraryLegs");
+				logger.info(String.format("getPedibusItineraryLegs[%s]: %s", ownerId, result.size()));
 			}
 			return result;
 		} catch (Exception e) {
@@ -493,7 +493,7 @@ public class GamificationController {
 			result.put("teams", teams);
 
 			if (logger.isInfoEnabled()) {
-				logger.info("get pedibus game status");
+				logger.info(String.format("getGameStatus[%s]: %s", ownerId, gameId));
 			}
 
 			return result;

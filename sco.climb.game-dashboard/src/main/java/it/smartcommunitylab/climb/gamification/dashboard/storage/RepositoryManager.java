@@ -285,7 +285,7 @@ public class RepositoryManager {
 			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);
 		} else {
-			throw new StorageException("Cannot update existing PedibusGame with gameId " + game.getGameId());
+			logger.warn("Cannot update existing PedibusGame with gameId " + game.getGameId());
 		}
 	}	
 	
@@ -369,7 +369,7 @@ public class RepositoryManager {
 			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);
 		} else {
-			throw new StorageException("Cannot update existing PedibusItineraryLeg with gameId " + leg.getGameId() + " and legId " + leg.getLegId());
+			logger.warn("Cannot update existing PedibusItineraryLeg with gameId " + leg.getGameId() + " and legId " + leg.getLegId());
 		}
 	}	
 	
@@ -418,7 +418,8 @@ public class RepositoryManager {
 			mongoTemplate.updateFirst(query, update, PedibusTeam.class);
 			return true;
 		} else {
-			throw new StorageException("Cannot update existing PedibusPlayer with classRoom " + team.getClassRoom());
+			logger.warn("Cannot update existing savePedibusTeam with id " + team.getClassRoom());
+			return false;
 		}
 	}	
 	
