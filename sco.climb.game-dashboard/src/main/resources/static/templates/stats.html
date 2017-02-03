@@ -7,13 +7,13 @@
       <h1 class="md-display-1">{{stats.maxGameScore}}</h1>
     </div>
   </div>
-</div>
-<div layout="row" layout-align="start center">
-  <div flex="50">
-    <h1 class="md-title">{{'stats_ranking_global' | translate}}</h1>
-  </div>
-  <div flex="50" class="legenda">
-    {{'stats_legenda' | translate}} <i class="icon icon-foot"></i><i class="icon icon-star"></i> 10 km
+  <div layout="row" layout-align="start center">
+    <div flex="50">
+      <h1 class="md-title">{{'stats_ranking_global' | translate}}</h1>
+    </div>
+    <div flex="50" class="legenda">
+      {{'stats_legenda' | translate}} <i class="icon icon-foot"></i><i class="icon icon-star"></i> 10 km
+    </div>
   </div>
   <div layout="row">
     <table>
@@ -26,7 +26,7 @@
       </tr>
       <tr>
         <td class="mode-zeroImpact_solo">
-          <i class="icon icon-foot" ng-repeat="i in getCount(stats.scoreModeMap.zeroimpact_solo) track by $index"></i>
+          <i class="icon icon-foot" ng-repeat="i in getCount(stats.scoreModeMap.zeroImpact_solo) track by $index"></i>
         </td>
         <td class="mode-zeroImpact_wAdult">
           <i class="icon icon-foot" ng-repeat="i in getCount(stats.scoreModeMap.zeroImpact_wAdult) track by $index"></i>

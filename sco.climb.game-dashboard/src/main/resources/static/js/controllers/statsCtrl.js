@@ -1,20 +1,24 @@
 /* global angular */
 angular.module('climbGame.controllers.stats', [])
-  .controller('statsCtrl', function ($scope, $filter) {
-    $scope.stats = {}
+  .controller('statsCtrl', function ($scope, $filter, dataService) {
+    const KMS_PER_FOOT = 10
 
-    /* temporary data */
+    $scope.stats = null
+
+    /* temporary data *
     var data = {
-      'gameScore': 156870,
+      'gameScore': 303770,
       'maxGameScore': 5900000,
       'scoreModeMap': {
-        'zeroImpact_wAdult': 98070,
-        'bus': 39600,
+        'zeroImpact_wAdult': 101070,
+        'bus': 147600,
         'pandr': 600,
-        'bonus': 7100,
-        'zeroImpact_solo': 11500
+        'car': 0,
+        'bonus': 31000,
+        'zeroImpact_solo': 23500
       }
     }
+    */
 
     var data2stats = function (data) {
       var gameScore = $filter('number')(data.gameScore / 1000, 2)
@@ -26,24 +30,29 @@ angular.module('climbGame.controllers.stats', [])
         'gameScore': gameScore,
         'maxGameScore': data.maxGameScore / 1000,
         'scoreModeMap': {
-          'zeroImpact_wAdult': Math.floor(data['scoreModeMap']['zeroImpact_wAdult'] / 10000),
-          'bus': Math.floor(data['scoreModeMap']['bus'] / 10000),
-          'pandr': Math.floor(data['scoreModeMap']['pandr'] / 10000),
-          'bonus': Math.floor(data['scoreModeMap']['bonus'] / 10000),
-          'zeroImpact_solo': Math.floor(data['scoreModeMap']['zeroImpact_solo'] / 10000)
+          'zeroImpact_wAdult': Math.floor(data['scoreModeMap']['zeroImpact_wAdult'] / (1000 * KMS_PER_FOOT)),
+          'bus': Math.floor(data['scoreModeMap']['bus'] / (1000 * KMS_PER_FOOT)),
+          'pandr': Math.floor(data['scoreModeMap']['pandr'] / (1000 * KMS_PER_FOOT)),
+          'bonus': Math.floor(data['scoreModeMap']['bonus'] / (1000 * KMS_PER_FOOT)),
+          'zeroImpact_solo': Math.floor(data['scoreModeMap']['zeroImpact_solo'] / (1000 * KMS_PER_FOOT))
         }
       }
     }
 
-    $scope.stats = data2stats(data)
-    console.log($scope.stats)
+    dataService.getStats().then(
+      function (stats) {
+        $scope.stats = data2stats(stats)
+      },
+      function (reason) {
+        console.log(reason)
+      }
+    )
 
     $scope.getGameScorePercentage = function () {
       return ($scope.stats.gameScore * 100) / $scope.stats.maxGameScore
     }
 
     $scope.getCount = function (count) {
-      console.log(count)
       return !count ? 0 : new Array(count)
     }
   })
