@@ -68,11 +68,6 @@ public class ConsoleController {
 	
 	private static final transient Logger logger = LoggerFactory.getLogger(ConsoleController.class);
 		
-	@RequestMapping(value = "/")
-	public String root() {
-		return "console";
-	}
-	
 	@RequestMapping(value = "/upload")
 	public String upload() {
 		return "upload";
