@@ -21,20 +21,44 @@ angular.module('climbGame.controllers.excursions', [])
     }
     */
 
-    dataService.getExcursions().then(
-      function (excurions) {
-        $scope.excurions = excurions
-      },
-      function (reason) {
-        // console.log(reason)
-      }
-    )
+    $scope.refreshExcursions = function () {
+      dataService.getExcursions().then(
+        function (excurions) {
+          $scope.excursions = excurions
+        },
+        function (reason) {
+          // console.log(reason)
+        }
+      )
+    }
+
+    $scope.refreshExcursions()
 
     $scope.newExcursion = {
       name: null,
       date: null,
       children: null,
       distance: null,
-      meteo: null
+      meteo: 'sunny'
+    }
+
+    $scope.createExcursion = function () {
+      var params = {
+        name: $scope.newExcursion.name,
+        date: $scope.newExcursion.date.getTime(),
+        children: $scope.newExcursion.children,
+        distance: $scope.newExcursion.distance * 1000,
+        meteo: $scope.newExcursion.meteo
+      }
+
+      dataService.postExcursion(params).then(
+        function (data) {
+          // refresh?
+          $scope.refreshExcursions()
+        },
+        function (reason) {
+          // console.log(reason)
+        }
+      )
     }
   })

@@ -1,4 +1,4 @@
-<div class="stats">
+<div class="stats" layout-padding>
   <div layout="column" flex="80" flex-offset="10">
     <h1 class="md-title title-progress">{{'stats_gamescore' | translate:'{done: ' + stats.gameScore + ', total: ' + stats.maxGameScore + '}'}}</h1>
     <div layout="row" layout-align="start" layout-margin>
@@ -26,19 +26,29 @@
       </tr>
       <tr>
         <td class="mode-zeroImpact_solo">
-          <i class="icon icon-foot" ng-repeat="i in getCount(stats.scoreModeMap.zeroImpact_solo) track by $index"></i>
+          <div layout="row" layout-wrap>
+            <i flex="10" class="icon icon-foot" ng-repeat="i in getCount(stats.scoreModeMap.zeroImpact_solo) track by $index"></i>
+          </div>
         </td>
         <td class="mode-zeroImpact_wAdult">
-          <i class="icon icon-foot" ng-repeat="i in getCount(stats.scoreModeMap.zeroImpact_wAdult) track by $index"></i>
+          <div layout="row" layout-wrap>
+            <i flex="10" class="icon icon-foot" ng-repeat="i in getCount(stats.scoreModeMap.zeroImpact_wAdult) track by $index"></i>
+          </div>
         </td>
         <td class="mode-bus">
-          <i class="icon icon-foot" ng-repeat="i in getCount(stats.scoreModeMap.bus) track by $index"></i>
+          <div layout="row" layout-wrap>
+            <i flex="10" class="icon icon-foot" ng-repeat="i in getCount(stats.scoreModeMap.bus) track by $index"></i>
+          </div>
         </td>
         <td class="mode-pandr">
-          <i class="icon icon-foot" ng-repeat="i in getCount(stats.scoreModeMap.pandr) track by $index"></i>
+          <div layout="row" layout-wrap>
+            <i flex="10" class="icon icon-foot" ng-repeat="i in getCount(stats.scoreModeMap.pandr) track by $index"></i>
+          </div>
         </td>
         <td class="bonus">
-          <i class="icon icon-star" ng-repeat="i in getCount(stats.scoreModeMap.bonus) track by $index"></i>
+          <div layout="row" layout-wrap>
+            <i flex="10" class="icon icon-star" ng-repeat="i in getCount(stats.scoreModeMap.bonus) track by $index"></i>
+          </div>
         </td>
       </tr>
     </table>

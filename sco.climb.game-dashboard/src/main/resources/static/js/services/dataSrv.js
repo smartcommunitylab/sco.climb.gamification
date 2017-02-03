@@ -144,5 +144,38 @@ angular.module('climbGame.services.data', [])
       return deferred.promise
     }
 
+    // post new excursions
+    dataService.postExcursion = function (params) {
+      var deferred = $q.defer()
+
+      if (!params || !params.name || !params.date || !params.children || !params.distance || !params.meteo) {
+        deferred.reject('Invalid or missing data')
+        return deferred.promise
+      }
+
+      $http({
+        method: 'POST',
+        url: configService.getExcursionsURL() + loginService.getOwnerId() + '/' + loginService.getGameId() + '/' + loginService.getClassRoom(),
+        headers: {
+          'Accept': 'application/json',
+          'x-access-token': loginService.getUserToken()
+        },
+        timeout: configService.httpTimout(),
+        params: {
+          name: params.name,
+          date: params.date,
+          children: params.children,
+          distance: params.distance,
+          meteo: params.meteo
+        }
+      }).then(function (response) {
+        deferred.resolve(response.data)
+      }, function (reason) {
+        console.log(reason)
+        deferred.reject(reason)
+      })
+      return deferred.promise
+    }
+
     return dataService
   })
