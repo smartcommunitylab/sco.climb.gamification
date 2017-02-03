@@ -100,6 +100,7 @@ public class GamificationController {
 		}
 
 		List<String> allChildrenId = Lists.newArrayList();
+		List<String> allTeamsId = Lists.newArrayList();
 		
 		try {
 			String token = request.getHeader("X-ACCESS-TOKEN");
@@ -152,11 +153,11 @@ public class GamificationController {
 				storage.savePedibusTeam(pt, ownerId, false);
 
 				TeamDTO team = new TeamDTO();
-
 				team.setName(classRoom);
 				team.setMembers(childrenId);
 				team.setPlayerId(classRoom);
 				team.setGameId(game.getGameId());
+				allTeamsId.add(classRoom);
 
 				try {
 					gengineUtils.createTeam(game.getGameId(), team);
@@ -174,7 +175,7 @@ public class GamificationController {
 
 				TeamDTO team = new TeamDTO();
 				team.setName(game.getGlobalTeam());
-				team.setMembers(allChildrenId);
+				team.setMembers(allTeamsId);
 				team.setPlayerId(game.getGlobalTeam());
 				team.setGameId(game.getGameId());
 
@@ -202,6 +203,7 @@ public class GamificationController {
 		}
 		
 		List<String> allChildrenId = Lists.newArrayList();
+		List<String> allTeamsId = Lists.newArrayList();
 
 		try {
 			String token = request.getHeader("X-ACCESS-TOKEN");
@@ -254,11 +256,11 @@ public class GamificationController {
 
 				if (!updated) {
 					TeamDTO team = new TeamDTO();
-
 					team.setName(classRoom);
 					team.setMembers(childrenId);
 					team.setPlayerId(classRoom);
 					team.setGameId(game.getGameId());
+					allTeamsId.add(classRoom);
 
 					try {
 						gengineUtils.createTeam(game.getGameId(), team);
@@ -286,7 +288,7 @@ public class GamificationController {
 					TeamDTO team = new TeamDTO();
 
 					team.setName(game.getGlobalTeam());
-					team.setMembers(allChildrenId);
+					team.setMembers(allTeamsId);
 					team.setPlayerId(game.getGlobalTeam());
 					team.setGameId(game.getGameId());
 

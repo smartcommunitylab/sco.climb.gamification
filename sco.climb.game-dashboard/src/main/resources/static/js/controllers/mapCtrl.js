@@ -14,16 +14,17 @@ angular.module("climbGame.controllers.map", [])
         pathMarkers: [],
         layers: {
           baselayers: {
-            osm: {
-              name: 'OpenStreetMap',
-              url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-              type: 'xyz'
-            },
             altro: {
               name: 'Watercolor',
               url: 'http://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png',
               type: 'xyz'
+            },
+            osm: {
+              name: 'OpenStreetMap',
+              url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+              type: 'xyz'
             }
+
           }
         }
       });
@@ -304,7 +305,7 @@ angular.module("climbGame.controllers.map", [])
               iconUrl: icon,
               iconSize: [50, 50],
               iconAnchor: [25, 25],
-              popupAnchor: [0, -5]
+              popupAnchor: [0, -25]
             }
           });
           addPlayerPosition();
@@ -383,7 +384,7 @@ angular.module("climbGame.controllers.map", [])
           iconUrl: './img/POI_here.png',
           iconSize: [50, 50],
           iconAnchor: [25, 50],
-          popupAnchor: [0, -5]
+          popupAnchor: [0, -50]
         }
       });
     }
@@ -502,4 +503,25 @@ angular.module("climbGame.controllers.map", [])
     var deg2rad = function (deg) {
       return deg * (Math.PI / 180)
     };
+
+
+    var scrollleft = function () {
+      document.getElementById('gallery').scrollLeft -= 10
+    }
+    var scrollright = function () {
+      document.getElementById('gallery').scrollLeft += 10
+    }
+    $scope.scrollLeft = function () {
+      $scope.scrollleftTimer = setInterval(scrollleft, 10);
+
+    }
+    $scope.scrollRight = function () {
+      $scope.scrollrightTimer = setInterval(scrollright, 10);
+    }
+    $scope.resetTimerLeft = function () {
+      clearInterval($scope.scrollleftTimer);
+    }
+    $scope.resetTimerRight = function () {
+      clearInterval($scope.scrollrightTimer);
+    }
   }]);

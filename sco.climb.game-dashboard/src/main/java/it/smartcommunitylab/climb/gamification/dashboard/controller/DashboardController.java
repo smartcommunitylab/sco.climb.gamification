@@ -189,7 +189,7 @@ public class DashboardController {
 		ed.setActionId(actionTrip);
 		
 		Map<String, Object> data = Maps.newTreeMap();
-		data.put(paramParticipants, children);
+		data.put(paramParticipants, Double.valueOf(children.toString()));
 		data.put(paramClassDistance, distance);
 		data.put(paramDate, date);
 		data.put(paramMeteo, meteo);
