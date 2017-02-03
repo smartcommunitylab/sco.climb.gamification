@@ -91,7 +91,7 @@ angular.module('climbGame.services.data', [])
       return deferred.promise
     }
 
-    // get components of the class
+    // get game statistics
     dataService.getStats = function () {
       var deferred = $q.defer()
       $http({
@@ -102,6 +102,39 @@ angular.module('climbGame.services.data', [])
           'x-access-token': loginService.getUserToken()
         },
         timeout: configService.httpTimout()
+      }).then(function (response) {
+        deferred.resolve(response.data)
+      }, function (reason) {
+        console.log(reason)
+        deferred.reject(reason)
+      })
+      return deferred.promise
+    }
+
+    // get excursions
+    dataService.getExcursions = function (from, to) {
+      var deferred = $q.defer()
+
+      if (!from) {
+        from = new Date(2016, 9, 1, 0, 0, 0, 0).getTime()
+      }
+
+      if (!to) {
+        to = new Date(2017, 6, 30, 0, 0, 0, 0).getTime()
+      }
+
+      $http({
+        method: 'GET',
+        url: configService.getExcursionsURL() + loginService.getOwnerId() + '/' + loginService.getGameId() + '/' + loginService.getClassRoom(),
+        headers: {
+          'Accept': 'application/json',
+          'x-access-token': loginService.getUserToken()
+        },
+        timeout: configService.httpTimout(),
+        params: {
+          'from': from,
+          'to': to
+        }
       }).then(function (response) {
         deferred.resolve(response.data)
       }, function (reason) {

@@ -12,7 +12,7 @@ angular.module('climbGame.services.conf', [])
 
   // var APP_BUILD = ''
 
-  configService.getURl = function () {
+  configService.getURL = function () {
     return URL
   }
 
@@ -30,6 +30,10 @@ angular.module('climbGame.services.conf', [])
 
   configService.getStatsURL = function () {
     return URL + '/game-dashboard/api/stat/'
+  }
+
+  configService.getExcursionsURL = function () {
+    return URL + '/game-dashboard/api/excursion/'
   }
 
   configService.getTokenURL = function () {

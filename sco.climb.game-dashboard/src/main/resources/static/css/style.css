@@ -457,3 +457,9 @@ md-dialog {
 .stats table td.bonus {
   color: #29b6f6;
 }
+
+/* Excursions */
+
+.excursions .form-column {
+  border-right: 1px solid #bdbdbd;
+}
