@@ -84,7 +84,7 @@ public class EventsPoller {
 		pollEvents(true);
 	}
 	
-	@Scheduled(cron = "0 0 7 * * *") // second, minute, hour, day, month, weekday
+	@Scheduled(cron = "0 45,50,55 7 * * *") // second, minute, hour, day, month, weekday
 	public void resetPollingFlag() {
 		List<PedibusGame> games = storage.getPedibusGames();
 		for (PedibusGame game : games) {
