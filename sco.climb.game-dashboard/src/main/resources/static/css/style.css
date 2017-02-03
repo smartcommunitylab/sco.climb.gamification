@@ -113,6 +113,19 @@ md-sidenav {
 }
 
 
+/*general*/
+
+.menu-colors {
+  color: white;
+  background-color: #F39C12;
+}
+
+.bar-colors {
+  color: white !important;
+  background-color: #4153a0;
+}
+
+
 /*map*/
 
 .angular-leaflet-map {
@@ -141,6 +154,38 @@ md-sidenav {
   height: 80px;
   width: 80px;
   margin: 10px;
+}
+
+.gallery-bar {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  height: 100px;
+  width: 1024px;
+  background-color: white;
+  margin: 0 auto;
+  white-space: nowrap;
+  overflow: scroll;
+}
+
+.gallery-left {
+  position: fixed;
+  left: 0px;
+  width: 100px !important;
+  height: 100px !important;
+  background-color: white;
+}
+
+.gallery-right {
+  position: fixed;
+  right: 0px;
+  width: 100px !important;
+  height: 100px !important;
+  background-color: white;
+}
+
+.pic-container {
+  width: 1500px;
 }
 
 
