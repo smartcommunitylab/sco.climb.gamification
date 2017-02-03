@@ -92,6 +92,10 @@ angular.module("climbGame.controllers.calendar", [])
           $mdToast.show($mdToast.simple().content('Selezionare un mezzo di trasporto'));
           return;
         }
+                if ($scope.todayData.babies[index].mean == 'pedibus') {
+                  $mdToast.show($mdToast.simple().content('Non e\' possibile sovrascrivere PEDIBUS'));
+                  return;
+                }
         //set baby[$index]= selected mean;
         //add mean to index and remove the other
         if ($scope.todayData.babies[index].mean) {
@@ -121,7 +125,7 @@ angular.module("climbGame.controllers.calendar", [])
               '    <div layout="row"  layout-align="start center" ><div layout"column" flex="50" ><md-button ng-click="closeDialog()" class=" send-dialog-delete">' +
               '      Annulla' +
               '   </div> </md-button>' +
-              '<div layout"column" flex="50" ><md-button ng-click = "sendData()" class = "send-dialog-confirm" > ' +
+              '<div layout"column" flex="50" ><md-button ng-click = "confirmSend()" class = "send-dialog-confirm" > ' +
               '      Invia' +
               '    </md-button></div>' +
               '</div></md-dialog>',
@@ -129,7 +133,7 @@ angular.module("climbGame.controllers.calendar", [])
               $scope.closeDialog = function () {
                 $mdDialog.hide();
               }
-              $scope.sendData = function () {
+              $scope.confirmSend = function () {
                 $scope.todayData.meteo = $scope.selectedWeather;
                 $scope.todayData.day = new Date().setHours(0, 0, 0, 0);
                 var babiesMap = {};
@@ -141,9 +145,38 @@ angular.module("climbGame.controllers.calendar", [])
                 $scope.todayData.modeMap = babiesMap;
                 calendarService.sendData($scope.todayData).then(function (returnValue) {
                   //TODO check if merged or not
+                  if (returnValue) {
+                    //popup dati backend cambiati
+                    $mdDialog.show({
+                      //targetEvent: $event,
+                      scope: $scope, // use parent scope in template
+                      preserveScope: true, // do not forget this if use parent scope
+                      template: '<md-dialog>' +
+                        '  <div class="cal-dialog-title"> Dati cambiati </div><md-divider></md-divider>' +
+                        '  <div class="cal-dialog-text">I dati presenti sono cambiati. </div>' +
+                        '    <div layout="row"  layout-align="start center" ><div layout"column" flex="100" ><md-button ng-click="closeDialogChanged()" class=" send-dialog-delete">' +
+                        '      Ho capito' +
+                        '   </div> </md-button>' +
+                        '</div></md-dialog>',
+                      controller: function DialogController($scope, $mdDialog) {
+                        //reload and show
+                        calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(function (calendar) {
+                            createWeekData(calendar);
+                            updateTodayData(calendar);
 
-                  //sent data
-                  $mdToast.show($mdToast.simple().content('Dati inviati'));
+                          },
+                          function (err) {
+
+                          });
+                        $scope.closeDialogChanged = function () {
+                          $mdDialog.hide();
+                        }
+                      }
+                    });
+                  } else {
+                    //sent data
+                    $mdToast.show($mdToast.simple().content('Dati inviati'));
+                  }
                   $scope.closeDialog();
 
                 }, function (error) {

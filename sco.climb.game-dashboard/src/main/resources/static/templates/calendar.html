@@ -70,8 +70,8 @@
               {{baby.name}} {{baby.surname}}
             </div>
             <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" ng-class="{'cal-today-middle':today(dayIndex),'cal-future-middle':isFuture(dayIndex)}">
-              <md-button ng-if="!today(dayIndex)" class="cal-baby-cell" ng-class="weekData[dayIndex][baby.childId].color"></md-button>
-              <md-button ng-if="today(dayIndex)" class="cal-baby-cell" ng-click="selectBabyMean(babyIndex)" ng-class="todayData.babies[babyIndex].color"></md-button>
+              <md-button ng-if="!today(dayIndex)" class="cal-baby-cell" ng-class="weekData[dayIndex][baby.childId].color"><span ng-if="weekData[dayIndex][baby.childId].mean=='pedibus'">PEDIBUS</span><span ng-if="weekData[dayIndex][baby.childId].mean=='absent'">A</span> </md-button>
+              <md-button ng-if="today(dayIndex)" class="cal-baby-cell" ng-click="selectBabyMean(babyIndex)" ng-class="todayData.babies[babyIndex].color"><span ng-if="todayData.babies[babyIndex].mean=='pedibus'">PEDIBUS</span><span ng-if="todayData.babies[babyIndex].mean=='absent'">A</span></md-button>
             </div>
           </div>
         </md-list>

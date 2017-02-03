@@ -1,7 +1,7 @@
 /* global angular */
 angular.module('climbGame.controllers.stats', [])
   .controller('statsCtrl', function ($scope, $filter, dataService) {
-    const KMS_PER_FOOT = 10
+    var KMS_PER_FOOT = 10
 
     $scope.stats = null
 

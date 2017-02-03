@@ -5,12 +5,14 @@ angular.module('climbGame', [
   'ui.router',
   'ngMaterial',
   'ngAria',
+  'ngMessages',
   'leaflet-directive',
   'pascalprecht.translate',
   'climbGame.controllers.home',
   'climbGame.controllers.map',
   'climbGame.controllers.calendar',
   'climbGame.controllers.stats',
+  'climbGame.controllers.excursions',
   'climbGame.controllers.login',
   'climbGame.controllers.classSelection',
   'climbGame.services.data',
@@ -52,8 +54,8 @@ angular.module('climbGame', [
         var $state = $injector.get('$state')
         var loginService = $injector.get('loginService')
         if (loginService.getOwnerId() && loginService.getClassRoom()) {
-          // $state.go('home')
-          $state.go('home.stats')
+          $state.go('home')
+          // $state.go('home.stats')
         } else if (loginService.getOwnerId()) {
           // if only user go to class
           $state.go('classSelection')
@@ -61,7 +63,6 @@ angular.module('climbGame', [
           $state.go('login')
         }
         // login default
-        //
         return $location.path()
       })
 
@@ -119,6 +120,15 @@ angular.module('climbGame', [
             'content@home': {
               templateUrl: 'templates/calendar.html',
               controller: 'calendarCtrl'
+            }
+          }
+        })
+        .state('home.excursions', {
+          url: 'excursions',
+          views: {
+            'content@home': {
+              templateUrl: 'templates/excursions.html',
+              controller: 'excursionsCtrl'
             }
           }
         })

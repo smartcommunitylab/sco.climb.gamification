@@ -1,9 +1,8 @@
-<!--
-<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="leftMenu">
+<md-sidenav class="md-sidenav-left md-whiteframe-z2 menu-colors" md-component-id="leftMenu">
   <md-toolbar layout="row">
-    <div class="md-toolbar-tools">
+    <div class="md-toolbar-tools menu-colors">
       <h2>
-        <span>Side Panel</span>
+        <span>Climb</span>
       </h2>
       <span flex></span>
       <md-button class="md-icon-button" aria-label="Close Side Panel" ng-click="closeSideNavPanel()">
@@ -12,7 +11,7 @@
       </md-button>
     </div>
   </md-toolbar>
-  <md-content layout-padding="">
+  <md-content layout-padding class="menu-colors">
     <md-list>
       <md-list-item ng-click="go('home.class')">
         <md-icon class="md-default-theme" class="material-icons">&#xE896;</md-icon>
@@ -22,87 +21,37 @@
         <md-icon class="md-default-theme" class="material-icons">&#xE55B;</md-icon>
         <p>{{'menu_map' | translate}}</p>
       </md-list-item>
+      <md-list-item ng-click="go('home.excursions')">
+        <md-icon class="md-default-theme" class="material-icons">&#xE7FB;</md-icon>
+        <p>{{'menu_excursions' | translate}}</p>
+      </md-list-item>
       <md-list-item ng-click="go('home.stats')">
         <md-icon class="md-default-theme" class="material-icons">&#xE24B;</md-icon>
         <p>{{'menu_stats' | translate}}</p>
       </md-list-item>
       <md-list-item ng-click="changeClass()">
-        <md-icon class="md-default-theme" class="material-icons">&#xE84F;</md-icon>
+        <md-icon class="material-icons menu-colors">&#xE84F;</md-icon>
         <p>{{'menu_change_class' | translate}}</p>
       </md-list-item>
       <md-list-item ng-click="logout()">
-        <md-icon class="md-default-theme" class="material-icons">&#xE8AC;</md-icon>
+        <md-icon class="material-icons menu-colors">&#xE8AC;</md-icon>
         <p>{{'menu_logout' | translate}}</p>
       </md-list-item>
     </md-list>
   </md-content>
 </md-sidenav>
-<md-toolbar class="desktop">
-  <div class="md-toolbar-tools">
-    <md-button class="md-icon-button" aria-label="Side Panel" ng-click="openSideNavPanel()">
-      <md-tooltip>Side Panel</md-tooltip>
-      <md-icon class="md-default-theme" class="material-icons">&#xE5D2;</md-icon>
+<md-toolbar class="desktop bar-colors">
+  <div class="md-toolbar-tools bar-colors">
+    <md-button class="md-icon-button bar-colors" aria-label="Side Panel" ng-click="openSideNavPanel()">
+      <md-tooltip>Menu</md-tooltip>
+      <md-icon class="material-icons bar-colors">&#xE5D2;</md-icon>
     </md-button>
-    <h2> <span>Heading</span>
+    <h2> <span>Climb</span>
     </h2>
   </div>
 </md-toolbar>
-<main class="md-padding" layout="row" flex>
+<main layout="row" flex>
   <md-content flex>
     <ui-view name="content"></ui-view>
-  </md-content>
-</main>-->
-
-<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="leftMenu">
-  <md-toolbar layout=" row ">
-    <div class="md-toolbar-tools ">
-      <h2>
-        <span>Side Panel</span>
-      </h2>
-      <span flex></span>
-      <md-button class="md-icon-button " aria-label="Close Side Panel " ng-click="closeSideNavPanel() ">
-        <md-tooltip>Close Side Panel</md-tooltip>
-        <md-icon class="md-default-theme " class="material-icons ">&#xE5CD;</md-icon>
-      </md-button>
-    </div>
-  </md-toolbar>
-  <md-content layout-padding=" ">
-    <md-list>
-      <md-list-item ng-click="go( 'home.class') ">
-        <md-icon class="md-default-theme " class="material-icons ">&#xE896;</md-icon>
-        <p>{{'menu_class' | translate}}</p>
-      </md-list-item>
-      <md-list-item ng-click="go( 'home.map') ">
-        <md-icon class="md-default-theme " class="material-icons ">&#xE55B;</md-icon>
-        <p>{{'menu_map' | translate}}</p>
-      </md-list-item>
-      <md-list-item ng-click="go( 'home.stats') ">
-        <md-icon class="md-default-theme " class="material-icons ">&#xE24B;</md-icon>
-        <p>{{'menu_stats' | translate}}</p>
-      </md-list-item>
-      <md-list-item ng-click="changeClass() ">
-        <md-icon class="md-default-theme " class="material-icons ">&#xE84F;</md-icon>
-        <p>{{'menu_change_class' | translate}}</p>
-      </md-list-item>
-      <md-list-item ng-click="logout() ">
-        <md-icon class="md-default-theme " class="material-icons ">&#xE8AC;</md-icon>
-        <p>{{'menu_logout' | translate}}</p>
-      </md-list-item>
-    </md-list>
-  </md-content>
-</md-sidenav>
-<md-toolbar class="desktop ">
-  <div class="md-toolbar-tools ">
-    <md-button class="md-icon-button " aria-label="Side Panel " ng-click="openSideNavPanel() ">
-      <md-tooltip>Side Panel</md-tooltip>
-      <md-icon class="md-default-theme " class="material-icons ">&#xE5D2;</md-icon>
-    </md-button>
-    <h2> <span>Heading</span>
-    </h2>
-  </div>
-</md-toolbar>
-<main class="md-padding " layout="row " flex>
-  <md-content flex>
-    <ui-view name="content "></ui-view>
   </md-content>
 </main>

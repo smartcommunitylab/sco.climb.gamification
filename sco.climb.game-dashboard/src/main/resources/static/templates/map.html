@@ -1,14 +1,21 @@
-<md-content flex="" layout-padding="">
-  <leaflet width="100%" height="768px" center="center" markers="pathMarkers" paths="pathLine" layers="layers" id="map" defaults="defaults"></leaflet>
-  <div class="map-resources">
-    <md-button class="md-icon-button" aria-label="Left">
-      <i class="material-icons">&#xE314;</i>
-    </md-button>
-    <div class="leg-image" ng-repeat="leg in  legs">
-      <img class="map-gallery" src="{{leg.imageUrl}}">
+<md-content flex="">
+  <leaflet width="100%" height="700px" center="center" markers="pathMarkers" paths="pathLine" layers="layers" id="map" defaults="defaults"></leaflet>
+  <div class="gallery-bar" id="gallery">
+    <div class="pic-container">
+      <div>
+        <!--        <md-button class="md-button gallery-left" aria-label="Left" ng-mousedown="scrollLeft()" ng-mouseup="resetTimerLeft()">-->
+        <md-button class="md-button gallery-left" aria-label="Left">
+          <i class="material-icons">&#xE314;</i>
+        </md-button>
+        <div class="leg-image" ng-repeat="leg in  legs">
+          <img class="map-gallery" src="{{leg.imageUrl}}" ng-if="leg.position <= currentLeg.position">
+          <img class="map-gallery" src="./img/POI-not-reached.png" ng-if="leg.position > currentLeg.position">
+        </div>
+        <!--        <md-button class="md-button gallery-right" aria-label="Right" ng-mousedown="scrollRight()" ng-mouseup="resetTimerRight()">-->
+        <md-button class="md-button gallery-right" aria-label="Right">
+          <i class="material-icons">&#xE315;</i>
+        </md-button>
+      </div>
     </div>
-    <md-button class="md-icon-button" aria-label="Right">
-      <i class="material-icons">&#xE315;</i>
-    </md-button>
   </div>
 </md-content>
