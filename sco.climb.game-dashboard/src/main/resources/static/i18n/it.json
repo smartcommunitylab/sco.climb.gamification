@@ -37,5 +37,9 @@
   "cal_mean_bus": "Con scuolabus o autobus",
   "cal_mean_pandr": "In macchina fino alla piazzola di sosta",
   "cal_mean_car": "In macchina fino a scuola",
-  "cal_mean_absent": "Assente"
+  "cal_mean_absent": "Assente",
+  "login_user": "Utente",
+  "login_password": "Password",
+  "login_enter": "Entra",
+  "title_class": "Classe"
 }

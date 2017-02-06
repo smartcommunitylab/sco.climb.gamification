@@ -11,9 +11,9 @@ angular.module('climbGame.controllers.home', [])
     'loginService',
 
     function ($rootScope, $scope, $log, $state, $mdSidenav, $timeout, $location, loginService) {
-      // $state.go('home.class')
+      $state.go('home.class');
       // TODO change this!
-      $state.go('home.excursions')
+      //$state.go('home.excursions')
 
       $scope.go = function (path) {
         $scope.closeSideNavPanel()
@@ -23,7 +23,7 @@ angular.module('climbGame.controllers.home', [])
       $scope.logout = function () {
         // delete storage
         loginService.logout()
-        // go to login
+          // go to login
         $state.go('login')
       }
 

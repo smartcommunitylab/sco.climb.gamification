@@ -24,7 +24,12 @@ angular.module("climbGame.controllers.calendar", [])
       }
       setLabelWeek($scope.week);
 
+      calendarService.setTitle().then(function () {
 
+      }, function (err) {
+        //default value
+
+      });
       calendarService.getClassPlayers().then(function (players) {
           $scope.class = players;
           for (var i = 0; i < players.length; i++) {
@@ -92,10 +97,10 @@ angular.module("climbGame.controllers.calendar", [])
           $mdToast.show($mdToast.simple().content('Selezionare un mezzo di trasporto'));
           return;
         }
-                if ($scope.todayData.babies[index].mean == 'pedibus') {
-                  $mdToast.show($mdToast.simple().content('Non e\' possibile sovrascrivere PEDIBUS'));
-                  return;
-                }
+        if ($scope.todayData.babies[index].mean == 'pedibus') {
+          $mdToast.show($mdToast.simple().content('Non e\' possibile sovrascrivere PEDIBUS'));
+          return;
+        }
         //set baby[$index]= selected mean;
         //add mean to index and remove the other
         if ($scope.todayData.babies[index].mean) {
@@ -144,7 +149,9 @@ angular.module("climbGame.controllers.calendar", [])
                 }
                 $scope.todayData.modeMap = babiesMap;
                 calendarService.sendData($scope.todayData).then(function (returnValue) {
-                  //TODO check if merged or not
+                  //change weekdata to closed
+                  $scope.weekData[$scope.todayIndex].closed = true;
+                  // check if merged or not
                   if (returnValue) {
                     //popup dati backend cambiati
                     $mdDialog.show({
@@ -356,6 +363,9 @@ angular.module("climbGame.controllers.calendar", [])
             if (calendar[i].meteo) {
               $scope.weekData[i].meteo = calendar[i].meteo;
             }
+            //if (calendar[i].closed) {
+            $scope.weekData[i].closed = calendar[i].closed;
+            //}
           } else {
             //add entire day of null data
           }
