@@ -3,17 +3,18 @@
   <div class="gallery-bar" id="gallery">
     <div class="pic-container">
       <div>
-        <!--        <md-button class="md-button gallery-left" aria-label="Left" ng-mousedown="scrollLeft()" ng-mouseup="resetTimerLeft()">-->
-        <md-button class="md-button gallery-left" aria-label="Left">
+        <md-button class="md-button gallery-left gallery-button" aria-label="Left" ng-mousedown="scrollLeft()" ng-mouseup="resetTimerLeft()">
+          <!--        <md-button class="md-button gallery-left" aria-label="Left">-->
           <i class="material-icons">&#xE314;</i>
         </md-button>
-        <div class="leg-image" ng-repeat="leg in  legs">
-          <img class="map-gallery" src="{{leg.imageUrl}}" ng-if="leg.position <= currentLeg.position">
-          <img class="map-gallery" src="./img/POI-not-reached.png" ng-if="leg.position > currentLeg.position">
+        <div class="leg-image" ng-repeat="leg in  legs" ng-click="goToPoi(leg)">
+          <img class="map-gallery" src="{{leg.imageUrl}}" ng-if="leg.position < currentLeg.position" ng-class="{'selectedImageMarker':getSelected($index)}">
+          <img class="map-gallery" src="./img/POI-not-reached.png" ng-if="leg.position >= currentLeg.position">
+          <div class=" leg-name " ng-if="leg.position < currentLeg.position ">{{$index+1}}. {{leg.name}}</div>
         </div>
-        <!--        <md-button class="md-button gallery-right" aria-label="Right" ng-mousedown="scrollRight()" ng-mouseup="resetTimerRight()">-->
-        <md-button class="md-button gallery-right" aria-label="Right">
-          <i class="material-icons">&#xE315;</i>
+        <md-button class="md-button gallery-right gallery-button " aria-label="Right " ng-mousedown="scrollRight() " ng-mouseup="resetTimerRight() ">
+          <!--        <md-button class="md-button gallery-right " aria-label="Right ">-->
+          <i class="material-icons ">&#xE315;</i>
         </md-button>
       </div>
     </div>

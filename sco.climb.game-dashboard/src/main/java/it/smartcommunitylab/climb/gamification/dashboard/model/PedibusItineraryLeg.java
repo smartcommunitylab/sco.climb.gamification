@@ -13,7 +13,7 @@ public class PedibusItineraryLeg extends BaseObject implements Comparable<Pedibu
 	private String description;
 	private int position;
 	private double[] geocoding; // lon/lat (for mongodb)
-	private List<String> externalUrls = new ArrayList<String>();
+	private List<Link> externalUrls = new ArrayList<Link>();
 	private String imageUrl;
 	private String polyline;
 	private int score;
@@ -78,12 +78,6 @@ public class PedibusItineraryLeg extends BaseObject implements Comparable<Pedibu
 	public int compareTo(PedibusItineraryLeg o) {
 		return position - o.position;
 	}
-	public List<String> getExternalUrls() {
-		return externalUrls;
-	}
-	public void setExternalUrls(List<String> externalUrls) {
-		this.externalUrls = externalUrls;
-	}
 	public String getImageUrl() {
 		return imageUrl;
 	}
@@ -95,5 +89,11 @@ public class PedibusItineraryLeg extends BaseObject implements Comparable<Pedibu
 	}
 	public void setTransport(String transport) {
 		this.transport = transport;
+	}
+	public List<Link> getExternalUrls() {
+		return externalUrls;
+	}
+	public void setExternalUrls(List<Link> externalUrls) {
+		this.externalUrls = externalUrls;
 	}
 }

@@ -125,7 +125,7 @@ public class RepositoryManager {
 				Criteria.where("day").lte(to));
 		criteria = criteria.andOperator(timeCriteria);
 		Query query = new Query(criteria);
-		query.with(new Sort(Sort.Direction.ASC, "day"));
+		query.with(new Sort(Sort.Direction.DESC, "day"));
 		List<Excursion> result = mongoTemplate.find(query, Excursion.class);
 		return result;
 	}
@@ -479,6 +479,7 @@ public class RepositoryManager {
 	private String generateObjectId() {
 		return UUID.randomUUID().toString();
 	}
+
 
 
 }
