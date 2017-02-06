@@ -75,8 +75,8 @@ public class EventsPoller {
 	private static final SimpleDateFormat shortSdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	
-	@Scheduled(cron = "0 0,5,10,15 8-18 * * MON-FRI") // second, minute, hour, day, month, weekday
-	//@Scheduled(cron = "0 */2 8-18 * * MON-FRI") // second, minute, hour, day, month, weekday
+	@Scheduled(cron = "0 0,5,10,15 8-20 * * MON-FRI") // second, minute, hour, day, month, weekday
+	//@Scheduled(cron = "0 */2 8-18 * * MON-FRI")
 	public void scheduledPollEvents() throws Exception {
 		if(logger.isInfoEnabled()) {
 			logger.info("scheduledPollEvents");
@@ -84,11 +84,15 @@ public class EventsPoller {
 		pollEvents(true);
 	}
 	
-	@Scheduled(cron = "0 45,50,55 7 * * *") // second, minute, hour, day, month, weekday
+	@Scheduled(cron = "0 45,55 7 * * *") // second, minute, hour, day, month, weekday
 	public void resetPollingFlag() {
 		List<PedibusGame> games = storage.getPedibusGames();
+		Calendar cal = new GregorianCalendar(TimeZone.getDefault());
+		cal.add(Calendar.DAY_OF_YEAR, -1);
+		String date = shortSdf.format(cal.getTime());
 		for (PedibusGame game : games) {
 			storage.resetPollingFlag(game.getOwnerId(), game.getGameId());
+			storage.setToday(game.getOwnerId(), game.getGameId(), date);
 		}
 	}
 	
