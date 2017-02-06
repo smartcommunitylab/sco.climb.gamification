@@ -177,5 +177,34 @@ angular.module('climbGame.services.data', [])
       return deferred.promise
     }
 
+    // get notifications
+    dataService.getNotifications = function (timestamp) {
+      var deferred = $q.defer()
+
+      if (!timestamp) {
+        deferred.reject('Timestamp required')
+        return deferred.promise
+      }
+
+      $http({
+        method: 'GET',
+        url: configService.getNotificationsURL() + loginService.getOwnerId() + '/' + loginService.getGameId() + '/' + loginService.getClassRoom(),
+        headers: {
+          'Accept': 'application/json',
+          'x-access-token': loginService.getUserToken()
+        },
+        timeout: configService.httpTimout(),
+        params: {
+          timestamp: timestamp
+        }
+      }).then(function (response) {
+        deferred.resolve(response.data)
+      }, function (reason) {
+        console.log(reason)
+        deferred.reject(reason)
+      })
+      return deferred.promise
+    }
+
     return dataService
   })
