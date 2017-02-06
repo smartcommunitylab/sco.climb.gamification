@@ -3,6 +3,7 @@ package it.smartcommunitylab.climb.gamification.dashboard.controller;
 import it.smartcommunitylab.climb.contextstore.model.Child;
 import it.smartcommunitylab.climb.gamification.dashboard.common.GEngineUtils;
 import it.smartcommunitylab.climb.gamification.dashboard.common.Utils;
+import it.smartcommunitylab.climb.gamification.dashboard.exception.EntityNotFoundException;
 import it.smartcommunitylab.climb.gamification.dashboard.exception.UnauthorizedException;
 import it.smartcommunitylab.climb.gamification.dashboard.model.Gamified;
 import it.smartcommunitylab.climb.gamification.dashboard.model.PedibusGame;
@@ -36,13 +37,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Throwables;
@@ -325,7 +329,7 @@ public class GamificationController {
 			PedibusGame result = storage.getPedibusGame(ownerId, gameId);
 
 			if (logger.isInfoEnabled()) {
-				logger.info("get pedibusGame");
+				logger.info(String.format("getPedibusGame[%s]: %s", ownerId, gameId));
 			}
 			return result;
 		} catch (Exception e) {
@@ -345,7 +349,7 @@ public class GamificationController {
 			List<PedibusGame> result = storage.getPedibusGames(ownerId);
 
 			if (logger.isInfoEnabled()) {
-				logger.info("get pedibusGames");
+				logger.info(String.format("getPedibusGames[%s]: %s", ownerId, result.size()));
 			}
 			return result;
 		} catch (Exception e) {
@@ -375,7 +379,7 @@ public class GamificationController {
 	}
 	
 	@RequestMapping(value = "/api/legs/{ownerId}", method = RequestMethod.POST)
-	public @ResponseBody void createPedibusItineraryLeg(@PathVariable String ownerId, 
+	public @ResponseBody void createPedibusItineraryLegs(@PathVariable String ownerId, 
 			@RequestBody List<PedibusItineraryLeg> legs, @RequestParam(required = false) Boolean sum, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
@@ -413,7 +417,7 @@ public class GamificationController {
 			PedibusItineraryLeg result = storage.getPedibusItineraryLeg(ownerId, legId);
 
 			if (logger.isInfoEnabled()) {
-				logger.info("get pedibusItineraryLegs");
+				logger.info(String.format("getPedibusItineraryLeg[%s]: %s", ownerId, legId));
 			}
 			return result;
 		} catch (Exception e) {
@@ -433,7 +437,7 @@ public class GamificationController {
 			List<PedibusItineraryLeg> result = storage.getPedibusItineraryLegs(ownerId);
 
 			if (logger.isInfoEnabled()) {
-				logger.info("get pedibusItineraryLegs");
+				logger.info(String.format("getPedibusItineraryLegs[%s]: %s", ownerId, result.size()));
 			}
 			return result;
 		} catch (Exception e) {
@@ -493,7 +497,7 @@ public class GamificationController {
 			result.put("teams", teams);
 
 			if (logger.isInfoEnabled()) {
-				logger.info("get pedibus game status");
+				logger.info(String.format("getGameStatus[%s]: %s", ownerId, gameId));
 			}
 
 			return result;
@@ -649,5 +653,29 @@ public class GamificationController {
 	public static String getUUID() {
 		return UUID.randomUUID().toString();
 	}	
+	
+	@ExceptionHandler(EntityNotFoundException.class)
+	@ResponseStatus(value=HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public Map<String,String> handleEntityNotFoundError(HttpServletRequest request, Exception exception) {
+		logger.error(exception.getMessage());
+		return Utils.handleError(exception);
+	}
+	
+	@ExceptionHandler(UnauthorizedException.class)
+	@ResponseStatus(value=HttpStatus.FORBIDDEN)
+	@ResponseBody
+	public Map<String,String> handleUnauthorizedError(HttpServletRequest request, Exception exception) {
+		logger.error(exception.getMessage());
+		return Utils.handleError(exception);
+	}
+	
+	@ExceptionHandler(Exception.class)
+	@ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)
+	@ResponseBody
+	public Map<String,String> handleGenericError(HttpServletRequest request, Exception exception) {
+		logger.error(exception.getMessage());
+		return Utils.handleError(exception);
+	}
 
 }

@@ -1,7 +1,7 @@
 /* global angular */
 angular.module('climbGame.controllers.stats', [])
   .controller('statsCtrl', function ($scope, $filter, dataService) {
-    const KMS_PER_FOOT = 10
+    var KMS_PER_FOOT = 10
 
     $scope.stats = null
 
@@ -21,13 +21,8 @@ angular.module('climbGame.controllers.stats', [])
     */
 
     var data2stats = function (data) {
-      var gameScore = $filter('number')(data.gameScore / 1000, 2)
-      if (gameScore % 1 === 0) {
-        gameScore = data.gameScore / 1000
-      }
-
       return {
-        'gameScore': gameScore,
+        'gameScore': $filter('number')(data.gameScore / 1000, 0),
         'maxGameScore': data.maxGameScore / 1000,
         'scoreModeMap': {
           'zeroImpact_wAdult': Math.floor(data['scoreModeMap']['zeroImpact_wAdult'] / (1000 * KMS_PER_FOOT)),
