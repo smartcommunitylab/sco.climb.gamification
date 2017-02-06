@@ -16,6 +16,8 @@
   "stats_bonus": "Bonus",
   "excursions_new": "Nuova gita scolastica",
   "excursions_history": "Storico gite scolastiche",
+  "excursion_distance": "km a piedi",
+  "excursion_children": "Hanno partecipato {{children}} bambini",
   "excursion_form_name_placeholder": "Inserisci il nome della gita",
   "excursion_form_name_error_required": "Il nome della gita è necessario",
   "excursion_form_date_placeholder": "Inserisci la data",

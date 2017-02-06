@@ -23,8 +23,8 @@ angular.module('climbGame.controllers.excursions', [])
 
     $scope.refreshExcursions = function () {
       dataService.getExcursions().then(
-        function (excurions) {
-          $scope.excursions = excurions
+        function (excursions) {
+          $scope.excursions = excursions
         },
         function (reason) {
           // console.log(reason)
@@ -34,6 +34,23 @@ angular.module('climbGame.controllers.excursions', [])
 
     $scope.refreshExcursions()
 
+    $scope.scrollTimer = null
+
+    $scope.startScroll = function (direction) {
+      $scope.scrollupTimer = setInterval(function (direction) {
+        if (direction === 'up') {
+          document.getElementById('excursions-list').scrollTop -= 10
+        } else if (direction === 'down') {
+          document.getElementById('excursions-list').scrollTop += 10
+        }
+      }, 10)
+    }
+
+    $scope.stopScroll = function () {
+      clearInterval($scope.scrollTimer)
+    }
+
+    /* Form */
     $scope.newExcursion = {
       name: null,
       date: null,

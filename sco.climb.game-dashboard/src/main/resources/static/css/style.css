@@ -508,6 +508,10 @@ md-dialog {
 }
 
 /* Excursions */
+.excursions {
+  height: 708px;
+  overflow: hidden;
+}
 
 .excursions .form-column {
   border-right: 1px solid #bdbdbd;
@@ -533,6 +537,10 @@ md-dialog {
 .excursions .form-column .md-button.md-raised {
   background-color: #f39512;
   color: #ffffff;
+}
+
+.excursions #excursions-list {
+  overflow: auto;
 }
 
 .excursions md-card .card-media {
