@@ -127,11 +127,12 @@
       </div>
     </div>
   </div>
-  <div layout="column" flex="5" layout-align="center center">
-    <md-button class="md-icon-button" ng-mousedown="startScroll('up')" ng-mouseup="stopScroll('up')">
+  <div layout="column" flex="5" layout-align="end center" class="controls">
+    <md-button class="md-icon-button" ng-mousedown="startScroll('up')" ng-mouseup="stopScroll()">
       <md-icon class="icon-arrow_up"></md-icon>
     </md-button>
-    <md-button class="md-icon-button" ng-mousedown="startScroll('down')" ng-mouseup="stopScroll('down')">
+    <md-button class="md-icon-button" ng-mousedown="startScroll('down')" ng-mouseup="stopScroll()">
       <md-icon class="icon-arrow_down"></md-icon>
     </md-button>
   </div>
+</div>

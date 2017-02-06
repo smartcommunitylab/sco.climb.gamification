@@ -583,7 +583,7 @@ md-dialog {
 }
 
 .excursions #excursions-list {
-  overflow: auto;
+  overflow: hidden;
 }
 
 .excursions md-card .card-media {
@@ -593,4 +593,10 @@ md-dialog {
 
 .excursions md-card .card-media .meteo {
   font-size: 50px;
+}
+
+.excursions .controls .md-button md-icon {
+  color: white;
+  background-color: #F39C12;
+  border-radius: 0;
 }

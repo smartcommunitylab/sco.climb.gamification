@@ -3,22 +3,10 @@ angular.module('climbGame.controllers.stats', [])
   .controller('statsCtrl', function ($scope, $filter, dataService) {
     var KMS_PER_FOOT = 10
 
-    $scope.stats = null
-
-    /* temporary data *
-    var data = {
-      'gameScore': 303770,
-      'maxGameScore': 5900000,
-      'scoreModeMap': {
-        'zeroImpact_wAdult': 101070,
-        'bus': 147600,
-        'pandr': 600,
-        'car': 0,
-        'bonus': 31000,
-        'zeroImpact_solo': 23500
-      }
+    $scope.stats = {
+      'gameScore': 0,
+      'maxGameScore': 0
     }
-    */
 
     var data2stats = function (data) {
       return {
@@ -44,7 +32,9 @@ angular.module('climbGame.controllers.stats', [])
     )
 
     $scope.getGameScorePercentage = function () {
-      return ($scope.stats.gameScore * 100) / $scope.stats.maxGameScore
+      if ($scope.stats) {
+        return ($scope.stats.gameScore * 100) / $scope.stats.maxGameScore
+      }
     }
 
     $scope.getCount = function (count) {

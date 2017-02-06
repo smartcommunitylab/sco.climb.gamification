@@ -1,6 +1,6 @@
 /* global angular */
 angular.module('climbGame.controllers.excursions', [])
-  .controller('excursionsCtrl', function ($scope, dataService) {
+  .controller('excursionsCtrl', function ($scope, $window, dataService) {
     $scope.showHints = false
     $scope.datepickerisOpen = false
     $scope.excursions = null
@@ -37,11 +37,15 @@ angular.module('climbGame.controllers.excursions', [])
     $scope.scrollTimer = null
 
     $scope.startScroll = function (direction) {
-      $scope.scrollupTimer = setInterval(function (direction) {
+      $scope.scrollTimer = setInterval(function () {
         if (direction === 'up') {
-          document.getElementById('excursions-list').scrollTop -= 10
+          if ($window.document.getElementById('excursions-list').scrollTop === 0) {
+            clearInterval($scope.scrollTimer)
+          } else {
+            $window.document.getElementById('excursions-list').scrollTop -= 10
+          }
         } else if (direction === 'down') {
-          document.getElementById('excursions-list').scrollTop += 10
+          $window.document.getElementById('excursions-list').scrollTop += 10
         }
       }, 10)
     }
