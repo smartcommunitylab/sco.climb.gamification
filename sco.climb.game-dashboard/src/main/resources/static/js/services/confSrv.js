@@ -9,7 +9,9 @@ angular.module('climbGame.services.conf', [])
   var BOAT_CONSTANT = 'nave'
   var PLANE_CONSTANT = 'volo'
   var httpTimeout = 10000
-
+  var DEFAULT_CENTER_MAP = [37.973378, 23.730957];
+  var DEFAULT_ZOOM_MAP = 4;
+  var DEFAULT_ZOOM_POI = 9;
   // var APP_BUILD = ''
 
   configService.getURl = function () {
@@ -54,6 +56,15 @@ angular.module('climbGame.services.conf', [])
 
   configService.getPlaneConstant = function () {
     return PLANE_CONSTANT
+  }
+  configService.getDefaultMapCenterConstant = function () {
+    return DEFAULT_CENTER_MAP
+  }
+  configService.getDefaultZoomMapConstant = function () {
+    return DEFAULT_ZOOM_MAP
+  }
+  configService.getDefaultZoomPoiConstant = function () {
+    return DEFAULT_ZOOM_POI
   }
 
   return configService

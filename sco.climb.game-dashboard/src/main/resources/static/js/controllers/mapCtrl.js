@@ -6,9 +6,9 @@ angular.module("climbGame.controllers.map", [])
           zoomControl: false
         },
         center: {
-          lat: 37.973378,
-          lng: 23.730957,
-          zoom: 4
+          lat: configService.getDefaultMapCenterConstant()[0],
+          lng: configService.getDefaultMapCenterConstant()[1],
+          zoom: configService.getDefaultZoomMapConstant()
         },
         pathLine: {},
         pathMarkers: [],
@@ -123,143 +123,152 @@ angular.module("climbGame.controllers.map", [])
         containerStyle.left = styleValues.left;
       }
       leafletData.getMap('map').then(function (map) {
-        var leftarrow = L.Control.extend({
-          options: {
-            position: 'topleft'
-          },
-          onAdd: function (map) {
-            var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
-            assignStyle(container.style, controlsStyle['leftarrow']);
-            container.onclick = function () {
+          var leftarrow = L.Control.extend({
+            options: {
+              position: 'topleft'
+            },
+            onAdd: function (map) {
+              var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+              assignStyle(container.style, controlsStyle['leftarrow']);
+              container.onclick = function () {
 
-              // Calculate the offset
-              var offset = map.getSize().x * 0.14;
-              // Then move the map
-              map.panBy(new L.Point(-offset, 0), {
-                animate: false
-              })
+                // Calculate the offset
+                var offset = map.getSize().x * 0.14;
+                // Then move the map
+                map.panBy(new L.Point(-offset, 0), {
+                  animate: false
+                })
+              }
+              return container;
             }
-            return container;
-          }
-        });
-        var rightarrow = L.Control.extend({
-          options: {
-            position: 'topleft'
-          },
-          onAdd: function (map) {
-            var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
-            assignStyle(container.style, controlsStyle['rightarrow']);
-            container.onclick = function () {
+          });
+          var rightarrow = L.Control.extend({
+            options: {
+              position: 'topleft'
+            },
+            onAdd: function (map) {
+              var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+              assignStyle(container.style, controlsStyle['rightarrow']);
+              container.onclick = function () {
 
-              // Calculate the offset
-              var offset = map.getSize().x * 0.14;
-              // Then move the map
-              map.panBy(new L.Point(offset, 0), {
-                animate: false
-              })
+                // Calculate the offset
+                var offset = map.getSize().x * 0.14;
+                // Then move the map
+                map.panBy(new L.Point(offset, 0), {
+                  animate: false
+                })
+              }
+              return container;
             }
-            return container;
-          }
-        });
-        var uparrow = L.Control.extend({
-          options: {
-            position: 'topleft'
-          },
-          onAdd: function (map) {
-            var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
-            assignStyle(container.style, controlsStyle['uparrow']);
-            container.onclick = function () {
+          });
+          var uparrow = L.Control.extend({
+            options: {
+              position: 'topleft'
+            },
+            onAdd: function (map) {
+              var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+              assignStyle(container.style, controlsStyle['uparrow']);
+              container.onclick = function () {
 
-              // Calculate the offset
-              var offset = map.getSize().x * 0.14;
-              // Then move the map
-              map.panBy(new L.Point(0, -offset), {
-                animate: false
-              })
+                // Calculate the offset
+                var offset = map.getSize().x * 0.14;
+                // Then move the map
+                map.panBy(new L.Point(0, -offset), {
+                  animate: false
+                })
+              }
+              return container;
             }
-            return container;
-          }
-        });
-        var downarrow = L.Control.extend({
-          options: {
-            position: 'topleft'
-          },
-          onAdd: function (map) {
-            var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
-            assignStyle(container.style, controlsStyle['downarrow'])
-            container.onclick = function () {
+          });
+          var downarrow = L.Control.extend({
+            options: {
+              position: 'topleft'
+            },
+            onAdd: function (map) {
+              var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+              assignStyle(container.style, controlsStyle['downarrow'])
+              container.onclick = function () {
 
-              // Calculate the offset
-              var offset = map.getSize().x * 0.14;
-              // Then move the map
-              map.panBy(new L.Point(0, offset), {
-                animate: false
-              })
+                // Calculate the offset
+                var offset = map.getSize().x * 0.14;
+                // Then move the map
+                map.panBy(new L.Point(0, offset), {
+                  animate: false
+                })
+              }
+              return container;
             }
-            return container;
-          }
-        });
+          });
 
-        var zoomin = L.Control.extend({
-          options: {
-            position: 'topleft'
-          },
-          onAdd: function (map) {
-            var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
-            assignStyle(container.style, controlsStyle['zoomin'])
-            container.onclick = function () {
+          var zoomin = L.Control.extend({
+            options: {
+              position: 'topleft'
+            },
+            onAdd: function (map) {
+              var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+              assignStyle(container.style, controlsStyle['zoomin'])
+              container.onclick = function () {
 
-              // Calculate the offset
-              var offset = map.getSize().x * 0.14;
-              // Then move the map
-              map.zoomIn();
+                // Calculate the offset
+                var offset = map.getSize().x * 0.14;
+                // Then move the map
+                map.zoomIn();
+              }
+              return container;
             }
-            return container;
-          }
-        });
-        var zoomout = L.Control.extend({
-          options: {
-            position: 'topleft'
-          },
-          onAdd: function (map) {
-            var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
-            assignStyle(container.style, controlsStyle['zoomout'])
-            container.onclick = function () {
+          });
+          var zoomout = L.Control.extend({
+            options: {
+              position: 'topleft'
+            },
+            onAdd: function (map) {
+              var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+              assignStyle(container.style, controlsStyle['zoomout'])
+              container.onclick = function () {
 
-              // Calculate the offset
-              var offset = map.getSize().x * 0.14;
-              // Then move the map
-              map.zoomOut();
+                // Calculate the offset
+                var offset = map.getSize().x * 0.14;
+                // Then move the map
+                map.zoomOut();
+              }
+              return container;
             }
-            return container;
-          }
-        });
-        var home = L.Control.extend({
-          options: {
-            position: 'topleft'
-          },
-          onAdd: function (map) {
-            var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
-            assignStyle(container.style, controlsStyle['home'])
-            container.onclick = function () {
+          });
+          var home = L.Control.extend({
+            options: {
+              position: 'topleft'
+            },
+            onAdd: function (map) {
+              var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+              assignStyle(container.style, controlsStyle['home'])
+              container.onclick = function () {
+                //              $scope.center = {
+                //                lat: 37.973378,
+                //                lng: 23.730957,
+                //                zoom: 4
+                //              }
+                //              map.setZoom(4);
+                //              map.panTo([37.973378, 23.730957]);
 
-              map.panTo([37.973378, 23.730957]);
-              map.setZoom(4);
+                map.setView([configService.getDefaultMapCenterConstant()[0], configService.getDefaultMapCenterConstant()[1]], configService.getDefaultZoomMapConstant());
+                // map.invalidateSize();
+
+              }
+              return container;
             }
-            return container;
-          }
-        });
-        map.addControl(new leftarrow());
-        map.addControl(new rightarrow());
-        map.addControl(new uparrow());
-        map.addControl(new downarrow());
+          });
+          map.addControl(new leftarrow());
+          map.addControl(new rightarrow());
+          map.addControl(new uparrow());
+          map.addControl(new downarrow());
 
-        map.addControl(new zoomin());
-        map.addControl(new zoomout());
-        map.addControl(new home());
-      }, function (error) {
-        console.log('error creation');
-      });
+          map.addControl(new zoomin());
+          map.addControl(new zoomout());
+          map.addControl(new home());
+        },
+        function (error) {
+          console.log('error creation');
+        });
     }
     init();
     mapService.getStatus().then(function (data) {
@@ -273,6 +282,8 @@ angular.module("climbGame.controllers.map", [])
             $scope.globalScore = data.teams[i].score;
             $scope.currentLeg = data.teams[i].currentLeg;
             $scope.globalStatus = data.teams[i];
+            $scope.scrollToPoint($scope.currentLeg.position - 1);
+
             break;
           }
         }
@@ -285,36 +296,25 @@ angular.module("climbGame.controllers.map", [])
             //create div of external url
           var externalUrl = "<div>";
           for (var k = 0; k < data.legs[i].externalUrls.length; k++) {
-            externalUrl = externalUrl + '<div class="row"> ' + ' <a href="' + data.legs[i].externalUrls[k] + '" target="_blank">' + data.legs[i].externalUrls[k] + '</div>';
+            externalUrl = externalUrl + '<div class="row"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank">' + data.legs[i].externalUrls[k].name + '</div>';
           }
           externalUrl = externalUrl + '</div>';
-          var icon = getMarkerIcon(data.legs[i])
-          $scope.pathMarkers.push({
-            getMessageScope: function () {
-              return $scope;
-            },
-            lat: data.legs[i].geocoding[1],
-            lng: data.legs[i].geocoding[0],
-            message: '<div class="map-balloon">' +
-              '<h4 class="text-pop-up">' + (i + 1) + '. ' + data.legs[i].name + '</h4>' +
-              '<div class="row">' +
-              '<div class="col">' + externalUrl + '</div>' +
-              '</div>' +
-              '</div>',
-            icon: {
-              iconUrl: icon,
-              iconSize: [50, 50],
-              iconAnchor: [25, 25],
-              popupAnchor: [0, -25]
-            }
-          });
-          addPlayerPosition();
+          var icon = getMarkerIcon(data.legs[i]);
+          if (data.legs[i].position < $scope.currentLeg.position) {
+            $scope.pathMarkers.push(getMarker(data.legs[i], externalUrl, icon, i));
+            //marker with message
+          } else {
+            //marker without message
+            $scope.pathMarkers.push(getMarker(data.legs[i], null, icon, i));
+          }
+
         }
+        addPlayerPosition();
+
       },
       function (err) {
         //error with status
       });
-
 
     //function that put the position on map using the actual points of the user
 
@@ -426,6 +426,44 @@ angular.module("climbGame.controllers.map", [])
 
     }
 
+    function getMarker(data, url, icon, i) {
+      var returnMarker = {};
+      if (url) {
+        returnMarker = {
+          getMessageScope: function () {
+            return $scope;
+          },
+          lat: data.geocoding[1],
+          lng: data.geocoding[0],
+          message: '<div class="map-balloon">' +
+            '<h4 class="text-pop-up">' + (i + 1) + '. ' + data.name + '</h4>' +
+            '<div class="row">' +
+            '<div class="col">' + url + '</div>' +
+            '</div>' +
+            '</div>',
+          icon: {
+            iconUrl: icon,
+            iconSize: [50, 50],
+            iconAnchor: [25, 25],
+            popupAnchor: [0, -25]
+          }
+        }
+      } else returnMarker = {
+        getMessageScope: function () {
+          return $scope;
+        },
+        lat: data.geocoding[1],
+        lng: data.geocoding[0],
+
+        icon: {
+          iconUrl: icon,
+          iconSize: [50, 50],
+          iconAnchor: [25, 25],
+          popupAnchor: [0, -25]
+        }
+      }
+      return returnMarker;
+    }
 
     // Method used to split a polyline in two polylines considering a percentage value.
     // Now the percentage is related with the array elements number but we can consider the real distance in meters
@@ -524,4 +562,61 @@ angular.module("climbGame.controllers.map", [])
     $scope.resetTimerRight = function () {
       clearInterval($scope.scrollrightTimer);
     }
-  }]);
+
+    $scope.scrollToPoint = function (i) {
+      //get the bar
+      var imagesBar = document.getElementById('gallery');
+      //      get the the width
+      var widthBar = imagesBar.width;
+      //get the dimension of 1
+      //      var arrayImages = imagesBar.childNodes[1].childNodes[1].childNodes[1];
+      var widhtImages = imagesBar.childNodes[1].childNodes[1].childNodes[4].offsetWidth;
+      //go to i-th place
+      document.getElementById('gallery').scrollLeft = 0;
+      if (i != 0) {
+        document.getElementById('gallery').scrollLeft = widhtImages * ($scope.currentLeg.position - 6);
+      }
+      $scope.selectedPosition = Number(i);
+    }
+    $scope.goToPoi = function (leg) {
+      if (leg.position <= $scope.currentLeg.position) {
+        leafletData.getMap('map').then(function (map) {
+          //center and zoom
+          var latlng = L.latLng(leg.geocoding[1], leg.geocoding[0]);
+          //map.panTo(latlng);
+          // map.setZoom(8);
+          setInterval($scope.pathMarkers[leg.position].focus = true, 2000);
+          map.setView([leg.geocoding[1], leg.geocoding[0]], configService.getDefaultZoomPoiConstant());
+          //open popup
+          $scope.selectedPosition = leg.position;
+          // map.invalidateSize();
+          //          $scope.scrollToPoint($scope.selectedPosition);
+        }, function (err) {
+
+        });
+
+      }
+    }
+    $scope.getSelected = function (index) {
+      return index == $scope.selectedPosition;
+    }
+    $scope.$on('leafletDirectiveMarker.map.click', function (e, args) {
+      // Args will contain the marker name and other relevant information
+      console.log(args);
+      var markerName = args.leafletEvent.target.options.name; //has to be set above
+      // var $container = $(args.leafletEvent.target._popup._container).find('.leaflet-popup-  content');
+      //  $container.empty();
+      //      var html = "<p> I am " + markerName + " " + args.leafletEvent.target._popup._content + "</p>",
+      //        linkFunction = $compile(angular.element(html)),
+      //        linkedDOM = linkFunction($scope);
+      //      $container.append(linkedDOM);
+      //marker is clickable and already reached
+      if (args.model.message) {
+        $scope.scrollToPoint(args.modelName)
+          //      console.log(markerName);
+      }
+    });
+    //    $scope.$on('leafletDirectiveMarker.map.click', function (event, locationEvent) {
+    //      alert('Message');
+    //    });
+      }]);
