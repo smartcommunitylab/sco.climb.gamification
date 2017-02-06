@@ -4,19 +4,19 @@
   </div>
   <md-content layout="vertical" flex id="content">
     <div layout="row" layout-align="center center" layout-fill>
-      <md-whiteframe class="md-whiteframe-z1" layout="column" flex="30" layout-padding>
+      <md-whiteframe class="md-whiteframe-z1 " layout="column" flex="30" layout-padding>
         <md-content md-theme="docs-dark">
           <md-input-container>
-            <label>Email</label>
+            <label>{{'login_user'|translate}}</label>
             <input ng-model="user.username">
           </md-input-container>
           <md-input-container>
-            <label>Password</label>
+            <label>{{'login_password'|translate}}</label>
             <input ng-model="user.password" type="password">
           </md-input-container>
           <md-input-container layout-align="center center">
             <div layout="row" layout-sm="column" layout-margin>
-              <md-button class="md-raised md-primary" flex="50" flex-sm="100" ng-click="login()">Login</md-button>
+              <md-button class="md-raised button-login" flex="50" flex-sm="100" ng-click="login()">{{'login_enter'|translate}}</md-button>
             </div>
           </md-input-container>
         </md-content>
