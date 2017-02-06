@@ -143,11 +143,19 @@ md-sidenav {
 }
 
 .leg-image {
-  width: 50px;
-  height: 50px;
+  width: 100px;
+  height: 100px;
   display: inline-block;
-  margin-left: 20px;
-  margin-right: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+/*
+  margin-left: 20px;margin-right: 20px;
+*/
+}
+
+.leg-name {
+  font-size: 10px;
+  text-align: center;
 }
 
 .map-gallery {
@@ -160,7 +168,7 @@ md-sidenav {
   position: absolute;
   bottom: 0px;
   left: 0px;
-  height: 100px;
+  height: 120px;
   width: 1024px;
   background-color: white;
   margin: 0 auto;
@@ -171,21 +179,34 @@ md-sidenav {
 .gallery-left {
   position: fixed;
   left: 0px;
-  width: 100px !important;
-  height: 100px !important;
+  width: 120px !important;
+  height: 120px !important;
   background-color: white;
+  margin: 0px;
 }
 
 .gallery-right {
   position: fixed;
   right: 0px;
-  width: 100px !important;
-  height: 100px !important;
+  width: 120px !important;
+  height: 120px !important;
   background-color: white;
+  margin: 0px;
+}
+
+.md-button.gallery-button.md-default-theme:not([disabled]):hover,
+.md-button:not([disabled]):hover {
+  background-color: white;
+}
+
+.selectedImageMarker {
+  border: 3px solid #4152a0;
 }
 
 .pic-container {
   width: 1500px;
+  padding-left: 100px;
+  padding-right: 100px;
 }
 
 
@@ -294,18 +315,21 @@ md-sidenav {
   height: 30px;
   line-height: 30px;
   text-align: center;
+  margin-right: 20px;
 }
 
 .days-row {
   height: 50px;
   line-height: 50px;
   text-align: center;
+  margin-right: 20px;
 }
 
 .weather-row {
   height: 50px;
   line-height: 50px;
   text-align: center;
+  margin-right: 20px;
 }
 
 .weather-icon {
@@ -347,6 +371,7 @@ md-sidenav {
 .baby-list {
   height: 400px;
   overflow: auto;
+  margin-right: 20px;
 }
 
 md-dialog {
