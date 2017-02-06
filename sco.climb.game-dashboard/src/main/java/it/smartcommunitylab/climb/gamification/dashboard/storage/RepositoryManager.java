@@ -313,19 +313,6 @@ public class RepositoryManager {
 		}
 	}
 	
-	public void setToday(String ownerId, String gameId, String date) {
-		Query query = new Query(new Criteria("gameId").is(gameId).and("ownerId").is(ownerId));
-		PedibusGame gameDB = mongoTemplate.findOne(query, PedibusGame.class);
-		Date now = new Date();
-		if (gameDB != null) {
-			Update update = new Update();
-			update.set("lastDaySeen", date);
-			update.set("lastUpdate", now);
-			mongoTemplate.updateFirst(query, update, PedibusGame.class);
-		}		
-	}
-	
-	
 	public void updatePollingFlag(String ownerId, String gameId, boolean flag) {
 		Query query = new Query(new Criteria("gameId").is(gameId).and("ownerId").is(ownerId));
 		PedibusGame gameDB = mongoTemplate.findOne(query, PedibusGame.class);

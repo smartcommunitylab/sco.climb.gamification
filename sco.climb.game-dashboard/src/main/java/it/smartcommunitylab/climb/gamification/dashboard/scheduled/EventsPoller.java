@@ -92,7 +92,7 @@ public class EventsPoller {
 		String date = shortSdf.format(cal.getTime());
 		for (PedibusGame game : games) {
 			storage.resetPollingFlag(game.getOwnerId(), game.getGameId());
-			storage.setToday(game.getOwnerId(), game.getGameId(), date);
+			storage.updatePedibusGameLastDaySeen(game.getOwnerId(), game.getGameId(), date);
 		}
 	}
 	
