@@ -14,17 +14,17 @@
     </div>
   </div>
   <div layout="row">
-    <div layout="column" layout-align="end center" flex="5">
-      <md-button class="md-icon-button" aria-label="Favorite" ng-mousedown="scrollUp()" ng-mouseup="resetTimerUp()">
+    <div layout="column" class="scroll-control" layout-align="end center" flex="5">
+      <md-button class="md-icon-button " aria-label="Favorite" ng-mousedown="scrollUp()">
         <md-icon class="icon-arrow_up cal-button-scroll"></md-icon>
       </md-button>
-      <md-button class="md-icon-button" aria-label="menu " ng-mousedown="scrollDown()" ng-mouseup="resetTimerDown()">
+      <md-button class="md-icon-button " aria-label="menu " ng-mousedown="scrollDown()">
         <md-icon class="icon-arrow_down cal-button-scroll"></md-icon>
       </md-button>
     </div>
     <div layout="column" flex="100">
       <div layout="row" class="state-row">
-        <div layout="column" flex="25" class="cal-header">{{'cal_header_state'|translate}}</div>
+        <div layout="column" flex="25" class="cal-header">{{'cal_header_state'|translate| uppercase}}</div>
         <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" ng-class="{'cal-today-first':today(dayIndex)}" class="cal-header">
           <!--          <span ng-if="!today(dayIndex) && isPast(dayIndex) ">{{'cal_header_sent'|translate}}</span>-->
           <span ng-if="weekData[dayIndex].closed">{{'cal_header_sent'|translate}}</span>
@@ -35,14 +35,14 @@
       <div layout="row" class="days-row">
         <div layout="column" flex="25" class="cal-header">
           <div layout="row" class="cal-header">
-            <md-button class="md-icon-button" ng-click="prevWeek()"><i layout="column" flex="25" class="icon-arrow_left"></i></md-button><span class="cal-header" layout="column" flex="80">{{labelWeek}}</span>
-            <md-button class="md-icon-button" ng-click="nextWeek()"><i layout="column" flex="25" class="icon-arrow_right"></i></md-button>
+            <md-button class="md-icon-button week-button" ng-click="prevWeek()"><i layout="column" flex="25" class="icon-arrow_left"></i></md-button><span class="cal-header" layout="column" flex="80">{{labelWeek}}</span>
+            <md-button class="md-icon-button week-button" ng-click="nextWeek()"><i layout="column" flex="25" class="icon-arrow_right"></i></md-button>
           </div>
         </div>
         <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" class="cal-header" ng-class="{'cal-today-middle':today(dayIndex),'cal-header-future':isFuture(dayIndex)}">{{day |date:'EEEE dd-MM'}}</div>
       </div>
       <div layout="row" class="weather-row">
-        <div layout="column" flex="25" class="cal-header">Clima</div>
+        <div layout="column" flex="25" class="cal-header">{{'cal_header_clima'|translate| uppercase}}</div>
         <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" class="cal-header">
           <div layout="row" flex="100">
             <!--            <div ng-if="!today(dayIndex) && isPast(dayIndex)" layout="row" flex="100">-->

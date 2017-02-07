@@ -1,5 +1,5 @@
 {
-  "menu_class": "Classe",
+  "menu_class": "Calendario",
   "menu_map": "Mappa",
   "menu_excursions": "Gite scolastiche",
   "menu_stats": "Statistiche",
@@ -31,6 +31,7 @@
   "cal_send_data_button": "INVIA DATI",
   "toast_uname_not_valid": "Nome utente o password non validi",
   "cal_header_state": "Stato",
+  "cal_header_clima": "Clima",
   "cal_header_sent": "Dati Inviati",
   "cal_mean_zeroImpact_solo": "A piedi o in bici da solo o con gli amici",
   "cal_mean_zeroImpact_wAdult": "A piedi o accompagnati da un adulto",
