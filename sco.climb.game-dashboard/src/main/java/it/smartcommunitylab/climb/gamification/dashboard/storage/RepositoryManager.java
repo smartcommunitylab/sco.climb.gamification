@@ -13,6 +13,7 @@ import it.smartcommunitylab.climb.gamification.dashboard.security.DataSetInfo;
 import it.smartcommunitylab.climb.gamification.dashboard.security.Token;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -208,8 +209,11 @@ public class RepositoryManager {
 			if(calendarDayDB.isClosed()) {
 				return;
 			} else {
-				logger.warn(String.format("updateCalendarDayFromPedibus[%s]:existing calendar day not closed %s - %s",
-						ownerId, gameId, classRoom));
+				calendarDayDB.getModeMap().putAll(modeMap);
+				Update update = new Update();
+				update.set("modeMap", calendarDayDB.getModeMap());
+				update.set("lastUpdate", now);
+				mongoTemplate.updateFirst(query, update, CalendarDay.class);
 			}
 		}
 	}
@@ -307,19 +311,20 @@ public class RepositoryManager {
 		Date now = new Date();
 		if (gameDB != null) {
 			Update update = new Update();
-			update.set("pollingFlag", Boolean.TRUE);
+			update.set("pollingFlagMap", new HashMap<String, Boolean>());
 			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);
 		}
 	}
 	
-	public void updatePollingFlag(String ownerId, String gameId, boolean flag) {
+	public void updatePollingFlag(String ownerId, String gameId, String routeId, boolean flag) {
 		Query query = new Query(new Criteria("gameId").is(gameId).and("ownerId").is(ownerId));
 		PedibusGame gameDB = mongoTemplate.findOne(query, PedibusGame.class);
 		Date now = new Date();
 		if (gameDB != null) {
+			gameDB.getPollingFlagMap().put(routeId, flag);
 			Update update = new Update();
-			update.set("pollingFlag", flag);
+			update.set("pollingFlagMap", gameDB.getPollingFlagMap());
 			update.set("lastUpdate", now);
 			mongoTemplate.updateFirst(query, update, PedibusGame.class);
 		}
