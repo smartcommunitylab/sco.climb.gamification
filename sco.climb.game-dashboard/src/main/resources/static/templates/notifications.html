@@ -1,0 +1,25 @@
+<div class="notifications" layout="row">
+  <div id="notifications-list" layout="column" flex>
+    <md-card md-theme="default" ng-repeat="notif in notifications">
+      <md-card-title>
+        <md-card-title-text>
+          <span class="md-subhead">{{notif.timestamp | date:'dd MMMM yyyy, HH:mm'}}</span>
+        </md-card-title-text>
+      </md-card-title>
+      <md-card-content ng-if="notif.key">
+        <p class="md-subhead">{{'notif_' + notif.key | translate:notif.data}}</p>
+      </md-card-content>
+      <md-card-content ng-if="notif.badge">
+        <p class="md-subhead">{{notif.badge}} della collection {{notif.collectionName}}</p>
+      </md-card-content>
+    </md-card>
+  </div>
+  <div layout="column" layout-padding flex="5" layout-align="end center" class="controls">
+    <md-button class="md-icon-button" ng-click="scroll('up')">
+      <md-icon class="icon-arrow_up"></md-icon>
+    </md-button>
+    <md-button class="md-icon-button" ng-click="scroll('down')">
+      <md-icon class="icon-arrow_down"></md-icon>
+    </md-button>
+  </div>
+</div>

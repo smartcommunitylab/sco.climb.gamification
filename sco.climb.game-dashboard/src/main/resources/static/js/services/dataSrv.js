@@ -182,8 +182,8 @@ angular.module('climbGame.services.data', [])
       var deferred = $q.defer()
 
       if (!timestamp) {
-        deferred.reject('Timestamp required')
-        return deferred.promise
+        // January 1, 2017
+        timestamp = new Date(2017, 1, 1, 0, 0, 0, 0).getTime()
       }
 
       $http({

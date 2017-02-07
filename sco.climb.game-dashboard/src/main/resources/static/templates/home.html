@@ -25,6 +25,10 @@
         <md-icon class="material-icons menu-colors">&#xE7FB;</md-icon>
         <p>{{'menu_excursions' | translate}}</p>
       </md-list-item>
+      <md-list-item ng-click="go('home.notifications')" ng-class="{'menu-selected' : isCurrentState('home.notifications')}">
+        <md-icon class="md-default-theme" class="material-icons">&#xE625;</md-icon>
+        <p>{{'menu_notifications' | translate}}</p>
+      </md-list-item>
       <md-list-item ng-click="go('home.stats')" ng-class="{'menu-selected' : isCurrentState('home.stats')}">
         <md-icon class="material-icons menu-colors ">&#xE24B;</md-icon>
         <p>{{'menu_stats' | translate}}</p>

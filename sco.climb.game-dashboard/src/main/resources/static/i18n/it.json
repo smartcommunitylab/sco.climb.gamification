@@ -3,6 +3,7 @@
   "menu_map": "Mappa",
   "menu_excursions": "Gite scolastiche",
   "menu_stats": "Statistiche",
+  "menu_notifications": "Notifiche",
   "menu_change_class": "Cambia sezione",
   "menu_logout": "Logout",
   "stats_gamescore": "Raggiunti {{done}} km su {{total}}!",
@@ -44,5 +45,7 @@
   "login_enter": "Entra",
   "title_class": "Classe",
   "login_select_classes": "Seleziona la classe che desideri",
-  "class_choose_room": "Selezionare una classe"
+  "class_choose_room": "Selezionare una classe",
+  "notif_this is a test.": "Primo campo messaggio {{msg}}",
+  "notif_BRAVI! Oggi avete raggiunto obiettivo di viaggi eco-sostenibili!": "Primo campo {{target_trips}} e secondo campo {{valid_trips}}"
 }
