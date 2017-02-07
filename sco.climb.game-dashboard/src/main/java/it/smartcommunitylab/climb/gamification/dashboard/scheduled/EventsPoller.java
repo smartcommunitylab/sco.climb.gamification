@@ -75,8 +75,8 @@ public class EventsPoller {
 	private static final SimpleDateFormat shortSdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	
-	//@Scheduled(cron = "0 0,5,10,15 8-20 * * MON-FRI") // second, minute, hour, day, month, weekday
-	@Scheduled(cron = "0 */2 8-18 * * MON-FRI")
+	@Scheduled(cron = "0 0,5,10,15 8-20 * * MON-FRI") // second, minute, hour, day, month, weekday
+	//@Scheduled(cron = "0 */2 8-18 * * MON-FRI")
 	public void scheduledPollEvents() throws Exception {
 		if(logger.isInfoEnabled()) {
 			logger.info("scheduledPollEvents");
