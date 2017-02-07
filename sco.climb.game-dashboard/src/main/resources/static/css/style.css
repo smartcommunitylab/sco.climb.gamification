@@ -114,6 +114,11 @@ md-sidenav {
 
 /*login*/
 
+.login-view {
+  height: 100%;
+  background-color: #4153a0;
+}
+
 .climb-image {
   display: block;
   margin: auto;
@@ -125,8 +130,33 @@ md-sidenav {
   color: white!important;
 }
 
+.login-label {
+  color: white;
+}
+
+.login-view div md-input-container label {
+  color: white!important;
+}
+
+.login-view div md-input-container input {
+  border-bottom: 2px solid white;
+  color: white!important;
+}
+
+.login-view md-radio-group md-radio-button div .md-off {
+  border-color: white!important;
+}
+
+.login-view md-radio-group md-radio-button div span {
+  color: white!important;
+}
+
 
 /*general*/
+
+.full-page {
+  height: 100%;
+}
 
 .menu-colors {
   color: white;

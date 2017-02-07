@@ -11,6 +11,7 @@ angular.module("climbGame.controllers.calendar", [])
       }
       $scope.classMap = {};
       $scope.weekData = [];
+
       $scope.todayData = {
         babies: [],
         means: {}
