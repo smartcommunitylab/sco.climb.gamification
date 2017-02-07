@@ -598,5 +598,22 @@ md-dialog {
 .excursions .controls .md-button md-icon {
   color: white;
   background-color: #F39C12;
-  border-radius: 0;
+}
+
+/* Notifications */
+.notifications {
+  height: 708px;
+}
+
+.notifications #notifications-list {
+  overflow: hidden;
+}
+
+.notifications #notifications-list md-card.unread {
+  border: 1px solid #F39C12;
+}
+
+.notifications .controls .md-button md-icon {
+  color: white;
+  background-color: #F39C12;
 }

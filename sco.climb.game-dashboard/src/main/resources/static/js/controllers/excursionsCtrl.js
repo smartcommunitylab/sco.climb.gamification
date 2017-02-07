@@ -37,6 +37,7 @@ angular.module('climbGame.controllers.excursions', [])
     $scope.scrollTimer = null
 
     $scope.startScroll = function (direction) {
+      /*
       $scope.scrollTimer = setInterval(function () {
         if (direction === 'up') {
           if ($window.document.getElementById('excursions-list').scrollTop === 0) {
@@ -48,10 +49,16 @@ angular.module('climbGame.controllers.excursions', [])
           $window.document.getElementById('excursions-list').scrollTop += 10
         }
       }, 10)
+      */
+      if (direction === 'up') {
+        $window.document.getElementById('excursions-list').scrollTop -= 50
+      } else if (direction === 'down') {
+        $window.document.getElementById('excursions-list').scrollTop += 50
+      }
     }
 
     $scope.stopScroll = function () {
-      clearInterval($scope.scrollTimer)
+      // clearInterval($scope.scrollTimer)
     }
 
     /* Form */
