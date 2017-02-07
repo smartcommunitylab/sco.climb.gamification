@@ -10,7 +10,7 @@
         <p class="md-subhead">{{'notif_' + notif.key | translate:notif.data}}</p>
       </md-card-content>
       <md-card-content ng-if="notif.badge">
-        <p class="md-subhead">{{notif.badge}} della collection {{notif.collectionName}}</p>
+        <p class="md-subhead">{{'notif_badge' | translate:'{badge: "' + notif.badge + '"}'}}</p>
       </md-card-content>
     </md-card>
   </div>

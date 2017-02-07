@@ -31,6 +31,8 @@
   "excursion_form_send": "Aggiungi gita",
   "cal_send_data_button": "INVIA DATI",
   "toast_uname_not_valid": "Nome utente o password non validi",
+  "cal_notifications": "Notifiche",
+  "cal_challenges": "Sfide",
   "cal_header_state": "Stato",
   "cal_header_clima": "Clima",
   "cal_header_sent": "Dati Inviati",
@@ -44,6 +46,11 @@
   "login_password": "Password",
   "login_enter": "Entra",
   "title_class": "Classe",
-  "notif_this is a test.": "Primo campo messaggio {{msg}}",
-  "notif_BRAVI! Oggi avete raggiunto obiettivo di viaggi eco-sostenibili!": "Primo campo {{target_trips}} e secondo campo {{valid_trips}}"
+  "notif_ZeroImpactDayClass": "BRAVI! Oggi siete venuti tutti a scuola a piedi o in bici: è un giorno a IMPATTO ZERO e avete vinto {{bonus}} Km!",
+  "notif_NoCarDayClass": "COMPLIMENTI! Oggi nessuno di voi ha utilizzato l'auto per venire a scuola e avete vinto {{bonus}} Km!",
+  "notif_AlmostReachedLeg": "Avete quasi raggiunto la tappa {{leg}}. Continuate così!",
+  "notif_WeeklyRecordClass": "CONGRATULAZIONI! Avete battuto il vostro record settimanale con {{record}} Km!",
+  "notif_WeeklyPerformanceSchool": "La scorsa settimana la scuola ha percorso un totale di {{performance}} Km. Continuate così!",
+  "notif_ChallengeWon": "COMPLIMENTI! Avete superato la sfida che vi era stata assegnata e avete guadagnato {{VirtualPrice}}! Km!",
+  "notif_badge": "BRAVI! Avete raggiunto la tappa {{badge}}!"
 }
