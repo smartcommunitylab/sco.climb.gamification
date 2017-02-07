@@ -1,5 +1,5 @@
 angular.module('climbGame.services.login', [])
-  .factory('loginService', function ($http, $q, configService) {
+  .factory('loginService', function ($http, $q, $rootScope, configService) {
     var loginService = {};
     var OWNERID = "USERNAME";
     var GAMEID = "GAMEID";
@@ -117,10 +117,12 @@ angular.module('climbGame.services.login', [])
       localStorage.setItem(CLASS, classRoom);
       loginService.classRoom = classRoom;
     }
+    loginService.setTitle = function (title) {
+      $rootScope.title = title;
+    }
     loginService.removeClass = function () {
       localStorage.removeItem(CLASS);
       loginService.classRoom = null;
-
     }
     loginService.logout = function () {
       loginService.ownId = null;
