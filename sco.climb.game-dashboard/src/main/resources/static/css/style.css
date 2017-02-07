@@ -98,6 +98,14 @@ md-sidenav {
   transition-property: max-height;
 }
 
+.menu-selected {
+  background-color: #4153a0;
+}
+
+.menu-selected md-icon {
+  background-color: #4153a0;
+}
+
 .side-menu menu-toggle span {
   padding-top: 12px;
   padding-bottom: 12px;
@@ -185,7 +193,8 @@ md-sidenav {
   bottom: 0px;
   left: 0px;
   height: 120px;
-  width: 1024px;
+  /*  width: 1024px;*/
+  width: 100%;
   background-color: white;
   margin: 0 auto;
   white-space: nowrap;
@@ -227,6 +236,15 @@ md-sidenav {
 
 
 /*calendar*/
+
+.scroll-control {
+  z-index: 999;
+}
+
+.week-button {
+  color: #F39C12;
+  font-size: 30px;
+}
 
 .cal-sub-bar {
   height: 100px;
@@ -319,6 +337,7 @@ md-sidenav {
   margin-right: 16px;
   padding-left: 16px;
   border-color: blue;
+  background-color: white;
   border-style: solid;
   border-width: 2px 0px 0px 0px;
 }

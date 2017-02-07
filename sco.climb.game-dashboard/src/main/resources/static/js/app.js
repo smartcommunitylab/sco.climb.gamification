@@ -95,17 +95,6 @@ angular.module('climbGame', [
             }
           }
         })
-        /*
-        .state('home.login', {
-          url: 'login',
-          views: {
-            'content@home': {
-              templateUrl: 'templates/login.html',
-              controller: 'loginCtrl'
-            }
-          }
-        })
-        */
         .state('home.map', {
           url: 'map',
           views: {

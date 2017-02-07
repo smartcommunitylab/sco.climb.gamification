@@ -219,25 +219,15 @@ angular.module("climbGame.controllers.calendar", [])
       $scope.nextWeek = function () {
         changeWeek(1);
       }
-      var scrollup = function () {
-        document.getElementById('table').scrollTop -= 10
-      }
-      var scrolldown = function () {
-        document.getElementById('table').scrollTop += 10
-      }
+
       $scope.scrollUp = function () {
-        $scope.scrollupTimer = setInterval(scrollup, 10);
+        document.getElementById('table').scrollTop -= 50;
 
       }
       $scope.scrollDown = function () {
-        $scope.scrolldownTimer = setInterval(scrolldown, 10);
+        document.getElementById('table').scrollTop += 50;
       }
-      $scope.resetTimerUp = function () {
-        clearInterval($scope.scrollupTimer);
-      }
-      $scope.resetTimerDown = function () {
-        clearInterval($scope.scrolldownTimer);
-      }
+
       $scope.isFuture = function (dayIndex) {
         return (new Date().setHours(0, 0, 0, 0) < $scope.week[dayIndex].setHours(0, 0, 0, 0));
       }

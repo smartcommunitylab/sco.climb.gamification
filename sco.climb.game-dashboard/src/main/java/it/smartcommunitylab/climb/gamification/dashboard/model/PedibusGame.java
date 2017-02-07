@@ -3,7 +3,9 @@ package it.smartcommunitylab.climb.gamification.dashboard.model;
 import it.smartcommunitylab.climb.contextstore.model.BaseObject;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PedibusGame extends BaseObject {
 	
@@ -23,7 +25,7 @@ public class PedibusGame extends BaseObject {
 	private String toHour;
 	private String lastDaySeen;
 	
-	private boolean pollingFlag = false;
+	private Map<String, Boolean> pollingFlagMap = new HashMap<String, Boolean>();
 	
 	public String getSchoolId() {
 		return schoolId;
@@ -109,11 +111,11 @@ public class PedibusGame extends BaseObject {
 	public void setLastDaySeen(String lastDaySeen) {
 		this.lastDaySeen = lastDaySeen;
 	}
-	public boolean isPollingFlag() {
-		return pollingFlag;
+	public Map<String, Boolean> getPollingFlagMap() {
+		return pollingFlagMap;
 	}
-	public void setPollingFlag(boolean pollingFlag) {
-		this.pollingFlag = pollingFlag;
+	public void setPollingFlagMap(Map<String, Boolean> pollingFlagMap) {
+		this.pollingFlagMap = pollingFlagMap;
 	}
 
 }

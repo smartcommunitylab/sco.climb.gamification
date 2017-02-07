@@ -88,7 +88,6 @@ public class EventsPoller {
 	public void resetPollingFlag() {
 		List<PedibusGame> games = storage.getPedibusGames();
 		Calendar cal = new GregorianCalendar(TimeZone.getDefault());
-		cal.add(Calendar.DAY_OF_YEAR, -1);
 		String date = shortSdf.format(cal.getTime());
 		for (PedibusGame game : games) {
 			storage.resetPollingFlag(game.getOwnerId(), game.getGameId());
@@ -100,19 +99,17 @@ public class EventsPoller {
 		Map<String, Collection<ChildStatus>> results = Maps.newTreeMap();
 		List<PedibusGame> games = storage.getPedibusGames();
 		for (PedibusGame game : games) {
-			if(game.isPollingFlag()) {
-				logger.info("Reading game " + game.getGameId() + " events.");
-				Map<String, Collection<ChildStatus>> childrenStatusMap = pollGameEvents(game, checkDate);
-				if(!isEmptyResponse(childrenStatusMap)) {
-					for(Collection<ChildStatus> childrenStatus : childrenStatusMap.values()) {
-						sendScores(childrenStatus, game);
-					}
-					storage.updatePollingFlag(game.getOwnerId(), game.getGameId(), Boolean.FALSE);
-					storage.updatePedibusGameLastDaySeen(game.getOwnerId(), game.getGameId(), game.getLastDaySeen());
-					updateCalendarDayFromPedibus(game.getOwnerId(), game.getGameId(), childrenStatusMap);
+			logger.info("Reading game " + game.getGameId() + " events.");
+			Map<String, Collection<ChildStatus>> childrenStatusMap = pollGameEvents(game, checkDate);
+			for(String routeId : childrenStatusMap.keySet()) {
+				Collection<ChildStatus> childrenStatus = childrenStatusMap.get(routeId); 
+				if(!isEmptyResponse(childrenStatus)) {
+					//sendScores(childrenStatus, game);
+					storage.updatePollingFlag(game.getOwnerId(), game.getGameId(), routeId, Boolean.FALSE);
+					updateCalendarDayFromPedibus(game.getOwnerId(), game.getGameId(), childrenStatus);
 				}
-				results.putAll(childrenStatusMap);
 			}
+			results.putAll(childrenStatusMap);
 		}
 		return results;
 	}
@@ -136,11 +133,9 @@ public class EventsPoller {
 
 			if (game.getLastDaySeen() != null) {
 				cal.setTime(shortSdf.parse(game.getLastDaySeen()));
-				cal.add(Calendar.DAY_OF_YEAR, 1);
 			} else {
 				cal.setTime(cal.getTime());
 			}
-			game.setLastDaySeen(shortSdf.format(cal.getTime()));
 
 			String h[];
 
@@ -166,6 +161,12 @@ public class EventsPoller {
 			
 			for (String routeId : routesList) {
 				logger.info("Reading route " + routeId + " events.");
+				
+				Boolean pollingFlag = game.getPollingFlagMap().get(routeId);
+				if((pollingFlag != null) && (pollingFlag == Boolean.FALSE)) {
+					logger.info("Events already managed for route " + routeId);
+					continue;
+				}
 
 				String address = eventstoreURL + "/api/event/" + game.getOwnerId() + "?" + "routeId=" + routeId + "&dateFrom=" + from + "&dateTo=" + to;
 
@@ -262,26 +263,24 @@ public class EventsPoller {
 	}
 	
 	public void updateCalendarDayFromPedibus(String ownerId, String gameId,
-			Map<String, Collection<ChildStatus>> childrenStatusMap) {
+			Collection<ChildStatus> childrenStatus) {
 		
 		Map<String, Map<String, String>> classModeMap = new HashMap<String, Map<String,String>>();
 		
-		for(Collection<ChildStatus> childrenStatus : childrenStatusMap.values()) {
-			if(childrenStatus == null) {
-				continue;
-			}
-			for(ChildStatus childStatus : childrenStatus) {
-				if(childStatus.isArrived()) {
-					PedibusPlayer player = storage.getPedibusPlayerByChildId(ownerId, gameId, childStatus.getChildId());
-					if(player != null) {
-						String classRoom = player.getClassRoom();
-						Map<String, String> modeMap = classModeMap.get(classRoom);
-						if(modeMap == null) {
-							modeMap = new HashMap<String, String>();
-							classModeMap.put(classRoom, modeMap);
-						}
-						modeMap.put(player.getChildId(), Const.MODE_PEDIBUS);
+		if(childrenStatus == null) {
+			return;
+		}
+		for(ChildStatus childStatus : childrenStatus) {
+			if(childStatus.isArrived()) {
+				PedibusPlayer player = storage.getPedibusPlayerByChildId(ownerId, gameId, childStatus.getChildId());
+				if(player != null) {
+					String classRoom = player.getClassRoom();
+					Map<String, String> modeMap = classModeMap.get(classRoom);
+					if(modeMap == null) {
+						modeMap = new HashMap<String, String>();
+						classModeMap.put(classRoom, modeMap);
 					}
+					modeMap.put(player.getChildId(), Const.MODE_PEDIBUS);
 				}
 			}
 		}
@@ -300,13 +299,10 @@ public class EventsPoller {
 		}
 	}
 	
-	public boolean isEmptyResponse(Map<String, Collection<ChildStatus>> childrenStatusMap) {
+	public boolean isEmptyResponse(Collection<ChildStatus> childrenStatus) {
 		boolean result = true;
-		for(Collection<ChildStatus> status : childrenStatusMap.values()) {
-			if((status != null) && !status.isEmpty()) {
-				result = false;
-				break;
-			}
+		if((childrenStatus != null) && !childrenStatus.isEmpty()) {
+			result = false;
 		}
 		return result;
 	}

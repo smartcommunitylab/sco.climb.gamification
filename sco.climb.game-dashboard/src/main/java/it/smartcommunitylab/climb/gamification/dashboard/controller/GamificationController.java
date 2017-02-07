@@ -517,14 +517,14 @@ public class GamificationController {
 		try {
 			PedibusGame game = storage.getPedibusGame(ownerId, gameId);
 			Map<String, Collection<ChildStatus>> childrenStatusMap = eventsPoller.pollGameEvents(game, false);
-			for(Collection<ChildStatus> childrenStatus : childrenStatusMap.values()) {
-				eventsPoller.sendScores(childrenStatus, game);
+			for(String routeId : childrenStatusMap.keySet()) {
+				Collection<ChildStatus> childrenStatus = childrenStatusMap.get(routeId);
+				if(!eventsPoller.isEmptyResponse(childrenStatus)) {
+					eventsPoller.sendScores(childrenStatus, game);
+					storage.updatePollingFlag(game.getOwnerId(), game.getGameId(), routeId, Boolean.FALSE);
+					eventsPoller.updateCalendarDayFromPedibus(game.getOwnerId(), game.getGameId(), childrenStatus);
+				}
 			}
-			if(!eventsPoller.isEmptyResponse(childrenStatusMap)) {
-				storage.updatePedibusGameLastDaySeen(game.getOwnerId(), game.getGameId(), game.getLastDaySeen());
-			}
-			//update Calendar
-			eventsPoller.updateCalendarDayFromPedibus(ownerId, gameId, childrenStatusMap);
 			return childrenStatusMap;
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Throwables.getStackTraceAsString(e));

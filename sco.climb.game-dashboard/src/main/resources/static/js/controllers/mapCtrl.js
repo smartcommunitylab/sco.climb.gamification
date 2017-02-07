@@ -543,26 +543,32 @@ angular.module("climbGame.controllers.map", [])
     };
 
 
-    var scrollleft = function () {
-      document.getElementById('gallery').scrollLeft -= 10
-    }
-    var scrollright = function () {
-      document.getElementById('gallery').scrollLeft += 10
-    }
+    //    var scrollleft = function () {
+    //      document.getElementById('gallery').scrollLeft -= 10
+    //    }
+    //    var scrollright = function () {
+    //      document.getElementById('gallery').scrollLeft += 10
+    //    }
+    //    $scope.scrollLeft = function () {
+    //      $scope.scrollleftTimer = setInterval(scrollleft, 10);
+    //
+    //    }
+    //    $scope.scrollRight = function () {
+    //      $scope.scrollrightTimer = setInterval(scrollright, 10);
+    //    }
+    //    $scope.resetTimerLeft = function () {
+    //      clearInterval($scope.scrollleftTimer);
+    //    }
+    //    $scope.resetTimerRight = function () {
+    //      clearInterval($scope.scrollrightTimer);
+    //    }
     $scope.scrollLeft = function () {
-      $scope.scrollleftTimer = setInterval(scrollleft, 10);
+      document.getElementById('gallery').scrollLeft -= 50;
 
     }
     $scope.scrollRight = function () {
-      $scope.scrollrightTimer = setInterval(scrollright, 10);
+      document.getElementById('gallery').scrollLeft += 50;
     }
-    $scope.resetTimerLeft = function () {
-      clearInterval($scope.scrollleftTimer);
-    }
-    $scope.resetTimerRight = function () {
-      clearInterval($scope.scrollrightTimer);
-    }
-
     $scope.scrollToPoint = function (i) {
       //get the bar
       var imagesBar = document.getElementById('gallery');
@@ -570,7 +576,8 @@ angular.module("climbGame.controllers.map", [])
       var widthBar = imagesBar.width;
       //get the dimension of 1
       //      var arrayImages = imagesBar.childNodes[1].childNodes[1].childNodes[1];
-      var widhtImages = imagesBar.childNodes[1].childNodes[1].childNodes[4].offsetWidth;
+      //var widhtImages = imagesBar.childNodes[1].childNodes[1].childNodes[4].offsetWidth;
+      var widhtImages = 140;
       //go to i-th place
       document.getElementById('gallery').scrollLeft = 0;
       if (i != 0) {

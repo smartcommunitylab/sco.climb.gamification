@@ -19,7 +19,9 @@ angular.module('climbGame.controllers.home', [])
         $scope.closeSideNavPanel()
         $state.go(path)
       }
-
+      $scope.isCurrentState = function (state) {
+        return $state.includes(state);
+      }
       $scope.logout = function () {
         // delete storage
         loginService.logout()
