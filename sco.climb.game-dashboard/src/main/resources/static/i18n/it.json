@@ -42,5 +42,7 @@
   "login_user": "Utente",
   "login_password": "Password",
   "login_enter": "Entra",
-  "title_class": "Classe"
+  "title_class": "Classe",
+  "login_select_classes": "Seleziona la classe che desideri",
+  "class_choose_room": "Selezionare una classe"
 }
