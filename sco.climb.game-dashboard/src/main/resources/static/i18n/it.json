@@ -32,6 +32,7 @@
   "cal_send_data_button": "INVIA DATI",
   "toast_uname_not_valid": "Nome utente o password non validi",
   "cal_notifications": "Notifiche",
+  "cal_notifications_empty": "",
   "cal_challenges": "Sfide",
   "cal_header_state": "Stato",
   "cal_header_clima": "Clima",

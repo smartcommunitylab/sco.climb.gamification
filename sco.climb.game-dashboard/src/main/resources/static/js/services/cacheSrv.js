@@ -17,5 +17,9 @@ angular.module('climbGame.services.cache', [])
       return now
     }
 
+    cacheService.resetLastCheck = function (page) {
+      localStorage.removeItem(page + '_page_last_check')
+    }
+
     return cacheService
   })
