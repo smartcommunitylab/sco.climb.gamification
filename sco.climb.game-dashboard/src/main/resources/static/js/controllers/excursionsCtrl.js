@@ -62,13 +62,15 @@ angular.module('climbGame.controllers.excursions', [])
     }
 
     /* Form */
-    $scope.newExcursion = {
+    var emptyExcursion = {
       name: null,
       date: null,
       children: null,
       distance: null,
       meteo: 'sunny'
     }
+
+    $scope.newExcursion = angular.copy(emptyExcursion)
 
     $scope.createExcursion = function () {
       var params = {
@@ -81,7 +83,9 @@ angular.module('climbGame.controllers.excursions', [])
 
       dataService.postExcursion(params).then(
         function (data) {
-          // refresh?
+          // reset form
+          $scope.newExcursion = angular.copy(emptyExcursion)
+          // refresh
           $scope.refreshExcursions()
         },
         function (reason) {

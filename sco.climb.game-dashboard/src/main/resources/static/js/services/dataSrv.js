@@ -206,5 +206,31 @@ angular.module('climbGame.services.data', [])
       return deferred.promise
     }
 
+    // get challenges
+    dataService.getChallenges = function (timestamp) {
+      var deferred = $q.defer()
+
+      if (!timestamp) {
+        // January 1, 2017
+        timestamp = new Date(2017, 1, 1, 0, 0, 0, 0).getTime()
+      }
+
+      $http({
+        method: 'GET',
+        url: configService.getChallengesURL() + loginService.getOwnerId() + '/' + loginService.getGameId() + '/' + loginService.getClassRoom(),
+        headers: {
+          'Accept': 'application/json',
+          'x-access-token': loginService.getUserToken()
+        },
+        timeout: configService.httpTimout()
+      }).then(function (response) {
+        deferred.resolve(response.data)
+      }, function (reason) {
+        console.log(reason)
+        deferred.reject(reason)
+      })
+      return deferred.promise
+    }
+
     return dataService
   })
