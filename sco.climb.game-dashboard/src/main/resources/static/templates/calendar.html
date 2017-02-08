@@ -1,11 +1,12 @@
-<div class="row" style="width=100%;">
+<div>
   <div layout="row" class="cal-sub-bar">
     <div layout="column" flex="50">
       <div layout="row">
         <div layout="column" class="cal-arrow cal-arrow-notif">
-          <div class="md-subhead">{{'cal_notifications' | translate}}</div>
-          <p ng-if="notif.key">{{'notif_' + notif.key | translate:notif.data}}</p>
-          <p ng-if="notif.badge">{{'notif_badge' | translate:'{badge: "' + notif.badge + '"}'}}</p>
+          <div class="md-title">{{'cal_notifications' | translate}}</div>
+          <p ng-if="!lastNotification">{{'cal_notifications_empty' | translate}}</p>
+          <p ng-if="lastNotification.key">{{'notif_' + lastNotification.key | translate:lastNotification.data}}</p>
+          <p ng-if="lastNotification.badge">{{'notif_badge' | translate:'{badge: "' + lastNotification.badge + '"}'}}</p>
         </div>
         <div layout="column" class="cal-arrow-max"></div>
       </div>
@@ -14,7 +15,7 @@
       <div layout="row">
         <div layout="column" class="cal-arrow-min"></div>
         <div layout="column" class="cal-arrow cal-arrow-challenge">
-          {{'cal_challenges' | translate}}
+          <div class="md-title">{{'cal_challenges' | translate}}</div>
         </div>
       </div>
     </div>
