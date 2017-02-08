@@ -222,7 +222,7 @@ md-sidenav {
   position: absolute;
   bottom: 0px;
   left: 0px;
-  height: 120px;
+  height: 140px;
   /*  width: 1024px;*/
   width: 100%;
   background-color: white;
@@ -305,7 +305,6 @@ md-sidenav {
   background-color: #F39C12;
 }
 
-
 .cal-arrow-max {
   width: 0;
   height: 0;
@@ -313,7 +312,6 @@ md-sidenav {
   border-width: 50px 0 50px 50px;
   border-color: transparent transparent transparent #f39d12;
 }
-
 
 .cal-arrow-min {
   width: 0;
@@ -655,7 +653,9 @@ md-dialog {
   background-color: #F39C12;
 }
 
+
 /* Notifications */
+
 .notifications {
   height: 708px;
 }
@@ -671,4 +671,26 @@ md-dialog {
 .notifications .controls .md-button md-icon {
   color: white;
   background-color: #F39C12;
+}
+
+@media all and (-ms-high-contrast: none),
+(-ms-high-contrast: active) {
+  .days-row {
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    margin-right: 37px;
+  }
+  .weather-row {
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    margin-right: 37px;
+  }
+  .state-row {
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    margin-right: 37px;
+  }
 }
