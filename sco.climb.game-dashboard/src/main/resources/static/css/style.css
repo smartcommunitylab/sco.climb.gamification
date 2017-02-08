@@ -280,12 +280,6 @@ md-sidenav {
   height: 100px;
 }
 
-.cal-notif {
-  color: white;
-  width: 100%;
-  background-color: #F39C12;
-}
-
 .cal-name {
   display: inline-block;
   width: 180px;
@@ -294,7 +288,25 @@ md-sidenav {
   text-overflow: ellipsis;
 }
 
-.cal-notif-arrow {
+.cal-arrow {
+  padding: 10px;
+}
+
+.cal-arrow-notif {
+  color: white;
+  width: 100%;
+  background-color: #F39C12;
+}
+
+.cal-arrow-challenge {
+  color: white;
+  text-align: right;
+  width: 100%;
+  background-color: #F39C12;
+}
+
+
+.cal-arrow-max {
   width: 0;
   height: 0;
   border-style: solid;
@@ -302,14 +314,8 @@ md-sidenav {
   border-color: transparent transparent transparent #f39d12;
 }
 
-.cal-challenge {
-  color: white;
-  text-align: right;
-  width: 100%;
-  background-color: #F39C12;
-}
 
-.cal-challenge-arrow {
+.cal-arrow-min {
   width: 0;
   height: 0;
   border-style: solid;

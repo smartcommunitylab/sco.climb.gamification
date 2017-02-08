@@ -2,14 +2,20 @@
   <div layout="row" class="cal-sub-bar">
     <div layout="column" flex="50">
       <div layout="row">
-        <div layout="column" class="cal-notif">Notifiche</div>
-        <div layout="column" class="cal-notif-arrow"></div>
+        <div layout="column" class="cal-arrow cal-arrow-notif">
+          <div class="md-subhead">{{'cal_notifications' | translate}}</div>
+          <p ng-if="notif.key">{{'notif_' + notif.key | translate:notif.data}}</p>
+          <p ng-if="notif.badge">{{'notif_badge' | translate:'{badge: "' + notif.badge + '"}'}}</p>
+        </div>
+        <div layout="column" class="cal-arrow-max"></div>
       </div>
     </div>
     <div layout="column" flex="50">
       <div layout="row">
-        <div layout="column" class="cal-challenge-arrow"></div>
-        <div layout="column" class="cal-challenge ">Challenges</div>
+        <div layout="column" class="cal-arrow-min"></div>
+        <div layout="column" class="cal-arrow cal-arrow-challenge">
+          {{'cal_challenges' | translate}}
+        </div>
       </div>
     </div>
   </div>
@@ -26,6 +32,7 @@
       <div layout="row" class="state-row">
         <div layout="column" flex="25" class="cal-header">{{'cal_header_state'|translate| uppercase}}</div>
         <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" ng-class="{'cal-today-first':today(dayIndex)}" class="cal-header">
+          <!--          <span ng-if="!today(dayIndex) && isPast(dayIndex) ">{{'cal_header_sent'|translate}}</span>-->
           <span ng-if="weekData[dayIndex].closed">{{'cal_header_sent'|translate}}</span>
           <span ng-if="!today(dayIndex) && isFuture(dayIndex)" class="cal-header-future">{{'cal_send_data_button'|translate}}</span>
           <span ng-if="today(dayIndex) && !weekData[dayIndex].closed" ng-click="sendData()" class="cal-interactive-button">{{'cal_send_data_button'|translate}}</span>
@@ -71,11 +78,8 @@
               {{baby.name}} {{baby.surname}}
             </div>
             <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" ng-class="{'cal-today-middle':today(dayIndex),'cal-future-middle':isFuture(dayIndex)}">
-
-              <md-button ng-if="!today(dayIndex) || weekData[dayIndex].closed" class="cal-baby-cell" ng-class="weekData[dayIndex][baby.childId].color">
-                <span ng-if="weekData[dayIndex][baby.childId].mean=='pedibus'">PEDIBUS</span><span ng-if="weekData[dayIndex][baby.childId].mean=='absent'">A</span> </md-button>
+              <md-button ng-if="!today(dayIndex) || weekData[dayIndex].closed" class="cal-baby-cell" ng-class="weekData[dayIndex][baby.childId].color"><span ng-if="weekData[dayIndex][baby.childId].mean=='pedibus'">PEDIBUS</span><span ng-if="weekData[dayIndex][baby.childId].mean=='absent'">A</span> </md-button>
               <md-button ng-if="today(dayIndex) && !weekData[dayIndex].closed" class="cal-baby-cell" ng-click="selectBabyMean(babyIndex)" ng-class="todayData.babies[babyIndex].color"><span ng-if="todayData.babies[babyIndex].mean=='pedibus'">PEDIBUS</span><span ng-if="todayData.babies[babyIndex].mean=='absent'">A</span></md-button>
-
             </div>
           </div>
         </md-list>
@@ -139,7 +143,6 @@
         <md-icon md-svg-src="img/ic_color.svg "></md-icon>
       </md-button>
     </md-fab-trigger>
-
     <md-fab-actions>
       <md-button aria-label="A piedi o accompagnati da un adulto " class="md-fab md-raised md-mini cal-foot-friend-col " ng-click="selectGeneralMean( 'zeroImpact_solo') ">
         <md-tooltip md-visible="cal.meanOpen " md-direction="left ">{{'cal_mean_zeroImpact_solo'|translate}}</md-tooltip>
