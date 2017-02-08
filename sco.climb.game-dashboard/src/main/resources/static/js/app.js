@@ -16,6 +16,7 @@ angular.module('climbGame', [
   'climbGame.controllers.notifications',
   'climbGame.controllers.login',
   'climbGame.controllers.classSelection',
+  'climbGame.services.cache',
   'climbGame.services.data',
   'climbGame.services.conf',
   'climbGame.services.map',

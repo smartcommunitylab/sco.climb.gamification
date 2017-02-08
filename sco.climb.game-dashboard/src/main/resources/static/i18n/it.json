@@ -49,7 +49,6 @@
   "login_select_classes": "Seleziona la classe che desideri",
   "class_choose_room": "Selezionare una classe",
   "notif_this is a test.": "Primo campo messaggio {{msg}}",
-  "notif_BRAVI! Oggi avete raggiunto obiettivo di viaggi eco-sostenibili!": "Primo campo {{target_trips}} e secondo campo {{valid_trips}}",
   "notif_ZeroImpactDayClass": "BRAVI! Oggi siete venuti tutti a scuola a piedi o in bici: è un giorno a IMPATTO ZERO e avete vinto {{bonus}} Km!",
   "notif_NoCarDayClass": "COMPLIMENTI! Oggi nessuno di voi ha utilizzato l'auto per venire a scuola e avete vinto {{bonus}} Km!",
   "notif_AlmostReachedLeg": "Avete quasi raggiunto la tappa {{leg}}. Continuate così!",
