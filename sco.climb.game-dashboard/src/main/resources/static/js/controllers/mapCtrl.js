@@ -378,7 +378,7 @@ angular.module("climbGame.controllers.map", [])
         lat: actualMarkerPosition[0],
         lng: actualMarkerPosition[1],
         message: '<div class="map-balloon">' +
-          '<h4 class="text-pop-up"> la tua posizione</h4>' +
+          '<h4 class="text-pop-up"> Voi siete qui</h4>' +
           '</div>',
         icon: {
           iconUrl: './img/POI_here.png',
