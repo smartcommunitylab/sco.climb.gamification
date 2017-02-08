@@ -200,7 +200,7 @@ angular.module("climbGame.controllers.calendar", [])
             preserveScope: true, // do not forget this if use parent scope
             template: '<md-dialog>' +
               '  <div class="cal-dialog-title"> Dati incompleti  </div><md-divider></md-divider>' +
-              '  <div class="cal-dialog-text">Per poter inviare i dato e necessario compilare tutti i campi.</div>' +
+              '  <div class="cal-dialog-text">{{"cal_data_missing"|translate}}</div>' +
               '    <div layout="row"  layout-align="start center" ><div layout"column" flex="100" ><md-button ng-click="closeDialog()" class=" send-dialog-delete">' +
               '      Ho capito' +
               '   </div> </md-button>' +
@@ -236,6 +236,8 @@ angular.module("climbGame.controllers.calendar", [])
       $scope.isPast = function (dayIndex) {
         return (new Date().setHours(0, 0, 0, 0) > $scope.week[dayIndex].setHours(0, 0, 0, 0));
       }
+
+
 
       function dataAreComplete() {
         //meteo and means must  be chosen
@@ -362,4 +364,4 @@ angular.module("climbGame.controllers.calendar", [])
           }
         }
       }
-  }]);
+        }]);

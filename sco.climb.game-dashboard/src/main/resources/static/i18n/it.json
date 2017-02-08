@@ -46,6 +46,7 @@
   "title_class": "Classe",
   "login_select_classes": "Seleziona la classe che desideri",
   "class_choose_room": "Selezionare una classe",
+  "cal_data_missing": "Per poter inviare i dati è necessario compilare tutti i campi.",
   "notif_this is a test.": "Primo campo messaggio {{msg}}",
   "notif_BRAVI! Oggi avete raggiunto obiettivo di viaggi eco-sostenibili!": "Primo campo {{target_trips}} e secondo campo {{valid_trips}}"
 }
