@@ -296,7 +296,7 @@ angular.module("climbGame.controllers.map", [])
             //create div of external url
           var externalUrl = "<div>";
           for (var k = 0; k < data.legs[i].externalUrls.length; k++) {
-            externalUrl = externalUrl + '<div class="row"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank">' + data.legs[i].externalUrls[k].name + '</div>';
+            externalUrl = externalUrl + '<div class="row"> ' + ' <a href="' + data.legs[i].externalUrls[k].link + '" target="_blank">' + data.legs[i].externalUrls[k].name + '</a></div>';
           }
           externalUrl = externalUrl + '</div>';
           var icon = getMarkerIcon(data.legs[i]);

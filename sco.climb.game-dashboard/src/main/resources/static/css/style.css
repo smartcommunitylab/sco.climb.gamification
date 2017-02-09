@@ -225,14 +225,14 @@ md-sidenav {
 .map-gallery {
   height: 80px;
   width: 80px;
-  margin: 10px;
+  margin: 6px;
 }
 
 .map-gallery-question {
   height: 80px;
   width: 80px;
-  margin: 10px;
-  padding-bottom: 15px;
+  margin: 6px;
+  padding-bottom: 19px;
 }
 
 .gallery-bar {
@@ -320,6 +320,7 @@ md-sidenav {
   color: white;
   width: 100%;
   background-color: #F39C12;
+  margin: 5px 0px 5px 5px
 }
 
 .cal-arrow-challenge {
@@ -327,13 +328,15 @@ md-sidenav {
   text-align: right;
   width: 100%;
   background-color: #F39C12;
+  margin: 5px 5px 5px 0px
 }
 
 .cal-arrow-max {
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 50px 0 50px 50px;
+  border-width: 45px 0 45px 50px;
+  margin: 5px 5px 5px 0px;
   border-color: transparent transparent transparent #f39d12;
 }
 
@@ -341,7 +344,8 @@ md-sidenav {
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 50px 50px 50px 0;
+  border-width: 45px 50px 45px 0;
+   margin: 5px 0px 5px 5px;
   border-color: transparent #f39d12 transparent transparent;
 }
 
@@ -685,7 +689,7 @@ md-dialog {
 /* Notifications */
 
 .notifications {
-  height: 708px;
+  height: 695px;
 }
 
 .notifications #notifications-list {
@@ -700,6 +704,7 @@ md-dialog {
   color: white;
   background-color: #F39C12;
 }
+
 
 @media all and (-ms-high-contrast: none),
 (-ms-high-contrast: active) {
