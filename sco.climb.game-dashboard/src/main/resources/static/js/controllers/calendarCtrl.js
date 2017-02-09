@@ -27,8 +27,7 @@ angular.module('climbGame.controllers.calendar', [])
       setLabelWeek($scope.week)
 
       calendarService.setTitle().then(
-        function () {
-        },
+        function () {},
         function () {
           // default value
         }
@@ -52,12 +51,10 @@ angular.module('climbGame.controllers.calendar', [])
               createWeekData(calendar)
               updateTodayData(calendar)
             },
-            function () {
-            }
+            function () {}
           )
         },
-        function () {
-        }
+        function () {}
       )
 
       $scope.returnColorByType = function (type) {
@@ -303,8 +300,7 @@ angular.module('climbGame.controllers.calendar', [])
           function (calendar) {
             createWeekData(calendar)
           },
-          function () {
-          }
+          function () {}
         )
 
         // if the new week is the actual week
@@ -382,12 +378,35 @@ angular.module('climbGame.controllers.calendar', [])
       }
 
       /*
-      * Notifications stuff
-      */
+       * Notifications and Challenges stuff
+       */
       $scope.lastNotification = null
       $scope.notificationsPoller = null
 
-      var startNotificationsPoller = function () {
+      /*
+      {
+        "gameId": "588889c0e4b0464e16ac40a0",
+        "playerId": "5^",
+        "state": [{
+          "name": "test_KmSettimanali_classe_5",
+          "modelName": "KmSettimanali",
+          "fields": {
+            "TargetTeam": "classe",
+            "VirtualPrize": "biglietto aereo di test",
+            "bonusPointType": "bonus_distance",
+            "bonusScore": 3000,
+            "counterName": "total_distance",
+            "periodName": "weekly",
+            "target": 10000
+          },
+          "start": 1486512000000,
+          "completed": true,
+          "dateCompleted": 1486569750531
+        }]
+      }
+      */
+
+      var startPoller = function () {
         /* comment this if you don't want always the last notification available */
         CacheSrv.resetLastCheck('calendar')
 
@@ -406,17 +425,40 @@ angular.module('climbGame.controllers.calendar', [])
           )
         }
 
+        var getChallenges = function () {
+          dataService.getChallenges().then(
+            function (data) {
+              if (data && data.length) {
+                console.log('[Calendar] Challenges: ' + data.length)
+                for (var i = 0; i < data.length; i++) {
+                  if (data[i].state) {
+                    $scope.lastChallenge = data[i]
+                    i = data.length
+                  }
+                }
+              }
+            },
+            function (reason) {
+              console.log('[Calendar]' + reason)
+            }
+          )
+        }
+
         getNotifications()
+        getChallenges()
         // poll every 10 seconds
-        $scope.notificationsPoller = $interval(getNotifications, (1000 * 10))
+        $scope.poller = $interval(function () {
+          getNotifications()
+          getChallenges()
+        }, (1000 * 10))
       }
 
-      startNotificationsPoller()
+      startPoller()
 
       $scope.$on('$destroy', function () {
-        if ($scope.notificationsPoller) {
-          $interval.cancel($scope.notificationsPoller)
-          console.log('[Calendar] notificationsPoller cancelled')
+        if ($scope.poller) {
+          $interval.cancel($scope.poller)
+          console.log('[Calendar] poller cancelled')
         }
       })
     }

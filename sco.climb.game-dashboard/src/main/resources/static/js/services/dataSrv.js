@@ -207,13 +207,8 @@ angular.module('climbGame.services.data', [])
     }
 
     // get challenges
-    dataService.getChallenges = function (timestamp) {
+    dataService.getChallenges = function () {
       var deferred = $q.defer()
-
-      if (!timestamp) {
-        // January 1, 2017
-        timestamp = new Date(2017, 1, 1, 0, 0, 0, 0).getTime()
-      }
 
       $http({
         method: 'GET',

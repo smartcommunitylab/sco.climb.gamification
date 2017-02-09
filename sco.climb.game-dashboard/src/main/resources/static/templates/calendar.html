@@ -4,9 +4,9 @@
       <div layout="row">
         <div layout="column" class="cal-arrow cal-arrow-notif">
           <div class="md-title">{{'cal_notifications' | translate}}</div>
-          <p ng-if="!lastNotification">{{'cal_notifications_empty' | translate}}</p>
-          <p ng-if="lastNotification.key">{{'notif_' + lastNotification.key | translate:lastNotification.data}}</p>
-          <p ng-if="lastNotification.badge">{{'notif_badge' | translate:'{badge: "' + lastNotification.badge + '"}'}}</p>
+          <div ng-if="!lastNotification">{{'cal_notifications_empty' | translate}}</div>
+          <div ng-if="lastNotification.key">{{'notif_' + lastNotification.key | translate:lastNotification.data}}</div>
+          <div ng-if="lastNotification.badge">{{'notif_badge' | translate:'{badge: "' + lastNotification.badge + '"}'}}</div>
         </div>
         <div layout="column" class="cal-arrow-max"></div>
       </div>
@@ -16,6 +16,9 @@
         <div layout="column" class="cal-arrow-min"></div>
         <div layout="column" class="cal-arrow cal-arrow-challenge">
           <div class="md-title">{{'cal_challenges' | translate}}</div>
+          <div ng-if="lastChallenge && !state.completed" ng-repeat="state in lastChallenge.state">
+            {{'challenge_' + state.modelName | translate:state.fields}}
+          </div>
         </div>
       </div>
     </div>

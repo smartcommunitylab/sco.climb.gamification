@@ -9,21 +9,25 @@ angular.module('climbGame.controllers.home', [])
     '$timeout',
     '$location',
     'loginService',
-
-    function ($rootScope, $scope, $log, $state, $mdSidenav, $timeout, $location, loginService) {
+    'CacheSrv',
+    function ($rootScope, $scope, $log, $state, $mdSidenav, $timeout, $location, loginService, CacheSrv) {
       $state.go('home.class')
 
       $scope.go = function (path) {
         $scope.closeSideNavPanel()
         $state.go(path)
       }
+
       $scope.isCurrentState = function (state) {
         return $state.includes(state)
       }
+
       $scope.logout = function () {
+        CacheSrv.resetLastCheck('calendar')
+        CacheSrv.resetLastCheck('notifications')
         // delete storage
         loginService.logout()
-          // go to login
+        // go to login
         $state.go('login')
       }
 

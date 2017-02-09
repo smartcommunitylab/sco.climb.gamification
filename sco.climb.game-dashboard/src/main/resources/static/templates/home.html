@@ -31,35 +31,35 @@
         <p>{{'menu_notifications' | translate}}</p>
       </md-list-item>
       <md-list-item ng-click="go('home.stats')" ng-class="{'menu-selected' : isCurrentState('home.stats')}">
-        <md-icon class="material-icons menu-colors ">&#xE24B;</md-icon>
+        <md-icon class="material-icons menu-colors">&#xE24B;</md-icon>
         <p>{{'menu_stats' | translate}}</p>
       </md-list-item>
-      <md-list-item ng-click="changeClass() ">
-        <md-icon class="material-icons menu-colors ">&#xE627;</md-icon>
+      <md-list-item ng-click="changeClass()">
+        <md-icon class="material-icons menu-colors">&#xE627;</md-icon>
         <p>{{'menu_change_class' | translate}}</p>
       </md-list-item>
-      <md-list-item ng-click="logout() ">
-        <md-icon class="material-icons menu-colors ">&#xE853;</md-icon>
+      <md-list-item ng-click="logout()">
+        <md-icon class="material-icons menu-colors">&#xE853;</md-icon>
         <p>{{'menu_logout' | translate}}</p>
       </md-list-item>
     </md-list>
   </md-content>
 </md-sidenav>
-<md-toolbar class="desktop bar-colors ">
-  <div class="md-toolbar-tools bar-colors ">
-    <md-button class="md-icon-button bar-colors " aria-label="Side Panel " ng-click="openSideNavPanel() ">
+<md-toolbar class="desktop bar-colors">
+  <div class="md-toolbar-tools bar-colors">
+    <md-button class="md-icon-button bar-colors" aria-label="Side Panel" ng-click="openSideNavPanel()">
       <md-tooltip>Menu</md-tooltip>
-      <md-icon class="material-icons bar-colors ">&#xE5D2;</md-icon>
+      <md-icon class="material-icons bar-colors">&#xE5D2;</md-icon>
     </md-button>
     <h2> <span>{{title}}</span>
     </h2>
-    <div class="bar-logo ">
-      <img src="./img/logo_header.png ">
+    <div class="bar-logo">
+      <img src="./img/logo_header.png">
     </div>
   </div>
 </md-toolbar>
-<main layout="row " flex>
+<main layout="row" flex>
   <md-content flex>
-    <ui-view name="content "></ui-view>
+    <ui-view name="content"></ui-view>
   </md-content>
 </main>
