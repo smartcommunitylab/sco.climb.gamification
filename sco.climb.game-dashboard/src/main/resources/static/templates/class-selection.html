@@ -13,7 +13,7 @@
             <label class="login-label">{{'login_select_classes'|translate}}</label>
             <md-content class="login-view">
 
-              <md-radio-group ng-model="selectedClass">
+              <md-radio-group ng-model="data.selectedClass">
                 <md-radio-button ng-repeat="class in formClasses" ng-value="class">{{class.label}}</md-radio-button>
               </md-radio-group>
               <!--

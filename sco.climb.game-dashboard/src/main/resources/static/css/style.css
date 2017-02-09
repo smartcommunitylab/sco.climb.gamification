@@ -301,7 +301,9 @@ md-sidenav {
   height: 36px;
   width: 36px;
 }
-
+.menu-cal svg {
+  fill:white;
+}
 .cal-name {
   display: inline-block;
   width: 180px;
@@ -396,7 +398,7 @@ md-sidenav {
   margin-left: 0px;
   margin-right: 16px;
   padding-left: 16px;
-  border-color: blue;
+  border-color: #4153a0;
   background-color: white;
   border-style: solid;
   border-width: 2px 0px 0px 0px;
@@ -497,13 +499,13 @@ md-dialog {
 }
 
 .cal-today-first {
-  border-color: blue;
+  border-color: #4153a0;
   border-style: solid;
   border-width: 2px 2px 0px 2px;
 }
 
 .cal-today-middle {
-  border-color: blue;
+  border-color: #4153a0;
   border-style: solid;
   border-width: 0px 2px 0px 2px;
 }

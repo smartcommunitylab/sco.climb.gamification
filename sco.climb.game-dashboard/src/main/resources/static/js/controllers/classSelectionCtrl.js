@@ -17,11 +17,13 @@ angular.module('climbGame.controllers.classSelection', [])
       });
 
     }
-    $scope.selectedClass = null;;
+    $scope.data = {
+      selectedClass : $scope.formClasses[0]
+    }
 
     $scope.login = function () {
-      if ($scope.selectedClass) {
-        loginService.setClassRoom($scope.selectedClass.id);
+      if ($scope.data.selectedClass) {
+        loginService.setClassRoom($scope.data.selectedClass.id);
         $state.go('home')
       } else {
         $mdToast.show($mdToast.simple().content($filter('translate')('class_choose_room')));
