@@ -1,5 +1,5 @@
 angular.module("climbGame.controllers.map", [])
-  .controller("mapCtrl", ["$scope", "leafletData", "mapService", "configService", function ($scope, leafletData, mapService, configService) {
+  .controller("mapCtrl", ["$scope", "$timeout","leafletData", "mapService", "configService", function ($scope, $timeout,leafletData, mapService, configService) {
     var init = function () {
       angular.extend($scope, {
         defaults: {
@@ -282,7 +282,8 @@ angular.module("climbGame.controllers.map", [])
             $scope.globalScore = data.teams[i].score;
             $scope.currentLeg = data.teams[i].currentLeg;
             $scope.globalStatus = data.teams[i];
-            $scope.scrollToPoint($scope.currentLeg.position - 1);
+//            $timeout($scope.scrollToPoint($scope.currentLeg.position - 1), 500);
+
 
             break;
           }
@@ -310,6 +311,7 @@ angular.module("climbGame.controllers.map", [])
 
         }
         addPlayerPosition();
+//                  $timeout($scope.scrollToPoint($scope.currentLeg.position - 1), 3000);
 
       },
       function (err) {
@@ -577,11 +579,11 @@ angular.module("climbGame.controllers.map", [])
       //get the dimension of 1
       //      var arrayImages = imagesBar.childNodes[1].childNodes[1].childNodes[1];
       //var widhtImages = imagesBar.childNodes[1].childNodes[1].childNodes[4].offsetWidth;
-      var widhtImages = 140;
+      var widhtImages = 100;
       //go to i-th place
       document.getElementById('gallery').scrollLeft = 0;
-      if (i != 0) {
-        document.getElementById('gallery').scrollLeft = widhtImages * ($scope.currentLeg.position - 6);
+      if (i >=5) {
+        document.getElementById('gallery').scrollLeft = widhtImages * ($scope.currentLeg.position - 8);
       }
       $scope.selectedPosition = Number(i);
     }
@@ -606,6 +608,10 @@ angular.module("climbGame.controllers.map", [])
     }
     $scope.getSelected = function (index) {
       return index == $scope.selectedPosition;
+    }
+    $scope.scrollMap = function (index) {
+      if (index == $scope.legs.length-1 )
+          {$scope.scrollToPoint($scope.currentLeg.position - 1);}
     }
     $scope.$on('leafletDirectiveMarker.map.click', function (e, args) {
       // Args will contain the marker name and other relevant information
