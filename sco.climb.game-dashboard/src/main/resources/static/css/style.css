@@ -664,7 +664,7 @@ md-dialog {
 }
 
 .excursions #excursions-list {
-  overflow: hidden;
+  overflow: auto;
 }
 
 .excursions md-card .card-media {
@@ -689,7 +689,7 @@ md-dialog {
 }
 
 .notifications #notifications-list {
-  overflow: hidden;
+  overflow: auto;
 }
 
 .notifications #notifications-list md-card.unread {

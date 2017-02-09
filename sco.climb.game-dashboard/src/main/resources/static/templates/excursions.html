@@ -83,28 +83,50 @@
   </div>
   <div layout="column" flex>
     <h1 class="md-title">{{'excursions_history' | translate}}</h1>
-    <div layout="row" id="excursions-list" layout-wrap>
-      <div flex="50" ng-repeat="ex in excursions">
-        <md-card md-theme="default">
-          <md-card-title>
-            <md-card-title-text>
-              <span class="md-headline">{{ex.name}}</span>
-              <span class="md-subhead">{{ex.day | date:'dd MMMM yyyy'}}</span>
-            </md-card-title-text>
-            <md-card-title-media>
-              <div class="md-media-sm card-media">
-                <i class="meteo" ng-class="{'icon-sun': ex.meteo === 'sunny', 'icon-cloudy': ex.meteo === 'cloudy', 'icon-rain': ex.meteo === 'rain', 'icon-snow': ex.meteo === 'snow'}"></i>
-              </div>
-            </md-card-title-media>
-          </md-card-title>
-          <md-card-content>
-            <p class="md-subhead">{{(ex.distance / 1000) % 1 !== 0 ? ((ex.distance / 1000) | number:1) : ((ex.distance / 1000) | number:0)}} {{'excursion_distance'
-              | translate}}</p>
-            <p class="md-subhead">{{'excursion_children' | translate:'{children: ' + ex.children + '}'}}</p>
-          </md-card-content>
-        </md-card>
+    <md-content id="excursions-list">
+      <div layout="row" layout-wrap>
+        <div flex="50" ng-repeat="ex in excursions">
+          <md-card md-theme="default">
+            <md-card-title>
+              <md-card-title-text>
+                <span class="md-headline">{{ex.name}}</span>
+                <span class="md-subhead">{{ex.day | date:'dd MMMM yyyy'}}</span>
+              </md-card-title-text>
+              <md-card-title-media>
+                <div class="md-media-sm card-media">
+                  <i class="meteo" ng-class="{'icon-sun': ex.meteo === 'sunny', 'icon-cloudy': ex.meteo === 'cloudy', 'icon-rain': ex.meteo === 'rain', 'icon-snow': ex.meteo === 'snow'}"></i>
+                </div>
+              </md-card-title-media>
+            </md-card-title>
+            <md-card-content>
+              <p class="md-subhead">{{(ex.distance / 1000) % 1 !== 0 ? ((ex.distance / 1000) | number:1) : ((ex.distance / 1000) | number:0)}}
+                {{'excursion_distance' | translate}}</p>
+              <p class="md-subhead">{{'excursion_children' | translate:'{children: ' + ex.children + '}'}}</p>
+            </md-card-content>
+          </md-card>
+        </div>
+        <div flex="50" ng-repeat="ex in excursions">
+          <md-card md-theme="default">
+            <md-card-title>
+              <md-card-title-text>
+                <span class="md-headline">{{ex.name}}</span>
+                <span class="md-subhead">{{ex.day | date:'dd MMMM yyyy'}}</span>
+              </md-card-title-text>
+              <md-card-title-media>
+                <div class="md-media-sm card-media">
+                  <i class="meteo" ng-class="{'icon-sun': ex.meteo === 'sunny', 'icon-cloudy': ex.meteo === 'cloudy', 'icon-rain': ex.meteo === 'rain', 'icon-snow': ex.meteo === 'snow'}"></i>
+                </div>
+              </md-card-title-media>
+            </md-card-title>
+            <md-card-content>
+              <p class="md-subhead">{{(ex.distance / 1000) % 1 !== 0 ? ((ex.distance / 1000) | number:1) : ((ex.distance / 1000) | number:0)}}
+                {{'excursion_distance' | translate}}</p>
+              <p class="md-subhead">{{'excursion_children' | translate:'{children: ' + ex.children + '}'}}</p>
+            </md-card-content>
+          </md-card>
+        </div>
       </div>
-    </div>
+    </md-content>
   </div>
   <div layout="column" flex="5" layout-align="end center" class="controls">
     <md-button class="md-icon-button" ng-click="startScroll('up')">
