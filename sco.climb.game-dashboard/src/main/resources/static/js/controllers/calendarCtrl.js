@@ -1,7 +1,7 @@
 /* global angular */
 angular.module('climbGame.controllers.calendar', [])
-  .controller('calendarCtrl', ['$scope', '$filter', '$interval', '$mdDialog', '$mdToast', 'CacheSrv', 'dataService', 'calendarService',
-    function ($scope, $filter, $interval, $mdDialog, $mdToast, CacheSrv, dataService, calendarService) {
+  .controller('calendarCtrl', ['$scope', '$filter','$window', '$interval', '$mdDialog', '$mdToast', 'CacheSrv', 'dataService', 'calendarService',
+    function ($scope, $filter,$window, $interval, $mdDialog, $mdToast, CacheSrv, dataService, calendarService) {
       $scope.week = []
       $scope.selectedWeather = ''
       $scope.selectedMean = ''
@@ -19,7 +19,7 @@ angular.module('climbGame.controllers.calendar', [])
       }
 
       setTodayIndex()
-
+      setClassSize();
       for (var i = 0; i < 5; i++) {
         $scope.week.push(new Date(getMonday(new Date()).getTime() + (i * 24 * 60 * 60 * 1000)))
       }
@@ -352,6 +352,16 @@ angular.module('climbGame.controllers.calendar', [])
           }
         }
       }
+       function setClassSize (){
+         var w = window,
+              d = document,
+              e = d.documentElement,
+              g = d.getElementsByTagName('body')[0],
+              x = w.innerWidth || e.clientWidth || g.clientWidth,
+              y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+                   document.getElementById('table').setAttribute("style","height:"+(y-64-100-130-50)+"px");
+       }
+
 
       function createWeekData (calendar) {
         $scope.weekData = []
@@ -471,5 +481,10 @@ angular.module('climbGame.controllers.calendar', [])
           console.log('[Calendar] poller cancelled')
         }
       })
+      var appWindow = angular.element($window);
+
+    appWindow.bind('resize', function () {
+      setClassSize();
+    });
     }
   ])
