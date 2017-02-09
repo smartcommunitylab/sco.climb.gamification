@@ -281,7 +281,7 @@ md-sidenav {
 /*calendar*/
 
 .scroll-control {
-  z-index: 999;
+  /*  z-index: 999;*/
 }
 
 .week-button {
@@ -291,6 +291,11 @@ md-sidenav {
 
 .cal-sub-bar {
   height: 100px;
+}
+
+.menu-cal {
+  height: 36px;
+  width: 36px;
 }
 
 .cal-name {
@@ -370,6 +375,10 @@ md-sidenav {
 
 .cal-pedibus-col {
   background-color: #ffee58 !important;
+}
+
+.calendar-tooltip {
+  left: -5px;
 }
 
 .cal-total {
