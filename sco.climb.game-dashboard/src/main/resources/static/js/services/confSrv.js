@@ -41,6 +41,10 @@ angular.module('climbGame.services.conf', [])
       return URL + '/game-dashboard/api/notification/'
     }
 
+    configService.getChallengesURL = function () {
+      return URL + '/game-dashboard/api/challenge/'
+    }
+
     configService.getTokenURL = function () {
       return URL + '/game-dashboard/token'
     }

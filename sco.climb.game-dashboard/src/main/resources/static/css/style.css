@@ -163,6 +163,10 @@ md-sidenav {
   background-color: #F39C12;
 }
 
+.menu-colors .md-button:hover {
+  background-color: transparent !important;
+}
+
 .bar-colors {
   color: white !important;
   background-color: #4153a0;

@@ -51,12 +51,12 @@
   "class_choose_room": "Selezionare una classe",
   "cal_data_missing": "Per poter inviare i dati è necessario compilare tutti i campi.",
   "notif_this is a test.": "Primo campo messaggio {{msg}}",
-  "notif_ZeroImpactDayClass": "BRAVI! Oggi siete venuti tutti a scuola a piedi o in bici: è un giorno a IMPATTO ZERO e avete vinto {{bonus}} Km!",
-  "notif_NoCarDayClass": "COMPLIMENTI! Oggi nessuno di voi ha utilizzato l'auto per venire a scuola e avete vinto {{bonus}} Km!",
-  "notif_AlmostReachedLeg": "Avete quasi raggiunto la tappa {{leg}}. Continuate così!",
-  "notif_WeeklyRecordClass": "CONGRATULAZIONI! Avete battuto il vostro record settimanale con {{record}} Km!",
-  "notif_WeeklyPerformanceSchool": "La scorsa settimana la scuola ha percorso un totale di {{performance}} Km. Continuate così!",
-  "notif_ChallengeWon": "COMPLIMENTI! Avete superato la sfida che vi era stata assegnata e avete guadagnato {{VirtualPrice}}! Km!",
+  "notif_ZeroImpactDayClass": "BRAVI! Oggi siete venuti tutti a scuola a piedi o in bici: è un giorno a IMPATTO ZERO e avete vinto {{_bonus_}} Km!",
+  "notif_NoCarDayClass": "COMPLIMENTI! Oggi nessuno di voi ha utilizzato l'auto per venire a scuola e avete vinto {{_bonus_}} Km!",
+  "notif_AlmostReachedLeg": "Avete quasi raggiunto la tappa {{_leg_}}. Continuate così!",
+  "notif_WeeklyRecordClass": "CONGRATULAZIONI! Avete battuto il vostro record settimanale con {{_record_}} Km!",
+  "notif_WeeklyPerformanceSchool": "La scorsa settimana la scuola ha percorso un totale di {{_performance_}} Km. Continuate così!",
+  "notif_ChallengeWon": "COMPLIMENTI! Avete superato la sfida che vi era stata assegnata e avete guadagnato {{_VirtualPrice_}}! Km!",
   "notif_badge": "BRAVI! Avete raggiunto la tappa {{badge}}!",
   "map_your_position": "Voi siete qui"
 }
