@@ -1,22 +1,26 @@
-angular.module("climbGame.controllers.login", [])
-  .controller("loginCtrl", ["$scope", "$state", "$mdToast", "$filter",
-    "loginService",
+/* global angular */
+angular.module('climbGame.controllers.login', [])
+  .controller('loginCtrl', ['$scope', '$state', '$mdToast', '$filter', 'loginService',
     function ($scope, $state, $mdToast, $filter, loginService) {
-      $scope.isAuth = false;
+      $scope.isAuth = false
+
       $scope.user = {
-        username: "",
-        password: ""
+        username: '',
+        password: ''
       }
+
       $scope.auth = function () {
-        $scope.isAuth = true;
+        $scope.isAuth = true
       }
+
       $scope.login = function () {
         loginService.login($scope.user).then(function () {
-          $state.go('classSelection');
+          $state.go('classSelection')
         }, function (err) {
-          //Toast the Problem
-          $mdToast.show($mdToast.simple().content($filter('translate')('toast_uname_not_valid')));
-        });
-
+          console.log(err)
+          // Toast the Problem
+          $mdToast.show($mdToast.simple().content($filter('translate')('toast_uname_not_valid')))
+        })
       }
-  }]);
+    }
+  ])
