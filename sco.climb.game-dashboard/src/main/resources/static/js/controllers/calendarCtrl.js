@@ -359,7 +359,9 @@ angular.module('climbGame.controllers.calendar', [])
               g = d.getElementsByTagName('body')[0],
               x = w.innerWidth || e.clientWidth || g.clientWidth,
               y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+         if (document.getElementById('table')){
                    document.getElementById('table').setAttribute("style","height:"+(y-64-100-130-50)+"px");
+         }
        }
 
 
@@ -474,17 +476,18 @@ angular.module('climbGame.controllers.calendar', [])
       }
 
       startPoller()
-
+      function onResize () {
+        setClassSize();
+      }
       $scope.$on('$destroy', function () {
         if ($scope.poller) {
           $interval.cancel($scope.poller)
           console.log('[Calendar] poller cancelled')
         }
+              window.angular.element($window).off('resize', onResize);
       })
-      var appWindow = angular.element($window);
 
-    appWindow.bind('resize', function () {
-      setClassSize();
-    });
+      var appWindow = angular.element($window);
+    appWindow.bind('resize', onResize);
     }
   ])

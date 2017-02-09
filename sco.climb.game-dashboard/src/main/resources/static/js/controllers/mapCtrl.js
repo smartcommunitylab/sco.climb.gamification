@@ -1,5 +1,5 @@
 angular.module("climbGame.controllers.map", [])
-  .controller("mapCtrl", ["$scope", "$timeout","leafletData", "mapService", "configService", function ($scope, $timeout,leafletData, mapService, configService) {
+  .controller("mapCtrl", ["$scope","$window", "$timeout","leafletData", "mapService", "configService", function ($scope, $window, $timeout,leafletData, mapService, configService) {
     var init = function () {
       angular.extend($scope, {
         defaults: {
@@ -269,8 +269,13 @@ angular.module("climbGame.controllers.map", [])
         function (error) {
           console.log('error creation');
         });
+
     }
     init();
+//        var appWindow = angular.element($window);
+//    appWindow.bind('resize', function () {
+//      setMapSize();
+//    });
     mapService.getStatus().then(function (data) {
         //visualize the status trought path
         $scope.status = data;
@@ -613,6 +618,30 @@ angular.module("climbGame.controllers.map", [])
       if (index == $scope.legs.length-1 )
           {$scope.scrollToPoint($scope.currentLeg.position - 1);}
     }
+
+    function setMapSize (){
+         var w = window,
+              d = document,
+              e = d.documentElement,
+              g = d.getElementsByTagName('body')[0],
+              x = w.innerWidth || e.clientWidth || g.clientWidth,
+              y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+                   document.getElementById('map').setAttribute("style","height:"+(y-64)+"px");
+       }
+    $scope.$on('$destroy', function () {
+              window.angular.element($window).off('resize', onResize);
+      })
+    function onResize () {
+        setMapSize();
+      }
+      $scope.$on('$destroy', function () {
+
+              window.angular.element($window).off('resize', onResize);
+      })
+
+      var appWindow = angular.element($window);
+    appWindow.bind('resize', onResize);
+
     $scope.$on('leafletDirectiveMarker.map.click', function (e, args) {
       // Args will contain the marker name and other relevant information
       console.log(args);

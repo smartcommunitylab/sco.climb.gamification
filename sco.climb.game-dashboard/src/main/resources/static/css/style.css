@@ -161,6 +161,7 @@ md-sidenav {
 .menu-colors {
   color: white;
   background-color: #F39C12;
+  z-index: 99999;
 }
 
 .menu-colors .md-button:hover {
@@ -236,7 +237,7 @@ md-sidenav {
 }
 
 .gallery-bar {
-  position: absolute;
+  position: fixed;
   bottom: 0px;
   left: 0px;
   height: 140px;
@@ -246,6 +247,7 @@ md-sidenav {
   margin: 0 auto;
   white-space: nowrap;
   overflow: scroll;
+  z-index: 999;
 }
 
 .gallery-left {
