@@ -2,7 +2,7 @@
 angular.module('climbGame.controllers.notifications', [])
   .controller('notificationsCtrl', function ($scope, $window, $translate, dataService, CacheSrv) {
     $scope.notifications = []
-
+    $scope.loading = true;
     $scope.scroll = function (direction) {
       if (direction === 'up') {
         $window.document.getElementById('notifications-list').scrollTop -= 50
@@ -15,11 +15,14 @@ angular.module('climbGame.controllers.notifications', [])
 
     dataService.getNotifications().then(
       function (data) {
+        $scope.loading = false;
         $scope.notifications = data
         CacheSrv.updateLastCheck('notifications')
       },
       function (reason) {
         // console.log(reason)
+        $scope.loading = false;
+
       }
     )
   })

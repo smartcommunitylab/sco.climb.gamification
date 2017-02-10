@@ -223,6 +223,10 @@ md-sidenav {
   overflow: hidden;
 }
 
+.leaflet-container {
+  height: 100% !important;
+}
+
 .map-gallery {
   height: 80px;
   width: 80px;
@@ -579,7 +583,7 @@ md-dialog {
 }
 
 .stats .table,
-.stats .table > .layout-column {
+.stats .table>.layout-column {
   border: 1px solid #bdbdbd;
 }
 
@@ -725,6 +729,14 @@ md-dialog {
 .notifications .controls .md-button md-icon {
   color: white;
   background-color: #F39C12;
+}
+
+.notifications .progress-notif svg path {
+  stroke: #4153a0;
+}
+
+.notifications .loading {
+  margin-top: 100px;
 }
 
 @media all and (-ms-high-contrast: none),
