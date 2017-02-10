@@ -273,6 +273,8 @@ angular.module("climbGame.controllers.map", [])
     }
     init();
     setMapSize();
+
+
     mapService.getStatus().then(function (data) {
         //visualize the status trought path
         $scope.status = data;
@@ -314,7 +316,7 @@ angular.module("climbGame.controllers.map", [])
         }
         addPlayerPosition();
         //                  $timeout($scope.scrollToPoint($scope.currentLeg.position - 1), 3000);
-
+        setGallerySize();
       },
       function (err) {
         //error with status
@@ -629,6 +631,11 @@ angular.module("climbGame.controllers.map", [])
         map.invalidateSize();
       });
     }
+
+    function setGallerySize() {
+      //
+      document.getElementById('pic-container').setAttribute("style", "width:" + ($scope.legs.length * 100) + "px");
+    }
     $scope.$on('$destroy', function () {
       window.angular.element($window).off('resize', onResize);
     })
@@ -663,4 +670,4 @@ angular.module("climbGame.controllers.map", [])
     //    $scope.$on('leafletDirectiveMarker.map.click', function (event, locationEvent) {
     //      alert('Message');
     //    });
-      }]);
+  }]);
