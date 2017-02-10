@@ -1,5 +1,5 @@
 angular.module("climbGame.controllers.map", [])
-  .controller("mapCtrl", ["$scope","$window", "$timeout","leafletData", "mapService", "configService", function ($scope, $window, $timeout,leafletData, mapService, configService) {
+  .controller("mapCtrl", ["$scope", "$window", "$timeout", "leafletData", "mapService", "configService", function ($scope, $window, $timeout, leafletData, mapService, configService) {
     var init = function () {
       angular.extend($scope, {
         defaults: {
@@ -272,10 +272,7 @@ angular.module("climbGame.controllers.map", [])
 
     }
     init();
-//        var appWindow = angular.element($window);
-//    appWindow.bind('resize', function () {
-//      setMapSize();
-//    });
+    setMapSize();
     mapService.getStatus().then(function (data) {
         //visualize the status trought path
         $scope.status = data;
@@ -287,7 +284,7 @@ angular.module("climbGame.controllers.map", [])
             $scope.globalScore = data.teams[i].score;
             $scope.currentLeg = data.teams[i].currentLeg;
             $scope.globalStatus = data.teams[i];
-//            $timeout($scope.scrollToPoint($scope.currentLeg.position - 1), 500);
+            //            $timeout($scope.scrollToPoint($scope.currentLeg.position - 1), 500);
 
 
             break;
@@ -316,7 +313,7 @@ angular.module("climbGame.controllers.map", [])
 
         }
         addPlayerPosition();
-//                  $timeout($scope.scrollToPoint($scope.currentLeg.position - 1), 3000);
+        //                  $timeout($scope.scrollToPoint($scope.currentLeg.position - 1), 3000);
 
       },
       function (err) {
@@ -587,7 +584,7 @@ angular.module("climbGame.controllers.map", [])
       var widhtImages = 100;
       //go to i-th place
       document.getElementById('gallery').scrollLeft = 0;
-      if (i >=5) {
+      if (i >= 5) {
         document.getElementById('gallery').scrollLeft = widhtImages * ($scope.currentLeg.position - 8);
       }
       $scope.selectedPosition = Number(i);
@@ -615,31 +612,36 @@ angular.module("climbGame.controllers.map", [])
       return index == $scope.selectedPosition;
     }
     $scope.scrollMap = function (index) {
-      if (index == $scope.legs.length-1 )
-          {$scope.scrollToPoint($scope.currentLeg.position - 1);}
+      if (index == $scope.legs.length - 1) {
+        $scope.scrollToPoint($scope.currentLeg.position - 1);
+      }
     }
 
-    function setMapSize (){
-         var w = window,
-              d = document,
-              e = d.documentElement,
-              g = d.getElementsByTagName('body')[0],
-              x = w.innerWidth || e.clientWidth || g.clientWidth,
-              y = w.innerHeight|| e.clientHeight|| g.clientHeight;
-                   document.getElementById('map').setAttribute("style","height:"+(y-64)+"px");
-       }
+    function setMapSize() {
+      var w = window,
+        d = document,
+        e = d.documentElement,
+        g = d.getElementsByTagName('body')[0],
+        x = w.innerWidth || e.clientWidth || g.clientWidth,
+        y = w.innerHeight || e.clientHeight || g.clientHeight;
+      document.getElementById('map-container').setAttribute("style", "height:" + (y - 64) + "px");
+      leafletData.getMap('map').then(function (map) {
+        map.invalidateSize();
+      });
+    }
     $scope.$on('$destroy', function () {
-              window.angular.element($window).off('resize', onResize);
-      })
-    function onResize () {
-        setMapSize();
-      }
-      $scope.$on('$destroy', function () {
+      window.angular.element($window).off('resize', onResize);
+    })
 
-              window.angular.element($window).off('resize', onResize);
-      })
+    function onResize() {
+      setMapSize();
+    }
+    $scope.$on('$destroy', function () {
 
-      var appWindow = angular.element($window);
+      window.angular.element($window).off('resize', onResize);
+    })
+
+    var appWindow = angular.element($window);
     appWindow.bind('resize', onResize);
 
     $scope.$on('leafletDirectiveMarker.map.click', function (e, args) {

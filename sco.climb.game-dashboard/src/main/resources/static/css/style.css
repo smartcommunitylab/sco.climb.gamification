@@ -223,6 +223,10 @@ md-sidenav {
   overflow: hidden;
 }
 
+.leaflet-container {
+  height: 100% !important;
+}
+
 .map-gallery {
   height: 80px;
   width: 80px;
@@ -303,9 +307,11 @@ md-sidenav {
   height: 36px;
   width: 36px;
 }
+
 .menu-cal svg {
-  fill:white;
+  fill: white;
 }
+
 .cal-name {
   display: inline-block;
   width: 180px;
@@ -347,7 +353,7 @@ md-sidenav {
   height: 0;
   border-style: solid;
   border-width: 45px 50px 45px 0;
-   margin: 5px 0px 5px 5px;
+  margin: 5px 0px 5px 5px;
   border-color: transparent #f39d12 transparent transparent;
 }
 
@@ -706,7 +712,6 @@ md-dialog {
   color: white;
   background-color: #F39C12;
 }
-
 
 @media all and (-ms-high-contrast: none),
 (-ms-high-contrast: active) {
