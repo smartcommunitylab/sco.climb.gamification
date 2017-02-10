@@ -1,6 +1,6 @@
 /* global angular */
 angular.module('climbGame.controllers.stats', [])
-  .controller('statsCtrl', function ($scope, $filter, dataService) {
+  .controller('statsCtrl', function ($scope, $filter, $window, dataService) {
     var KMS_PER_FOOT = 10
 
     $scope.stats = {
@@ -31,6 +31,14 @@ angular.module('climbGame.controllers.stats', [])
       }
     )
 
+    $scope.scroll = function (id, direction) {
+      if (direction === 'up') {
+        $window.document.getElementById(id).scrollTop -= 50
+      } else if (direction === 'down') {
+        $window.document.getElementById(id).scrollTop += 50
+      }
+    }
+
     $scope.getGameScorePercentage = function () {
       if ($scope.stats) {
         return ($scope.stats.gameScore * 100) / $scope.stats.maxGameScore
@@ -39,5 +47,9 @@ angular.module('climbGame.controllers.stats', [])
 
     $scope.getCount = function (count) {
       return !count ? 0 : new Array(count)
+    }
+
+    $scope.MathFloor = function (n) {
+      return Math.floor(n)
     }
   })

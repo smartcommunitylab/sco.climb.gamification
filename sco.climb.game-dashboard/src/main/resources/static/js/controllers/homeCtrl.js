@@ -11,7 +11,8 @@ angular.module('climbGame.controllers.home', [])
     'loginService',
     'CacheSrv',
     function ($rootScope, $scope, $log, $state, $mdSidenav, $timeout, $location, loginService, CacheSrv) {
-      $state.go('home.class')
+      // $state.go('home.class')
+      $state.go('home.stats')
 
       $scope.go = function (path) {
         $scope.closeSideNavPanel()

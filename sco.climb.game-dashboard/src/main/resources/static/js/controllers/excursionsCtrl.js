@@ -34,31 +34,12 @@ angular.module('climbGame.controllers.excursions', [])
 
     $scope.refreshExcursions()
 
-    $scope.scrollTimer = null
-
-    $scope.startScroll = function (direction) {
-      /*
-      $scope.scrollTimer = setInterval(function () {
-        if (direction === 'up') {
-          if ($window.document.getElementById('excursions-list').scrollTop === 0) {
-            clearInterval($scope.scrollTimer)
-          } else {
-            $window.document.getElementById('excursions-list').scrollTop -= 10
-          }
-        } else if (direction === 'down') {
-          $window.document.getElementById('excursions-list').scrollTop += 10
-        }
-      }, 10)
-      */
+    $scope.scroll = function (direction) {
       if (direction === 'up') {
         $window.document.getElementById('excursions-list').scrollTop -= 50
       } else if (direction === 'down') {
         $window.document.getElementById('excursions-list').scrollTop += 50
       }
-    }
-
-    $scope.stopScroll = function () {
-      // clearInterval($scope.scrollTimer)
     }
 
     /* Form */
@@ -72,6 +53,8 @@ angular.module('climbGame.controllers.excursions', [])
 
     $scope.newExcursion = angular.copy(emptyExcursion)
 
+    $scope.now = new Date()
+
     $scope.createExcursion = function () {
       var params = {
         name: $scope.newExcursion.name,
@@ -81,10 +64,14 @@ angular.module('climbGame.controllers.excursions', [])
         meteo: $scope.newExcursion.meteo
       }
 
+      if (!params.name || !params.date || !params.children || !params.distance || !params.meteo) {
+        return
+      }
+
       dataService.postExcursion(params).then(
         function (data) {
           // reset form
-          $scope.newExcursion = angular.copy(emptyExcursion)
+          $scope.resetForm()
           // refresh
           $scope.refreshExcursions()
         },
@@ -92,5 +79,11 @@ angular.module('climbGame.controllers.excursions', [])
           // console.log(reason)
         }
       )
+    }
+
+    $scope.resetForm = function () {
+      $scope.newExcursion = angular.copy(emptyExcursion)
+      $scope.excursionForm.$setPristine()
+      $scope.excursionForm.$setUntouched()
     }
   })
