@@ -58,6 +58,7 @@
   "notif_WeeklyPerformanceSchool": "La scorsa settimana la scuola ha percorso un totale di {{_performance_}} Km. Continuate così!",
   "notif_ChallengeWon": "COMPLIMENTI! Avete superato la sfida che vi era stata assegnata e avete guadagnato {{_VirtualPrize_}}!",
   "notif_badge": "BRAVI! Avete raggiunto la tappa {{badge}}!",
+  "notif_empty": "Non sono ancora presenti notifiche. ",
   "challenge_ScuolaSenzAuto": "Sfida di scuola: Fate un giorno \"A Scuola Senz'Auto\" per vincere {{VirtualPrize}}",
   "challenge_KmSettimanali": "Sfida di {{TargetTeam}}: Fate almeno {{target}} Km questa settimana per vincere {{VirtualPrize}}",
   "map_your_position": "Voi siete qui"

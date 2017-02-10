@@ -713,6 +713,14 @@ md-dialog {
   background-color: #F39C12;
 }
 
+.notifications .progress-notif svg path {
+  stroke: #4153a0;
+}
+
+.notifications .loading {
+  margin-top: 100px;
+}
+
 @media all and (-ms-high-contrast: none),
 (-ms-high-contrast: active) {
   .days-row {
