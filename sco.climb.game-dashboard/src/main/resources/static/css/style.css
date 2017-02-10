@@ -425,6 +425,7 @@ md-sidenav {
   line-height: 30px;
   text-align: center;
   margin-right: 20px;
+  max-width: 952px;
 }
 
 .days-row {
@@ -432,6 +433,7 @@ md-sidenav {
   line-height: 50px;
   text-align: center;
   margin-right: 20px;
+  max-width: 952px;
 }
 
 .weather-row {
@@ -439,6 +441,7 @@ md-sidenav {
   line-height: 50px;
   text-align: center;
   margin-right: 20px;
+  max-width: 952px;
 }
 
 .weather-icon {
