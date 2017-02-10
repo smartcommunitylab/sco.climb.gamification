@@ -587,13 +587,13 @@ md-dialog {
   border: 1px solid #bdbdbd;
 }
 
-.stats .table .header,
-.stats .table .scroller {
+.stats .table .header {
   border-bottom: 1px solid #bdbdbd;
 }
 
 .stats .table .scroller .md-button {
-  /*display: inline-block;*/
+  margin: 0;
+  width: 49%;
 }
 
 .stats .table md-content {
