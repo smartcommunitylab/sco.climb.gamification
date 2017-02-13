@@ -201,6 +201,11 @@ md-sidenav {
   background-color: white;
 }
 
+.map-balloon {
+  font-size: 20px;
+  line-height: 30px;
+}
+
 .gallery-arrow {
   color: #F39C12;
   font-size: 60px;
