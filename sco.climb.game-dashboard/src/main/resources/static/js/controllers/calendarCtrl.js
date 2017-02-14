@@ -1,7 +1,7 @@
 /* global angular */
 angular.module('climbGame.controllers.calendar', [])
-  .controller('calendarCtrl', ['$scope', '$filter','$window', '$interval', '$mdDialog', '$mdToast', 'CacheSrv', 'dataService', 'calendarService',
-    function ($scope, $filter,$window, $interval, $mdDialog, $mdToast, CacheSrv, dataService, calendarService) {
+  .controller('calendarCtrl', ['$scope', '$filter', '$window', '$interval', '$mdDialog', '$mdToast', 'CacheSrv', 'dataService', 'calendarService',
+    function ($scope, $filter, $window, $interval, $mdDialog, $mdToast, CacheSrv, dataService, calendarService) {
       $scope.week = []
       $scope.selectedWeather = ''
       $scope.selectedMean = ''
@@ -60,27 +60,27 @@ angular.module('climbGame.controllers.calendar', [])
       $scope.returnColorByType = function (type) {
         var color = ''
         switch (type) {
-          case 'zeroImpact_solo':
-            color = 'cal-foot-friend-col'
-            break
-          case 'zeroImpact_wAdult':
-            color = 'cal-foot-adult-col'
-            break
-          case 'bus':
-            color = 'cal-bus-col'
-            break
-          case 'pandr':
-            color = 'cal-car-square-col'
-            break
-          case 'car':
-            color = 'cal-car-school-col'
-            break
-          case 'absent':
-            color = 'cal-away-col'
-            break
-          case 'pedibus':
-            color = 'cal-pedibus-col'
-            break
+        case 'zeroImpact_solo':
+          color = 'cal-foot-friend-col'
+          break
+        case 'zeroImpact_wAdult':
+          color = 'cal-foot-adult-col'
+          break
+        case 'bus':
+          color = 'cal-bus-col'
+          break
+        case 'pandr':
+          color = 'cal-car-square-col'
+          break
+        case 'car':
+          color = 'cal-car-school-col'
+          break
+        case 'absent':
+          color = 'cal-away-col'
+          break
+        case 'pedibus':
+          color = 'cal-pedibus-col'
+          break
         }
         return color
       }
@@ -136,7 +136,7 @@ angular.module('climbGame.controllers.calendar', [])
             preserveScope: true, // do not forget this if use parent scope
             template: '<md-dialog>' +
               '  <div class="cal-dialog-title"> Invio dati  </div><md-divider></md-divider>' +
-              '  <div class="cal-dialog-text">Invia dati definitivi al sistema, completata l\'operazione non sara piu possibile modificarli.</div>' +
+              '  <div class="cal-dialog-text">Invia dati definitivi al sistema, completata l\'operazione non sarà piu possibile modificarli.</div>' +
               '    <div layout="row"  layout-align="start center" ><div layout"column" flex="50" ><md-button ng-click="closeDialog()" class=" send-dialog-delete">' +
               '      Annulla' +
               '   </div> </md-button>' +
@@ -144,7 +144,7 @@ angular.module('climbGame.controllers.calendar', [])
               '      Invia' +
               '    </md-button></div>' +
               '</div></md-dialog>',
-            controller: function DialogController ($scope, $mdDialog) {
+            controller: function DialogController($scope, $mdDialog) {
               $scope.closeDialog = function () {
                 $mdDialog.hide()
               }
@@ -178,7 +178,7 @@ angular.module('climbGame.controllers.calendar', [])
                         '      Ho capito' +
                         '   </div> </md-button>' +
                         '</div></md-dialog>',
-                      controller: function DialogController ($scope, $mdDialog) {
+                      controller: function DialogController($scope, $mdDialog) {
                         // reload and show
                         calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
                           function (calendar) {
@@ -198,16 +198,16 @@ angular.module('climbGame.controllers.calendar', [])
                   } else {
                     // sent data
                     $mdToast.show($mdToast.simple().content('Dati inviati'))
-                        // reload and show
+                      // reload and show
                     calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
-                          function (calendar) {
-                            createWeekData(calendar)
-                            updateTodayData(calendar)
-                          },
-                          function (error) {
-                            // manage error
-                          }
-                        )
+                      function (calendar) {
+                        createWeekData(calendar)
+                        updateTodayData(calendar)
+                      },
+                      function (error) {
+                        // manage error
+                      }
+                    )
                   }
                   $scope.closeDialog()
                 }, function () {
@@ -228,7 +228,7 @@ angular.module('climbGame.controllers.calendar', [])
               '      Ho capito' +
               '   </div> </md-button>' +
               '</div></md-dialog>',
-            controller: function DialogController ($scope, $mdDialog) {
+            controller: function DialogController($scope, $mdDialog) {
               $scope.closeDialog = function () {
                 $mdDialog.hide()
               }
@@ -259,7 +259,7 @@ angular.module('climbGame.controllers.calendar', [])
         return (new Date().setHours(0, 0, 0, 0) > $scope.week[dayIndex].setHours(0, 0, 0, 0))
       }
 
-      function dataAreComplete () {
+      function dataAreComplete() {
         // meteo and means must  be chosen
         if (!$scope.selectedWeather) {
           return false
@@ -273,7 +273,7 @@ angular.module('climbGame.controllers.calendar', [])
         return true
       }
 
-      function getMonday (d) {
+      function getMonday(d) {
         d = new Date(d)
         d.setHours(0, 0, 0, 0)
         var day = d.getDay()
@@ -281,7 +281,7 @@ angular.module('climbGame.controllers.calendar', [])
         return new Date(d.setDate(diff))
       }
 
-      function checkDayOfTheWeek (dayFromData, indexOfWeek) {
+      function checkDayOfTheWeek(dayFromData, indexOfWeek) {
         // compare timestamp dayFromData.day with timestamp of the $scope.week[indexOfWeek]
         // return true if it is the same day and false otherwise
         if (dayFromData.day === $scope.week[indexOfWeek].getTime()) {
@@ -290,14 +290,14 @@ angular.module('climbGame.controllers.calendar', [])
         return false
       }
 
-      function setTodayIndex () {
+      function setTodayIndex() {
         /* set the day of week */
         var day = new Date().getDay()
         day = day - (day === 0 ? -6 : 1)
         $scope.todayIndex = day
       }
 
-      function changeWeek (skipWeek) {
+      function changeWeek(skipWeek) {
         // take date of week[0] and go 1 week before or after
         var monday = $scope.week[0]
         monday.setDate(monday.getDate() + 7 * skipWeek)
@@ -327,13 +327,15 @@ angular.module('climbGame.controllers.calendar', [])
           // $filter('date')($scope.week[$scope.week.length - 1], 'dd MMM yyyy');
       }
 
-      function setLabelWeek (weekArray) {
+      function setLabelWeek(weekArray) {
         $scope.labelWeek = $filter('date')(weekArray[0], 'dd') + ' - ' +
           $filter('date')(weekArray[weekArray.length - 1], 'dd MMM yyyy')
       }
 
-      function updateTodayData (calendar) {
-        // if there is today data merge it with $scope.todayData
+      function updateTodayData(calendar) {
+        //reset the number of means
+        $scope.todayData.means = {}
+          // if there is today data merge it with $scope.todayData
         var today = new Date().setHours(0, 0, 0, 0)
         for (var i = 0; i < calendar.length; i++) {
           if (calendar[i].day === today) {
@@ -352,20 +354,21 @@ angular.module('climbGame.controllers.calendar', [])
           }
         }
       }
-       function setClassSize (){
-         var w = window,
-              d = document,
-              e = d.documentElement,
-              g = d.getElementsByTagName('body')[0],
-              x = w.innerWidth || e.clientWidth || g.clientWidth,
-              y = w.innerHeight|| e.clientHeight|| g.clientHeight;
-         if (document.getElementById('table')){
-                   document.getElementById('table').setAttribute("style","height:"+(y-64-100-130-50)+"px");
-         }
-       }
+
+      function setClassSize() {
+        var w = window,
+          d = document,
+          e = d.documentElement,
+          g = d.getElementsByTagName('body')[0],
+          x = w.innerWidth || e.clientWidth || g.clientWidth,
+          y = w.innerHeight || e.clientHeight || g.clientHeight;
+        if (document.getElementById('table')) {
+          document.getElementById('table').setAttribute("style", "height:" + (y - 64 - 100 - 130 - 50) + "px");
+        }
+      }
 
 
-      function createWeekData (calendar) {
+      function createWeekData(calendar) {
         $scope.weekData = []
         for (var i = 0; i < 5; i++) {
           // get i-th day data and put baby with that object id with that setted mean
@@ -468,7 +471,7 @@ angular.module('climbGame.controllers.calendar', [])
 
         getNotifications()
         getChallenges()
-        // poll every 10 seconds
+          // poll every 10 seconds
         $scope.poller = $interval(function () {
           getNotifications()
           getChallenges()
@@ -476,7 +479,8 @@ angular.module('climbGame.controllers.calendar', [])
       }
 
       startPoller()
-      function onResize () {
+
+      function onResize() {
         setClassSize();
       }
       $scope.$on('$destroy', function () {
@@ -484,10 +488,10 @@ angular.module('climbGame.controllers.calendar', [])
           $interval.cancel($scope.poller)
           console.log('[Calendar] poller cancelled')
         }
-              window.angular.element($window).off('resize', onResize);
+        window.angular.element($window).off('resize', onResize);
       })
 
       var appWindow = angular.element($window);
-    appWindow.bind('resize', onResize);
+      appWindow.bind('resize', onResize);
     }
   ])
