@@ -6,12 +6,12 @@ angular.module('climbGame.services.conf', [])
     var URL = 'https://' + (DEVELOPMENT ? 'climbdev' : 'climb') + '.smartcommunitylab.it'
     var FOOT_CONSTANT = 'piedi'
     var BOAT_CONSTANT = 'nave'
-    var PLANE_CONSTANT = 'volo'
+    var PLANE_CONSTANT = 'aereo'
     var httpTimeout = 10000
     var DEFAULT_CENTER_MAP = [37.973378, 23.730957]
     var DEFAULT_ZOOM_MAP = 4
     var DEFAULT_ZOOM_POI = 9
-    // var APP_BUILD = ''
+      // var APP_BUILD = ''
 
     configService.getURL = function () {
       return URL
