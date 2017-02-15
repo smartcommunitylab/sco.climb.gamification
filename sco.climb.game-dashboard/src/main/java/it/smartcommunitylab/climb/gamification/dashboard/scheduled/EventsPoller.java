@@ -75,7 +75,7 @@ public class EventsPoller {
 	private static final SimpleDateFormat shortSdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	
-	@Scheduled(cron = "0 0,5,10,15 8-20 * * MON-FRI") // second, minute, hour, day, month, weekday
+	@Scheduled(cron = "0 5,10,15 8-20 * * MON-FRI") // second, minute, hour, day, month, weekday
 	//@Scheduled(cron = "0 */2 8-18 * * MON-FRI")
 	public void scheduledPollEvents() throws Exception {
 		if(logger.isInfoEnabled()) {
@@ -104,7 +104,7 @@ public class EventsPoller {
 			for(String routeId : childrenStatusMap.keySet()) {
 				Collection<ChildStatus> childrenStatus = childrenStatusMap.get(routeId); 
 				if(!isEmptyResponse(childrenStatus)) {
-					//sendScores(childrenStatus, game);
+					sendScores(childrenStatus, game);
 					storage.updatePollingFlag(game.getOwnerId(), game.getGameId(), routeId, Boolean.FALSE);
 					updateCalendarDayFromPedibus(game.getOwnerId(), game.getGameId(), childrenStatus);
 				}
