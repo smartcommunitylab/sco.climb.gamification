@@ -10,8 +10,8 @@ angular.module('climbGame.controllers.stats', [])
 
     var data2stats = function (data) {
       return {
-        'gameScore': $filter('number')(data.gameScore / 1000, 0),
-        'maxGameScore': data.maxGameScore / 1000,
+        'gameScore': Math.round(data.gameScore / 1000, 0),
+        'maxGameScore': Math.round(data.maxGameScore / 1000, 0),
         'scoreModeMap': {
           'zeroImpact_wAdult': Math.floor(data['scoreModeMap']['zeroImpact_wAdult'] / (1000 * KMS_PER_FOOT)),
           'bus': Math.floor(data['scoreModeMap']['bus'] / (1000 * KMS_PER_FOOT)),

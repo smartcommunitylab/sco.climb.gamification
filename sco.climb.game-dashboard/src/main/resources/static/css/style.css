@@ -414,7 +414,7 @@ md-sidenav {
   text-align: center;
   margin-left: 0px;
   margin-right: 16px;
-  padding-left: 16px;
+  padding-left: 0px;
   border-color: #4153a0;
   background-color: white;
   border-style: solid;
@@ -485,7 +485,7 @@ md-sidenav {
 .baby-list {
   height: 400px;
   overflow: auto;
-  margin-right: 20px;
+  margin-right: 5px;
 }
 
 md-dialog {

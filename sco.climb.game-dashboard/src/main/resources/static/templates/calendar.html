@@ -76,8 +76,8 @@
         <md-list class="cal-listbabies">
           <div layout="row" ng-repeat="baby in class track by $index" ng-init="babyIndex = $index" class="cal-baby">
             <div layout="column" flex="25" class="cal-name">
-              <!--              {{baby.name}} {{baby.surname}}-->
-              ******* *******
+              {{baby.name}} {{baby.surname}}
+              <!--              ******* *******-->
             </div>
             <div layout="column" flex="15" ng-repeat="day in week track by $index" ng-init="dayIndex = $index" ng-class="{'cal-today-middle':today(dayIndex),'cal-future-middle':isFuture(dayIndex)}">
               <md-button ng-if="!today(dayIndex) || weekData[dayIndex].closed" class="cal-baby-cell" ng-class="weekData[dayIndex][baby.childId].color"><span ng-if="weekData[dayIndex][baby.childId].mean=='pedibus'">PEDIBUS</span><span ng-if="weekData[dayIndex][baby.childId].mean=='absent'">A</span> </md-button>

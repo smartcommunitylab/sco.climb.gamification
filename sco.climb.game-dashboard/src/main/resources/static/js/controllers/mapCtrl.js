@@ -284,7 +284,13 @@ angular.module("climbGame.controllers.map", [])
         for (var i = 0; i < data.teams.length; i++) {
           if (data.teams[i].classRoom == $scope.globalTeam) {
             $scope.globalScore = data.teams[i].score;
-            $scope.currentLeg = data.teams[i].currentLeg;
+            if (data.teams[i].currentLeg) {
+              $scope.currentLeg = data.teams[i].currentLeg;
+            } else {
+              $scope.currentLeg = data.legs[data.legs.length - 1];
+              $scope.endReached = true;
+
+            }
             $scope.globalStatus = data.teams[i];
             //            $timeout($scope.scrollToPoint($scope.currentLeg.position - 1), 500);
 
@@ -305,7 +311,7 @@ angular.module("climbGame.controllers.map", [])
           }
           externalUrl = externalUrl + '</div>';
           var icon = getMarkerIcon(data.legs[i]);
-          if (data.legs[i].position < $scope.currentLeg.position) {
+          if ((data.legs[i].position < $scope.currentLeg.position) || $scope.endReached) {
             $scope.pathMarkers.push(getMarker(data.legs[i], externalUrl, icon, i));
             //marker with message
           } else {
@@ -341,8 +347,10 @@ angular.module("climbGame.controllers.map", [])
           isCurrLeg = false;
         }
         var myScores = $scope.globalStatus.score; //2800;
-        var totalRange = ($scope.globalStatus.currentLeg) ? ($scope.globalStatus.currentLeg.score - myLeg.score) : $scope.globalStatus.score; //1000;
+        var totalRange = ($scope.globalStatus.currentLeg) ? ($scope.globalStatus.currentLeg.score - myLeg.score) : ($scope.globalStatus.score + $scope.globalStatus.scoreToEnd); //1000;
         var doneRange = ($scope.globalStatus.currentLeg) ? (myScores - myLeg.score) : myLeg.score; //800;
+        //        if (doneRange > totalRange)
+        //          (doneRange = totalRange);
         if (totalRange == 0) {
           totalRange = myLeg.score;
           doneRange = myScores;
@@ -351,12 +359,12 @@ angular.module("climbGame.controllers.map", [])
           for (var i = 0; i < polylines.length; i++) {
             var pointArr = polyline.decode(polylines[i].polyline);
             var middlePoint = Math.floor(pointArr.length / 2);
-            if (polylines[i].position == myLeg.position + 1) {
+            if ((polylines[i].position == myLeg.position + 1) || $scope.endReached) {
               // Actual leg. I have to split them in 2 part considering the percentage
               var actual_completing = doneRange / totalRange; //0,8
               var lengthInMeters = $scope.sumAllDistances(pointArr) * 1000;
               if (actual_completing > 0) {
-                if (actual_completing < 1) { // case completing between 1% and 99%
+                if ((actual_completing < 1)) { // case completing between 1% and 99%
                   var proportionalLength = lengthInMeters * actual_completing;
                   var splittedSubPolys = $scope.retrievePercentagePoly(pointArr, actual_completing, proportionalLength);
                   for (var y = 0; y < splittedSubPolys.length; y++) {
@@ -501,16 +509,6 @@ angular.module("climbGame.controllers.map", [])
       var partialPoly2 = pointArr.slice(count, pointArr.length);
       partialPoly2.unshift(newPoint);
 
-      /*if(percentage > 0){
-      	var perc = Math.floor(percentage * pointArr.length);
-      	if(perc <= 1)perc = 2;	// in case of too small value the system force the perc value to 2 (so the first splitted array has minimal 2 points)
-      	var partialPoly1 = pointArr.slice(0, perc);
-      	var partialPoly2 = pointArr.slice(perc - 1, pointArr.length);
-      } else {
-      	var partialPoly1 = [];
-      	var partialPoly2 = pointArr;
-      }*/
-
       var splittedPolys = [];
       splittedPolys.push(partialPoly1);
       splittedPolys.push(partialPoly2);
@@ -548,26 +546,6 @@ angular.module("climbGame.controllers.map", [])
       return deg * (Math.PI / 180)
     };
 
-
-    //    var scrollleft = function () {
-    //      document.getElementById('gallery').scrollLeft -= 10
-    //    }
-    //    var scrollright = function () {
-    //      document.getElementById('gallery').scrollLeft += 10
-    //    }
-    //    $scope.scrollLeft = function () {
-    //      $scope.scrollleftTimer = setInterval(scrollleft, 10);
-    //
-    //    }
-    //    $scope.scrollRight = function () {
-    //      $scope.scrollrightTimer = setInterval(scrollright, 10);
-    //    }
-    //    $scope.resetTimerLeft = function () {
-    //      clearInterval($scope.scrollleftTimer);
-    //    }
-    //    $scope.resetTimerRight = function () {
-    //      clearInterval($scope.scrollrightTimer);
-    //    }
     $scope.scrollLeft = function () {
       document.getElementById('gallery').scrollLeft -= 50;
 
@@ -581,18 +559,16 @@ angular.module("climbGame.controllers.map", [])
       //      get the the width
       var widthBar = imagesBar.width;
       //get the dimension of 1
-      //      var arrayImages = imagesBar.childNodes[1].childNodes[1].childNodes[1];
-      //var widhtImages = imagesBar.childNodes[1].childNodes[1].childNodes[4].offsetWidth;
       var widhtImages = 100;
       //go to i-th place
       document.getElementById('gallery').scrollLeft = 0;
       if (i >= 5) {
         document.getElementById('gallery').scrollLeft = widhtImages * ($scope.currentLeg.position - 8);
       }
-      $scope.selectedPosition = Number(i);
+      $scope.selectedPosition = Number(i) - 1;
     }
     $scope.goToPoi = function (leg) {
-      if (leg.position <= $scope.currentLeg.position) {
+      if (leg.position <= ($scope.currentLeg.position)) {
         leafletData.getMap('map').then(function (map) {
           //center and zoom
           var latlng = L.latLng(leg.geocoding[1], leg.geocoding[0]);
@@ -615,7 +591,11 @@ angular.module("climbGame.controllers.map", [])
     }
     $scope.scrollMap = function (index) {
       if (index == $scope.legs.length - 1) {
-        $scope.scrollToPoint($scope.currentLeg.position - 1);
+        if (!$scope.endReached) {
+          $scope.scrollToPoint($scope.currentLeg.position);
+        } else {
+          $scope.scrollToPoint($scope.currentLeg.position + 1);
+        }
       }
     }
 
@@ -655,19 +635,10 @@ angular.module("climbGame.controllers.map", [])
       // Args will contain the marker name and other relevant information
       console.log(args);
       var markerName = args.leafletEvent.target.options.name; //has to be set above
-      // var $container = $(args.leafletEvent.target._popup._container).find('.leaflet-popup-  content');
-      //  $container.empty();
-      //      var html = "<p> I am " + markerName + " " + args.leafletEvent.target._popup._content + "</p>",
-      //        linkFunction = $compile(angular.element(html)),
-      //        linkedDOM = linkFunction($scope);
-      //      $container.append(linkedDOM);
       //marker is clickable and already reached
       if (args.model.message) {
-        $scope.scrollToPoint(args.modelName)
+        $scope.scrollToPoint(Number(args.modelName) + 1)
           //      console.log(markerName);
       }
     });
-    //    $scope.$on('leafletDirectiveMarker.map.click', function (event, locationEvent) {
-    //      alert('Message');
-    //    });
   }]);
