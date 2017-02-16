@@ -19,7 +19,7 @@ angular.module('climbGame.controllers.calendar', [])
       }
 
       setTodayIndex()
-      setClassSize();
+      setClassSize()
       for (var i = 0; i < 5; i++) {
         $scope.week.push(new Date(getMonday(new Date()).getTime() + (i * 24 * 60 * 60 * 1000)))
       }
@@ -60,27 +60,27 @@ angular.module('climbGame.controllers.calendar', [])
       $scope.returnColorByType = function (type) {
         var color = ''
         switch (type) {
-        case 'zeroImpact_solo':
-          color = 'cal-foot-friend-col'
-          break
-        case 'zeroImpact_wAdult':
-          color = 'cal-foot-adult-col'
-          break
-        case 'bus':
-          color = 'cal-bus-col'
-          break
-        case 'pandr':
-          color = 'cal-car-square-col'
-          break
-        case 'car':
-          color = 'cal-car-school-col'
-          break
-        case 'absent':
-          color = 'cal-away-col'
-          break
-        case 'pedibus':
-          color = 'cal-pedibus-col'
-          break
+          case 'zeroImpact_solo':
+            color = 'cal-foot-friend-col'
+            break
+          case 'zeroImpact_wAdult':
+            color = 'cal-foot-adult-col'
+            break
+          case 'bus':
+            color = 'cal-bus-col'
+            break
+          case 'pandr':
+            color = 'cal-car-square-col'
+            break
+          case 'car':
+            color = 'cal-car-school-col'
+            break
+          case 'absent':
+            color = 'cal-away-col'
+            break
+          case 'pedibus':
+            color = 'cal-pedibus-col'
+            break
         }
         return color
       }
@@ -144,7 +144,7 @@ angular.module('climbGame.controllers.calendar', [])
               '      Invia' +
               '    </md-button></div>' +
               '</div></md-dialog>',
-            controller: function DialogController($scope, $mdDialog) {
+            controller: function DialogController ($scope, $mdDialog) {
               $scope.closeDialog = function () {
                 $mdDialog.hide()
               }
@@ -164,7 +164,7 @@ angular.module('climbGame.controllers.calendar', [])
                 calendarService.sendData($scope.todayData).then(function (returnValue) {
                   // change weekdata to closed
                   $scope.weekData[$scope.todayIndex].closed = true
-                    // check if merged or not
+                  // check if merged or not
                   if (returnValue) {
                     // popup dati backend cambiati
                     $mdDialog.show({
@@ -178,14 +178,14 @@ angular.module('climbGame.controllers.calendar', [])
                         '      Ho capito' +
                         '   </div> </md-button>' +
                         '</div></md-dialog>',
-                      controller: function DialogController($scope, $mdDialog) {
+                      controller: function DialogController ($scope, $mdDialog) {
                         // reload and show
                         calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
                           function (calendar) {
                             createWeekData(calendar)
                             updateTodayData(calendar)
                           },
-                          function (error) {
+                          function () {
                             // manage error
                           }
                         )
@@ -198,13 +198,13 @@ angular.module('climbGame.controllers.calendar', [])
                   } else {
                     // sent data
                     $mdToast.show($mdToast.simple().content('Dati inviati'))
-                      // reload and show
+                    // reload and show
                     calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
                       function (calendar) {
                         createWeekData(calendar)
                         updateTodayData(calendar)
                       },
-                      function (error) {
+                      function () {
                         // manage error
                       }
                     )
@@ -228,7 +228,7 @@ angular.module('climbGame.controllers.calendar', [])
               '      Ho capito' +
               '   </div> </md-button>' +
               '</div></md-dialog>',
-            controller: function DialogController($scope, $mdDialog) {
+            controller: function DialogController ($scope, $mdDialog) {
               $scope.closeDialog = function () {
                 $mdDialog.hide()
               }
@@ -259,7 +259,7 @@ angular.module('climbGame.controllers.calendar', [])
         return (new Date().setHours(0, 0, 0, 0) > $scope.week[dayIndex].setHours(0, 0, 0, 0))
       }
 
-      function dataAreComplete() {
+      function dataAreComplete () {
         // meteo and means must  be chosen
         if (!$scope.selectedWeather) {
           return false
@@ -273,7 +273,7 @@ angular.module('climbGame.controllers.calendar', [])
         return true
       }
 
-      function getMonday(d) {
+      function getMonday (d) {
         d = new Date(d)
         d.setHours(0, 0, 0, 0)
         var day = d.getDay()
@@ -281,7 +281,7 @@ angular.module('climbGame.controllers.calendar', [])
         return new Date(d.setDate(diff))
       }
 
-      function checkDayOfTheWeek(dayFromData, indexOfWeek) {
+      function checkDayOfTheWeek (dayFromData, indexOfWeek) {
         // compare timestamp dayFromData.day with timestamp of the $scope.week[indexOfWeek]
         // return true if it is the same day and false otherwise
         if (dayFromData.day === $scope.week[indexOfWeek].getTime()) {
@@ -290,14 +290,14 @@ angular.module('climbGame.controllers.calendar', [])
         return false
       }
 
-      function setTodayIndex() {
+      function setTodayIndex () {
         /* set the day of week */
         var day = new Date().getDay()
         day = day - (day === 0 ? -6 : 1)
         $scope.todayIndex = day
       }
 
-      function changeWeek(skipWeek) {
+      function changeWeek (skipWeek) {
         // take date of week[0] and go 1 week before or after
         var monday = $scope.week[0]
         monday.setDate(monday.getDate() + 7 * skipWeek)
@@ -323,19 +323,19 @@ angular.module('climbGame.controllers.calendar', [])
         }
 
         setLabelWeek($scope.week)
-          // $scope.labelWeek = $filter('date')($scope.week[0], 'dd') + " - "
-          // $filter('date')($scope.week[$scope.week.length - 1], 'dd MMM yyyy');
+        // $scope.labelWeek = $filter('date')($scope.week[0], 'dd') + " - "
+        // $filter('date')($scope.week[$scope.week.length - 1], 'dd MMM yyyy');
       }
 
-      function setLabelWeek(weekArray) {
+      function setLabelWeek (weekArray) {
         $scope.labelWeek = $filter('date')(weekArray[0], 'dd') + ' - ' +
           $filter('date')(weekArray[weekArray.length - 1], 'dd MMM yyyy')
       }
 
-      function updateTodayData(calendar) {
-        //reset the number of means
+      function updateTodayData (calendar) {
+        // reset the number of means
         $scope.todayData.means = {}
-          // if there is today data merge it with $scope.todayData
+        // if there is today data merge it with $scope.todayData
         var today = new Date().setHours(0, 0, 0, 0)
         for (var i = 0; i < calendar.length; i++) {
           if (calendar[i].day === today) {
@@ -355,25 +355,24 @@ angular.module('climbGame.controllers.calendar', [])
         }
       }
 
-      function setClassSize() {
-        var w = window,
-          d = document,
-          e = d.documentElement,
-          g = d.getElementsByTagName('body')[0],
-          x = w.innerWidth || e.clientWidth || g.clientWidth,
-          y = w.innerHeight || e.clientHeight || g.clientHeight;
+      function setClassSize () {
+        var w = window
+        var d = document
+        var e = d.documentElement
+        var g = d.getElementsByTagName('body')[0]
+        // x = w.innerWidth || e.clientWidth || g.clientWidth,
+        var y = w.innerHeight || e.clientHeight || g.clientHeight
         if (document.getElementById('table')) {
-          document.getElementById('table').setAttribute("style", "height:" + (y - 64 - 100 - 130 - 50) + "px");
+          document.getElementById('table').setAttribute('style', 'height:' + (y - 64 - 100 - 130 - 50) + 'px')
         }
       }
 
-
-      function createWeekData(calendar) {
+      function createWeekData (calendar) {
         $scope.weekData = []
         for (var i = 0; i < 5; i++) {
           // get i-th day data and put baby with that object id with that setted mean
           $scope.weekData.push({})
-            // if calendar[i] esiste vado avanti
+          // if calendar[i] esiste vado avanti
           if (calendar[i]) {
             // se giorno della settimana coincide con calendar.day vado avanti altrimenti skip
             if (checkDayOfTheWeek(calendar[i], i)) {
@@ -395,7 +394,7 @@ angular.module('climbGame.controllers.calendar', [])
             }
             // if (calendar[i].closed) {
             $scope.weekData[i].closed = calendar[i].closed
-              // }
+            // }
           } else {
             // add entire day of null data
           }
@@ -440,6 +439,7 @@ angular.module('climbGame.controllers.calendar', [])
             function (data) {
               if (data && data.length) {
                 console.log('[Calendar] New notifications: ' + data.length)
+                data[0].data = $scope.convertFields(data[0].data)
                 $scope.lastNotification = data[0]
                 CacheSrv.updateLastCheck('calendar')
               }
@@ -457,6 +457,9 @@ angular.module('climbGame.controllers.calendar', [])
                 console.log('[Calendar] Challenges: ' + data.length)
                 for (var i = 0; i < data.length; i++) {
                   if (data[i].state) {
+                    angular.forEach(data[i].state, function (state) {
+                      state.fields = $scope.convertFields(state.fields)
+                    })
                     $scope.lastChallenge = data[i]
                     i = data.length
                   }
@@ -471,7 +474,7 @@ angular.module('climbGame.controllers.calendar', [])
 
         getNotifications()
         getChallenges()
-          // poll every 10 seconds
+        // poll every 10 seconds
         $scope.poller = $interval(function () {
           getNotifications()
           getChallenges()
@@ -480,18 +483,19 @@ angular.module('climbGame.controllers.calendar', [])
 
       startPoller()
 
-      function onResize() {
-        setClassSize();
+      function onResize () {
+        setClassSize()
       }
+
       $scope.$on('$destroy', function () {
         if ($scope.poller) {
           $interval.cancel($scope.poller)
           console.log('[Calendar] poller cancelled')
         }
-        window.angular.element($window).off('resize', onResize);
+        window.angular.element($window).off('resize', onResize)
       })
 
-      var appWindow = angular.element($window);
-      appWindow.bind('resize', onResize);
+      var appWindow = angular.element($window)
+      appWindow.bind('resize', onResize)
     }
   ])
