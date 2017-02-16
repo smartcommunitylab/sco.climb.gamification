@@ -370,32 +370,37 @@ angular.module('climbGame.controllers.calendar', [])
 
       function createWeekData(calendar) {
         $scope.weekData = []
+        var k = 0;
         for (var i = 0; i < 5; i++) {
           // get i-th day data and put baby with that object id with that setted mean
           $scope.weekData.push({})
             // if calendar[i] esiste vado avanti
-          if (calendar[i]) {
+          if (calendar[k]) {
             // se giorno della settimana coincide con calendar.day vado avanti altrimenti skip
-            if (checkDayOfTheWeek(calendar[i], i)) {
-              for (var property in calendar[i].modeMap) {
+            if (checkDayOfTheWeek(calendar[k], i)) {
+              for (var property in calendar[k].modeMap) {
                 $scope.weekData[i][property] = {
-                  mean: calendar[i].modeMap[property]
+                  mean: calendar[k].modeMap[property]
                 }
-                $scope.weekData[i][property].color = $scope.returnColorByType(calendar[i].modeMap[property])
-                if (!$scope.weekData[i][calendar[i].modeMap[property]]) {
-                  $scope.weekData[i][calendar[i].modeMap[property]] = 0
+                $scope.weekData[i][property].color = $scope.returnColorByType(calendar[k].modeMap[property])
+                if (!$scope.weekData[i][calendar[k].modeMap[property]]) {
+                  $scope.weekData[i][calendar[k].modeMap[property]] = 0
                 }
-                $scope.weekData[i][calendar[i].modeMap[property]] = $scope.weekData[i][calendar[i].modeMap[property]] + 1
+                $scope.weekData[i][calendar[k].modeMap[property]] = $scope.weekData[i][calendar[k].modeMap[property]] + 1
               }
+              if (calendar[k].meteo) {
+                $scope.weekData[i].meteo = calendar[k].meteo
+              }
+              // if (calendar[i].closed) {
+              $scope.weekData[i].closed = calendar[k].closed
+              k++;
             } else {
               // add entire day of null data
+              for (var property in calendar[k].modeMap) {
+                $scope.weekData[i][property] = {}
+              }
+
             }
-            if (calendar[i].meteo) {
-              $scope.weekData[i].meteo = calendar[i].meteo
-            }
-            // if (calendar[i].closed) {
-            $scope.weekData[i].closed = calendar[i].closed
-              // }
           } else {
             // add entire day of null data
           }
