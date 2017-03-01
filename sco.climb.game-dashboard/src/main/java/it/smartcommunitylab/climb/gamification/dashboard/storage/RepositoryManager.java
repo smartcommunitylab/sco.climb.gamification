@@ -145,13 +145,15 @@ public class RepositoryManager {
 		return result;
 	}	
 	
-	public boolean saveCalendarDay(String ownerId, String gameId, String classRoom,
+	public Map<String, Boolean> saveCalendarDay(String ownerId, String gameId, String classRoom,
 			CalendarDay calendarDay) {
+		Map<String, Boolean> result = new HashMap<String, Boolean>();
 		Query query = new Query(new Criteria("ownerId").is(ownerId).and("gameId").is(gameId)
 				.and("classRoom").is(classRoom).and("day").is(calendarDay.getDay()));
 		CalendarDay calendarDayDB = mongoTemplate.findOne(query, CalendarDay.class);
 		Date now = new Date();
-		Boolean merged = false; 
+		Boolean merged = Boolean.FALSE; 
+		Boolean closed = Boolean.FALSE;
 		if(calendarDayDB == null) {
 			calendarDay.setCreationDate(now);
 			calendarDay.setLastUpdate(now);
@@ -162,30 +164,36 @@ public class RepositoryManager {
 			calendarDay.setClosed(true);
 			mongoTemplate.save(calendarDay);
 		} else {
-			//merge pedibus data with calendar data
-			Map<String, String> oldModeMap = calendarDayDB.getModeMap();
-			for(String childId : calendarDay.getModeMap().keySet()) {
-				String mode = calendarDay.getModeMap().get(childId);
-				String oldMode = oldModeMap.get(childId);
-				if(oldMode == null) {
-					continue;
-				} else if(mode.equals(Const.MODE_PEDIBUS) && oldMode.equals(Const.MODE_PEDIBUS)) {
-					continue;
-				}	else if(mode.equals(Const.MODE_PIEDI_ADULTO) && oldMode.equals(Const.MODE_PEDIBUS)) {
-					calendarDay.getModeMap().put(childId, Const.MODE_PEDIBUS);
-				} else if(oldMode.equals(Const.MODE_PEDIBUS)){
-					calendarDay.getModeMap().put(childId, Const.MODE_PEDIBUS);
-					merged = true;
+			if(calendarDayDB.isClosed()) {
+				closed = Boolean.TRUE;
+			} else {
+				//merge pedibus data with calendar data
+				Map<String, String> oldModeMap = calendarDayDB.getModeMap();
+				for(String childId : calendarDay.getModeMap().keySet()) {
+					String mode = calendarDay.getModeMap().get(childId);
+					String oldMode = oldModeMap.get(childId);
+					if(oldMode == null) {
+						continue;
+					} else if(mode.equals(Const.MODE_PEDIBUS) && oldMode.equals(Const.MODE_PEDIBUS)) {
+						continue;
+					}	else if(mode.equals(Const.MODE_PIEDI_ADULTO) && oldMode.equals(Const.MODE_PEDIBUS)) {
+						calendarDay.getModeMap().put(childId, Const.MODE_PEDIBUS);
+					} else if(oldMode.equals(Const.MODE_PEDIBUS)){
+						calendarDay.getModeMap().put(childId, Const.MODE_PEDIBUS);
+						merged = Boolean.TRUE;
+					}
 				}
+				Update update = new Update();
+				update.set("meteo", calendarDay.getMeteo());
+				update.set("modeMap", calendarDay.getModeMap());
+				update.set("closed", Boolean.TRUE);
+				update.set("lastUpdate", now);
+				mongoTemplate.updateFirst(query, update, CalendarDay.class);				
 			}
-			Update update = new Update();
-			update.set("meteo", calendarDay.getMeteo());
-			update.set("modeMap", calendarDay.getModeMap());
-			update.set("closed", Boolean.TRUE);
-			update.set("lastUpdate", now);
-			mongoTemplate.updateFirst(query, update, CalendarDay.class);
 		}
-		return merged;
+		result.put(Const.MERGED, merged);
+		result.put(Const.CLOSED, closed);
+		return result;
 	}
 	
 	public void updateCalendarDayFromPedibus(String ownerId, String gameId, String classRoom, 

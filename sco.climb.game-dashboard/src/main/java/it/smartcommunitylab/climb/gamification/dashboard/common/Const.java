@@ -22,4 +22,7 @@ public class Const {
 	public static final String TRANSPORT_BOAT = "nave";
 	public static final String TRANSPORT_AIRPLANE = "volo";
 	
+	public static final String MERGED = "MERGED";
+	public static final String CLOSED = "CLOSED";
+	
 }
