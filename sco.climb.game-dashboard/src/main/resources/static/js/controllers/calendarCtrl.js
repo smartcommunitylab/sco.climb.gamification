@@ -19,7 +19,7 @@ angular.module('climbGame.controllers.calendar', [])
       }
 
       setTodayIndex()
-      setClassSize();
+      setClassSize()
       for (var i = 0; i < 5; i++) {
         $scope.week.push(new Date(getMonday(new Date()).getTime() + (i * 24 * 60 * 60 * 1000)))
       }
@@ -185,7 +185,7 @@ angular.module('climbGame.controllers.calendar', [])
                             createWeekData(calendar)
                             updateTodayData(calendar)
                           },
-                          function (error) {
+                          function () {
                             // manage error
                           }
                         )
@@ -204,7 +204,7 @@ angular.module('climbGame.controllers.calendar', [])
                         createWeekData(calendar)
                         updateTodayData(calendar)
                       },
-                      function (error) {
+                      function () {
                         // manage error
                       }
                     )
@@ -333,7 +333,7 @@ angular.module('climbGame.controllers.calendar', [])
       }
 
       function updateTodayData(calendar) {
-        //reset the number of means
+        // reset the number of means
         $scope.todayData.means = {}
           // if there is today data merge it with $scope.todayData
         var today = new Date().setHours(0, 0, 0, 0)
@@ -356,46 +356,50 @@ angular.module('climbGame.controllers.calendar', [])
       }
 
       function setClassSize() {
-        var w = window,
-          d = document,
-          e = d.documentElement,
-          g = d.getElementsByTagName('body')[0],
-          x = w.innerWidth || e.clientWidth || g.clientWidth,
-          y = w.innerHeight || e.clientHeight || g.clientHeight;
+        var w = window
+        var d = document
+        var e = d.documentElement
+        var g = d.getElementsByTagName('body')[0]
+          // x = w.innerWidth || e.clientWidth || g.clientWidth,
+        var y = w.innerHeight || e.clientHeight || g.clientHeight
         if (document.getElementById('table')) {
-          document.getElementById('table').setAttribute("style", "height:" + (y - 64 - 100 - 130 - 50) + "px");
+          document.getElementById('table').setAttribute('style', 'height:' + (y - 64 - 100 - 130 - 50) + 'px')
         }
       }
 
-
       function createWeekData(calendar) {
         $scope.weekData = []
+        var k = 0;
         for (var i = 0; i < 5; i++) {
           // get i-th day data and put baby with that object id with that setted mean
           $scope.weekData.push({})
             // if calendar[i] esiste vado avanti
-          if (calendar[i]) {
+          if (calendar[k]) {
             // se giorno della settimana coincide con calendar.day vado avanti altrimenti skip
-            if (checkDayOfTheWeek(calendar[i], i)) {
-              for (var property in calendar[i].modeMap) {
+            if (checkDayOfTheWeek(calendar[k], i)) {
+              for (var property in calendar[k].modeMap) {
                 $scope.weekData[i][property] = {
-                  mean: calendar[i].modeMap[property]
+                  mean: calendar[k].modeMap[property]
                 }
-                $scope.weekData[i][property].color = $scope.returnColorByType(calendar[i].modeMap[property])
-                if (!$scope.weekData[i][calendar[i].modeMap[property]]) {
-                  $scope.weekData[i][calendar[i].modeMap[property]] = 0
+                $scope.weekData[i][property].color = $scope.returnColorByType(calendar[k].modeMap[property])
+                if (!$scope.weekData[i][calendar[k].modeMap[property]]) {
+                  $scope.weekData[i][calendar[k].modeMap[property]] = 0
                 }
-                $scope.weekData[i][calendar[i].modeMap[property]] = $scope.weekData[i][calendar[i].modeMap[property]] + 1
+                $scope.weekData[i][calendar[k].modeMap[property]] = $scope.weekData[i][calendar[k].modeMap[property]] + 1
               }
+              if (calendar[k].meteo) {
+                $scope.weekData[i].meteo = calendar[k].meteo
+              }
+              // if (calendar[i].closed) {
+              $scope.weekData[i].closed = calendar[k].closed
+              k++;
             } else {
               // add entire day of null data
+              for (var property in calendar[k].modeMap) {
+                $scope.weekData[i][property] = {}
+              }
+
             }
-            if (calendar[i].meteo) {
-              $scope.weekData[i].meteo = calendar[i].meteo
-            }
-            // if (calendar[i].closed) {
-            $scope.weekData[i].closed = calendar[i].closed
-              // }
           } else {
             // add entire day of null data
           }
@@ -440,6 +444,7 @@ angular.module('climbGame.controllers.calendar', [])
             function (data) {
               if (data && data.length) {
                 console.log('[Calendar] New notifications: ' + data.length)
+                data[0].data = $scope.convertFields(data[0].data)
                 $scope.lastNotification = data[0]
                 CacheSrv.updateLastCheck('calendar')
               }
@@ -457,6 +462,9 @@ angular.module('climbGame.controllers.calendar', [])
                 console.log('[Calendar] Challenges: ' + data.length)
                 for (var i = 0; i < data.length; i++) {
                   if (data[i].state) {
+                    angular.forEach(data[i].state, function (state) {
+                      state.fields = $scope.convertFields(state.fields)
+                    })
                     $scope.lastChallenge = data[i]
                     i = data.length
                   }
@@ -481,17 +489,18 @@ angular.module('climbGame.controllers.calendar', [])
       startPoller()
 
       function onResize() {
-        setClassSize();
+        setClassSize()
       }
+
       $scope.$on('$destroy', function () {
         if ($scope.poller) {
           $interval.cancel($scope.poller)
           console.log('[Calendar] poller cancelled')
         }
-        window.angular.element($window).off('resize', onResize);
+        window.angular.element($window).off('resize', onResize)
       })
 
-      var appWindow = angular.element($window);
-      appWindow.bind('resize', onResize);
+      var appWindow = angular.element($window)
+      appWindow.bind('resize', onResize)
     }
   ])
