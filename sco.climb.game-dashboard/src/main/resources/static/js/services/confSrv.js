@@ -3,8 +3,7 @@ angular.module('climbGame.services.conf', [])
   .factory('configService', function () {
     var configService = {}
     var DEVELOPMENT = false
-      //var URL = 'https://' + (DEVELOPMENT ? 'climbdev' : 'climb') + '.smartcommunitylab.it'
-    var URL = 'http://192.168.42.60:8080'
+    var URL = 'https://' + (DEVELOPMENT ? 'climbdev' : 'climb') + '.smartcommunitylab.it'
     var FOOT_CONSTANT = 'piedi'
     var BOAT_CONSTANT = 'nave'
     var PLANE_CONSTANT = 'aereo'
