@@ -126,30 +126,32 @@ public class DashboardController {
 		if (!Utils.validateAPIRequest(request, dataSetSetup, storage)) {
 			throw new UnauthorizedException("Unauthorized Exception: token not valid");
 		}
-		Boolean result = storage.saveCalendarDay(ownerId, gameId, classRoom, calendarDay);
+		Map<String, Boolean> result = storage.saveCalendarDay(ownerId, gameId, classRoom, calendarDay);
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("saveCalendarDay[%s]: %s - %s", ownerId, gameId, classRoom));
+			logger.info(String.format("saveCalendarDay[%s]: %s - %s - %s", ownerId, gameId, classRoom, result.toString()));
 		}
-		for(String childId : calendarDay.getModeMap().keySet()) {
-			ExecutionDataDTO ed = new ExecutionDataDTO();
-			ed.setGameId(gameId);
-			ed.setPlayerId(childId);
-			ed.setActionId(actionCalendar);
-			
-			Map<String, Object> data = Maps.newTreeMap();
-			data.put(paramMode, calendarDay.getModeMap().get(childId));
-			data.put(paramDate, System.currentTimeMillis());
-			data.put(paramMeteo, calendarDay.getMeteo());
-			ed.setData(data);
-			
-			try {
-				gengineUtils.executeAction(ed);
-			} catch (Exception e) {
-				logger.warn(String.format("saveCalendarDay[%s]: error in GE excecute action %s - %s",
-						ownerId, gameId, classRoom));
-			}
+		if(!result.get(Const.CLOSED)) {
+			for(String childId : calendarDay.getModeMap().keySet()) {
+				ExecutionDataDTO ed = new ExecutionDataDTO();
+				ed.setGameId(gameId);
+				ed.setPlayerId(childId);
+				ed.setActionId(actionCalendar);
+				
+				Map<String, Object> data = Maps.newTreeMap();
+				data.put(paramMode, calendarDay.getModeMap().get(childId));
+				data.put(paramDate, System.currentTimeMillis());
+				data.put(paramMeteo, calendarDay.getMeteo());
+				ed.setData(data);
+				
+				try {
+					gengineUtils.executeAction(ed);
+				} catch (Exception e) {
+					logger.warn(String.format("saveCalendarDay[%s]: error in GE excecute action %s - %s",
+							ownerId, gameId, classRoom));
+				}
+			}			
 		}
-		return result;
+		return result.get(Const.MERGED);
 	}
 	
 	@RequestMapping(value = "/api/calendar/{ownerId}/{gameId}/{classRoom}", method = RequestMethod.GET)
