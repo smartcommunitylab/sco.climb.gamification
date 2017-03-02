@@ -6,7 +6,8 @@ angular.module('climbGame.controllers.calendar', [])
       $scope.selectedWeather = ''
       $scope.selectedMean = ''
       $scope.selectedMeanColor = 'cal-menu-col'
-      $scope.labelWeek = ''
+      $scope.labelWeek = '';
+      $scope.sendingData = false;
       $scope.cal = {
         meanOpen: false
       }
@@ -129,6 +130,7 @@ angular.module('climbGame.controllers.calendar', [])
       }
 
       $scope.sendData = function () {
+
         if (dataAreComplete()) {
           $mdDialog.show({
             // targetEvent: $event,
@@ -146,73 +148,82 @@ angular.module('climbGame.controllers.calendar', [])
               '</div></md-dialog>',
             controller: function DialogController($scope, $mdDialog) {
               $scope.closeDialog = function () {
-                $mdDialog.hide()
+                $mdDialog.hide();
+                $scope.sendingData = false;
               }
 
               $scope.confirmSend = function () {
-                $scope.todayData.meteo = $scope.selectedWeather
-                $scope.todayData.day = new Date().setHours(0, 0, 0, 0)
-                var babiesMap = {}
-                for (var i = 0; i < $scope.todayData.babies.length; i++) {
-                  if ($scope.todayData.babies[i].mean) {
-                    babiesMap[$scope.todayData.babies[i].childId] = $scope.todayData.babies[i].mean
+                if (!$scope.sendingData) {
+                  $scope.sendingData = true;
+                  $scope.todayData.meteo = $scope.selectedWeather
+                  $scope.todayData.day = new Date().setHours(0, 0, 0, 0)
+                  var babiesMap = {}
+                  for (var i = 0; i < $scope.todayData.babies.length; i++) {
+                    if ($scope.todayData.babies[i].mean) {
+                      babiesMap[$scope.todayData.babies[i].childId] = $scope.todayData.babies[i].mean
+                    }
                   }
-                }
 
-                $scope.todayData.modeMap = babiesMap
+                  $scope.todayData.modeMap = babiesMap
 
-                calendarService.sendData($scope.todayData).then(function (returnValue) {
-                  // change weekdata to closed
-                  $scope.weekData[$scope.todayIndex].closed = true
-                    // check if merged or not
-                  if (returnValue) {
-                    // popup dati backend cambiati
-                    $mdDialog.show({
-                      // targetEvent: $event,
-                      scope: $scope, // use parent scope in template
-                      preserveScope: true, // do not forget this if use parent scope
-                      template: '<md-dialog>' +
-                        '  <div class="cal-dialog-title"> Dati cambiati </div><md-divider></md-divider>' +
-                        '  <div class="cal-dialog-text">I dati presenti sono cambiati. </div>' +
-                        '    <div layout="row"  layout-align="start center" ><div layout"column" flex="100" ><md-button ng-click="closeDialogChanged()" class=" send-dialog-delete">' +
-                        '      Ho capito' +
-                        '   </div> </md-button>' +
-                        '</div></md-dialog>',
-                      controller: function DialogController($scope, $mdDialog) {
-                        // reload and show
-                        calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
-                          function (calendar) {
-                            createWeekData(calendar)
-                            updateTodayData(calendar)
-                          },
-                          function () {
-                            // manage error
+                  calendarService.sendData($scope.todayData).then(function (returnValue) {
+                    // change weekdata to closed
+                    $scope.weekData[$scope.todayIndex].closed = true
+                      // check if merged or not
+                    if (returnValue) {
+                      // popup dati backend cambiati
+                      $mdDialog.show({
+                        // targetEvent: $event,
+                        scope: $scope, // use parent scope in template
+                        preserveScope: true, // do not forget this if use parent scope
+                        template: '<md-dialog>' +
+                          '  <div class="cal-dialog-title"> Dati cambiati </div><md-divider></md-divider>' +
+                          '  <div class="cal-dialog-text">I dati presenti sono cambiati. </div>' +
+                          '    <div layout="row"  layout-align="start center" ><div layout"column" flex="100" ><md-button ng-click="closeDialogChanged()" class=" send-dialog-delete">' +
+                          '      Ho capito' +
+                          '   </div> </md-button>' +
+                          '</div></md-dialog>',
+                        controller: function DialogController($scope, $mdDialog) {
+                          // reload and show
+                          calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
+                            function (calendar) {
+                              createWeekData(calendar)
+                              updateTodayData(calendar)
+                              $scope.sendingData = false;
+                            },
+                            function () {
+                              // manage error
+                              $scope.sendingData = false;
+                            }
+                          )
+
+                          $scope.closeDialogChanged = function () {
+                            $mdDialog.hide()
                           }
-                        )
-
-                        $scope.closeDialogChanged = function () {
-                          $mdDialog.hide()
                         }
-                      }
-                    })
-                  } else {
-                    // sent data
-                    $mdToast.show($mdToast.simple().content('Dati inviati'))
-                      // reload and show
-                    calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
-                      function (calendar) {
-                        createWeekData(calendar)
-                        updateTodayData(calendar)
-                      },
-                      function () {
-                        // manage error
-                      }
-                    )
-                  }
-                  $scope.closeDialog()
-                }, function () {
-                  // TODO get error
-                })
+                      })
+                    } else {
+                      // sent data
+                      $mdToast.show($mdToast.simple().content('Dati inviati'))
+                        // reload and show
+                      calendarService.getCalendar($scope.week[0].getTime(), $scope.week[$scope.week.length - 1].getTime()).then(
+                        function (calendar) {
+                          createWeekData(calendar)
+                          updateTodayData(calendar)
+                          $scope.sendingData = false;
+                        },
+                        function () {
+                          // manage error
+                          $scope.sendingData = false;
+                        }
+                      )
+                    }
+                    $scope.closeDialog()
+                  }, function () {
+                    // TODO get error
+                    $scope.sendingData = false;
+                  })
+                }
               }
             }
           })
@@ -230,10 +241,12 @@ angular.module('climbGame.controllers.calendar', [])
               '</div></md-dialog>',
             controller: function DialogController($scope, $mdDialog) {
               $scope.closeDialog = function () {
-                $mdDialog.hide()
+                $mdDialog.hide();
+                $scope.sendingData = false;
               }
             }
           })
+
         }
       }
 
@@ -502,5 +515,5 @@ angular.module('climbGame.controllers.calendar', [])
 
       var appWindow = angular.element($window)
       appWindow.bind('resize', onResize)
-    }
-  ])
+        }
+        ])

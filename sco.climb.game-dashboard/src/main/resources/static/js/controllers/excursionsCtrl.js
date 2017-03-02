@@ -5,6 +5,7 @@ angular.module('climbGame.controllers.excursions', [])
       $scope.showHints = false
       $scope.datepickerisOpen = false
       $scope.excursions = null
+      $scope.sendingData = false
 
       /* excursion example
       {
@@ -91,19 +92,24 @@ angular.module('climbGame.controllers.excursions', [])
             }
 
             $scope.confirmSend = function () {
-              dataService.postExcursion(params).then(
-                function (data) {
-                  // reset form
-                  $scope.resetForm()
-                    // refresh
-                  $scope.refreshExcursions()
-                    //close dialog
-                  $mdDialog.hide();
-                },
-                function (reason) {
-                  // console.log(reason)
-                }
-              )
+              if (!$scope.sendingData) {
+                $scope.sendingData = true;
+                dataService.postExcursion(params).then(
+                  function (data) {
+                    // reset form
+                    $scope.resetForm()
+                      // refresh
+                    $scope.refreshExcursions()
+                      //close dialog
+                    $mdDialog.hide();
+                    $scope.sendingData = false;
+                  },
+                  function (reason) {
+                    // console.log(reason)
+                    $scope.sendingData = false;
+                  }
+                )
+              }
             }
           }
         })
