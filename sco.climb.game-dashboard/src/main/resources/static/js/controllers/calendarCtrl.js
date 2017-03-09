@@ -467,7 +467,16 @@ angular.module('climbGame.controllers.calendar', [])
             }
           )
         }
-
+        var cleanStatesChallenges = function (arrayOfChallenges) {
+          // var lastchallenge = [];
+          if (arrayOfChallenges[0]) {
+            $scope.lastChallenge.state = [arrayOfChallenges[0]];
+          }
+          for (var i = 1; i < arrayOfChallenges.length; i++) {
+            if (arrayOfChallenges[i] && arrayOfChallenges[i].start > $scope.lastChallenge.state[0].start)
+              $scope.lastChallenge.state = [arrayOfChallenges[i]];
+          }
+        }
         var getChallenges = function () {
           dataService.getChallenges().then(
             function (data) {
@@ -480,7 +489,9 @@ angular.module('climbGame.controllers.calendar', [])
                     })
                     $scope.lastChallenge = data[i]
                     i = data.length
+                    cleanStatesChallenges($scope.lastChallenge.state);
                   }
+
                 }
               }
             },
