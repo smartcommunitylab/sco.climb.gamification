@@ -16,9 +16,10 @@
         <div layout="column" class="cal-arrow-min"></div>
         <div layout="column" class="cal-arrow cal-arrow-challenge">
           <div class="md-title">{{'cal_challenges' | translate}}</div>
-          <div ng-if="lastChallenge && !state.completed" ng-repeat="state in lastChallenge.state">
+          <div ng-if="openChallenge" ng-repeat="state in lastChallenge.state">
             {{'challenge_' + state.modelName | translate:state.fields}}
           </div>
+          <div ng-if="!openChallenge">{{'cal_challenge_empty' | translate}}</div>
         </div>
       </div>
     </div>

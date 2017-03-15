@@ -468,14 +468,16 @@ angular.module('climbGame.controllers.calendar', [])
           )
         }
         var cleanStatesChallenges = function (arrayOfChallenges) {
+          $scope.openChallenge=false;
           var challengesNotCompleted = [];
           //first get all the not completed
           for (var i = 0; i < arrayOfChallenges.length; i++) {
-            if (!arrayOfChallenges[i].completed)
+            if (!arrayOfChallenges[i].completed && !arrayOfChallenges[i].fields.prizeWon)
               challengesNotCompleted.push(arrayOfChallenges[i]);
           }
           if (challengesNotCompleted[0]) {
             $scope.lastChallenge.state = [challengesNotCompleted[0]];
+            $scope.openChallenge=true;
           }
           for (var i = 1; i < challengesNotCompleted.length; i++) {
             if (challengesNotCompleted[i] && challengesNotCompleted[i].start > $scope.lastChallenge.state[0].start)
