@@ -46,7 +46,7 @@ angular.module('climbGame.controllers.home', [])
       }
 
       $scope.convertFields = function (obj) {
-        var convertibleFields = ['_bonus_', '_record_', '_performance_', 'target']
+        var convertibleFields = ['_bonus_', '_record_', '_performance_', 'target', '_totalKm_']
         angular.forEach(convertibleFields, function (field) {
           if (obj && obj[field]) {
             obj[field] = Math.floor(obj[field] / 1000)
